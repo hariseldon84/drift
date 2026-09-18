@@ -1,0 +1,9 @@
+# Design Inspiration Story
+
+#### I basically do this for all my products where I describe my feeling that I want the product to portray in the final design. The feeling is raw, natural and not related to anything that the product does. It doesnt specifies tech genius, scientific reasoning, user needs, gaps, problems : nothing. It is just a feeling that is described using a story and I want the designer to extract the right pattern out of it.
+
+When I open drift, I feel as if I am liberated from the shackles of unorganized work, confused state of browsing, endless scrolling, and the world of panic to a space where everything is answered in the right manner to me and I feel calm, less anxious and soothing.
+
+Its as if :
+
+" I am walking across the lovely mountain road of Shimla and searching for a cafe that serves the perfect English Breakfast. I am driving with my wife in the pleasent mountain road, hungry and also most probably late for the next sight seeing. But somehow I dont feel any rush. I feel this is a vacation and I am in such a beautiful place. I look at the sun and I feel electrified : the sun on the sky at 08:00 am in Shimla in a February setting with 8 to 10 Deg C outside is just mesmerizing. I walk towards the organized lanes of Mall road even though the road has a lot of potholes. The whole pathway is topsy turvy and confusing. Yet I feel excited for the search . I find the cafe, I feel excited . However not as excited as the prospects of searching for the next shopping place across the Mall road. So i drive towards it yet in the most beautiful city with sun shines, foresty path, trees all around and the feeling that Christmas never ended in this town. I am happy, I am at peace, I can smell the fresh air that has recently passed through 1000s of trees : i can smell those leaves, i can smell the sun, i can feel the sunlight. i feel rejuvenated". 

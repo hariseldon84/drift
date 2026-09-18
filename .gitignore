@@ -1,0 +1,19 @@
+# macOS metadata
+.DS_Store
+
+# Local tool and agent state
+/.claude/
+
+# Generated build trees
+/build/
+/build-*/
+/cmake-build-*/
+
+# Downloaded third-party dependencies. Use scripts/fetch-cef.sh.
+/.deps/
+/docs/cef_binary_*/
+
+# Local logs and crash output
+*.log
+*.dSYM/
+

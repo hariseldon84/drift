@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/thin/style.css"><link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css"><style>
+body{margin:0;background:#E7E1D6;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#2D5016;text-decoration:none}a:hover{color:#3A6B1A}
+i[class^="ph-"]{line-height:1}
+</style></helmet>
+
+<div style="padding:56px 64px 96px;display:flex;flex-direction:column;gap:56px;background:#E7E1D6;font-family:Inter,Helvetica,sans-serif">
+
+<div style="display:flex;flex-direction:column;gap:10px;max-width:980px">
+<div style="font:400 13px/1.6 Lora,Georgia,serif;font-style:italic;color:#7A6E65">Drift, set three.</div>
+<div style="font:500 30px/1.3 Lora,Georgia,serif;color:#1C1410">Private tabs, the widget surface, and the network</div>
+<div style="font:400 12.5px/1.75 Inter,sans-serif;color:#7A6E65">Screens 21–34, continuing the Compare and Research sets. Same chrome, same type scale, same palette. Three rules govern this set: privacy is pine green and almost invisible — a 2px border and a 12px shield, never a dark window; the widget surface is the only place tasks and notes arrive from the object graph, and amber marks the moment they do; and the evening palette appears exactly twice — once as time of day, once as a privacy signal. No red anywhere, in any state.</div>
+</div>
+
+<!-- ========== SECTION A ========== -->
+<div style="display:flex;align-items:baseline;gap:14px;border-top:1px solid rgba(28,20,16,.14);padding-top:22px">
+<div style="font:500 17px Lora,Georgia,serif;color:#1C1410">Section A · Per-tab incognito &amp; guest mode</div>
+<div style="font:400 12px Inter,sans-serif;color:#8A7E74">Screens 21–25 · Chrome's dark window is the wrong reference</div>
+</div>
+
+<!-- S21 -->
+<div data-screen-label="21 Private Tab In Bar" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#2D5016;color:#F6F2EA;border-radius:4px">21</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">One private tab among five normal ones</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 1 · no amber</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.1);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.1);background:#FAF7F2;display:flex;flex-direction:column">
+  <div style="height:42px;display:flex;align-items:center;gap:5px;padding:0 15px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.055)">
+    <div style="display:flex;gap:7px;margin-right:10px"><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div><div style="width:11px;height:11px;border-radius:50%;background:#DFD2BD"></div><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:164px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">The 9 best ANC headphones</span></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;background:#FAF7F2;font:400 12.5px Inter,sans-serif;color:#1C1410;max-width:180px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E0D3C0;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">Sony WH-1000XM5 — Kettle</span></div>
+    <div style="height:29px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:8px;border-top:2px solid #2D5016;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:172px;overflow:hidden;white-space:nowrap"><i class="ph-thin ph-shield" style="font-size:12px;color:#2D5016;flex:none"></i><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">Axis Bank — Net Banking</span></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:150px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">Bose QC45 — Voltline</span></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:150px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">r/headphones · XM5 vs QC45</span></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:132px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">ANC archive</span></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#A2958A;margin-left:4px"></i>
+    <div style="flex:1"></div>
+    <div style="position:relative;display:flex;align-items:center;padding-left:10px">
+      <i class="ph-thin ph-shield" style="font-size:10px;color:#2D5016"></i>
+      <div style="position:absolute;top:26px;right:-6px;padding:7px 11px;border-radius:6px;background:#FAF7F2;border:1px solid rgba(28,20,16,.08);box-shadow:0 8px 22px rgba(28,20,16,.13);font:400 11.5px Inter,sans-serif;color:#1C1410;white-space:nowrap;z-index:4">1 private tab active</div>
+    </div>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#FAF7F2;border-bottom:1px solid rgba(28,20,16,.045)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#A69A8E"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="flex:1;max-width:600px;height:31px;border-radius:16px;background:#F2EDE4;border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;gap:9px;padding:0 14px"><i class="ph-thin ph-lock-simple" style="font-size:13px;color:#2D5016"></i><div style="font:400 12.5px Inter,sans-serif;color:#7A6E65">kettle.com<span style="color:#B5A89C">/p/sony-wh-1000xm5</span></div></div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#2D5016"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#7A6E65"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#BCAFA3"></i>
+  </div>
+  <div style="flex:1;overflow:hidden;background:#fff">
+    <div style="height:58px;display:flex;align-items:center;gap:26px;padding:0 60px;border-bottom:1px solid #EAE7E3">
+      <div style="font:600 19px Inter,sans-serif;color:#26231F;letter-spacing:-.02em">kettle</div>
+      <div style="display:flex;gap:22px;font:400 12.5px Inter,sans-serif;color:#5C574F">Audio · Home · Computing · Deals</div>
+    </div>
+    <div style="padding:46px 60px;display:flex;gap:60px">
+      <div style="width:436px;height:348px;border-radius:4px;background:linear-gradient(160deg,#EFEBE5,#E2DCD3);display:flex;align-items:center;justify-content:center;flex:none">
+        <div style="position:relative;width:186px;height:148px"><div style="position:absolute;left:33px;top:4px;width:120px;height:86px;border:15px solid #46403A;border-bottom:none;border-radius:90px 90px 0 0"></div><div style="position:absolute;left:2px;top:78px;width:46px;height:62px;border-radius:19px;background:#46403A"></div><div style="position:absolute;right:2px;top:78px;width:46px;height:62px;border-radius:19px;background:#46403A"></div></div>
+      </div>
+      <div style="flex:1;max-width:560px">
+        <div style="font:400 11.5px Inter,sans-serif;color:#8C8479;letter-spacing:.06em;margin-bottom:12px">SONY</div>
+        <div style="font:400 28px/1.35 Inter,sans-serif;color:#1A1815;margin-bottom:16px">WH-1000XM5 Wireless Noise Cancelling Headphones</div>
+        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:24px"><div style="font:500 26px Inter,sans-serif;color:#1A1815">$279.00</div><div style="font:400 13px Inter,sans-serif;color:#8C8479;text-decoration:line-through">$399.00</div></div>
+        <div style="display:flex;flex-direction:column;gap:9px;font:400 13px/1.6 Inter,sans-serif;color:#5C574F;margin-bottom:28px">
+          <div>30-hour battery · Quick charge in 3 minutes</div>
+          <div>Eight microphones, two processors</div>
+          <div>Free delivery by Friday 20 February</div>
+        </div>
+        <div style="display:flex;gap:12px">
+          <div style="height:42px;padding:0 26px;border-radius:4px;background:#26231F;color:#F7F4EF;display:flex;align-items:center;font:500 13px Inter,sans-serif">Add to cart</div>
+          <div style="height:42px;padding:0 22px;border-radius:4px;border:1px solid #C9C3BA;color:#3A362F;display:flex;align-items:center;font:400 13px Inter,sans-serif">Save for later</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 21</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Private tab: 2px pine green top border + shield icon left of the favicon + secondary text colour. No other changes to chrome or palette.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The 10px shield at the right of the tab bar is the ambient indicator — present whenever any private tab exists, and the only chrome element that counts them. Tooltip on hover, 150ms fade, no delay-in animation.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65"><span style="color:#1C1410">The test:</span> you would not notice tab 3 was private unless you went looking. That is the goal.</div>
+</div>
+</div>
+
+<!-- S22 -->
+<div data-screen-label="22 New Private Tab Menu" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#2D5016;color:#F6F2EA;border-radius:4px">22</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">Opening one · tab bar context menu</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 2 · non-dramatic by construction</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.1);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.1);background:#FAF7F2;display:flex;flex-direction:column;position:relative">
+  <div style="height:42px;display:flex;align-items:center;gap:5px;padding:0 15px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.055)">
+    <div style="display:flex;gap:7px;margin-right:10px"><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div><div style="width:11px;height:11px;border-radius:50%;background:#DFD2BD"></div><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:164px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">The 9 best ANC headphones</span></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;background:#FAF7F2;font:400 12.5px Inter,sans-serif;color:#1C1410;max-width:180px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E0D3C0;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">Sony WH-1000XM5 — Kettle</span></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:150px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">Bose QC45 — Voltline</span></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#A2958A;margin-left:4px"></i>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center"><i class="ph-thin ph-cursor" style="font-size:13px;color:#8A7E74;transform:translateX(-52px)"></i></div>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#FAF7F2;border-bottom:1px solid rgba(28,20,16,.045)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#A69A8E"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="flex:1;max-width:600px;height:31px;border-radius:16px;background:#F2EDE4;border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;gap:9px;padding:0 14px"><i class="ph-thin ph-lock-simple" style="font-size:13px;color:#2D5016"></i><div style="font:400 12.5px Inter,sans-serif;color:#7A6E65">kettle.com<span style="color:#B5A89C">/p/sony-wh-1000xm5</span></div></div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#2D5016"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#7A6E65"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#BCAFA3"></i>
+  </div>
+  <div style="flex:1;overflow:hidden;background:#fff">
+    <div style="height:58px;display:flex;align-items:center;gap:26px;padding:0 60px;border-bottom:1px solid #EAE7E3">
+      <div style="font:600 19px Inter,sans-serif;color:#26231F;letter-spacing:-.02em">kettle</div>
+      <div style="display:flex;gap:22px;font:400 12.5px Inter,sans-serif;color:#5C574F">Audio · Home · Computing · Deals</div>
+    </div>
+    <div style="padding:46px 60px;display:flex;gap:60px">
+      <div style="width:436px;height:348px;border-radius:4px;background:linear-gradient(160deg,#EFEBE5,#E2DCD3);display:flex;align-items:center;justify-content:center;flex:none">
+        <div style="position:relative;width:186px;height:148px"><div style="position:absolute;left:33px;top:4px;width:120px;height:86px;border:15px solid #46403A;border-bottom:none;border-radius:90px 90px 0 0"></div><div style="position:absolute;left:2px;top:78px;width:46px;height:62px;border-radius:19px;background:#46403A"></div><div style="position:absolute;right:2px;top:78px;width:46px;height:62px;border-radius:19px;background:#46403A"></div></div>
+      </div>
+      <div style="flex:1;max-width:560px">
+        <div style="font:400 11.5px Inter,sans-serif;color:#8C8479;letter-spacing:.06em;margin-bottom:12px">SONY</div>
+        <div style="font:400 28px/1.35 Inter,sans-serif;color:#1A1815;margin-bottom:16px">WH-1000XM5 Wireless Noise Cancelling Headphones</div>
+        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:24px"><div style="font:500 26px Inter,sans-serif;color:#1A1815">$279.00</div><div style="font:400 13px Inter,sans-serif;color:#8C8479;text-decoration:line-through">$399.00</div></div>
+        <div style="display:flex;flex-direction:column;gap:9px;font:400 13px/1.6 Inter,sans-serif;color:#5C574F">
+          <div>30-hour battery · Quick charge in 3 minutes</div>
+          <div>Eight microphones, two processors</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;left:434px;top:38px;width:226px;padding:6px;border-radius:8px;background:#FAF7F2;border:1px solid rgba(28,20,16,.07);box-shadow:0 10px 30px rgba(28,20,16,.14),0 1px 2px rgba(28,20,16,.06);z-index:5">
+    <div style="height:32px;display:flex;align-items:center;gap:9px;padding:0 11px;border-radius:5px;font:400 12.5px Inter,sans-serif;color:#1C1410" style-hover="background:rgba(28,20,16,.045)">New Tab<span style="margin-left:auto;font:400 11.5px Inter,sans-serif;color:#B5A89C">⌘T</span></div>
+    <div style="height:32px;display:flex;align-items:center;gap:9px;padding:0 11px;border-radius:5px;background:rgba(45,80,22,.08);font:400 12.5px Inter,sans-serif;color:#2D5016"><i class="ph-thin ph-shield" style="font-size:13px"></i>New Private Tab<span style="margin-left:auto;font:400 11.5px Inter,sans-serif;color:rgba(45,80,22,.6)">⌘⇧N</span></div>
+    <div style="height:1px;background:rgba(28,20,16,.075);margin:5px 9px"></div>
+    <div style="height:32px;display:flex;align-items:center;padding:0 11px;border-radius:5px;font:400 12.5px Inter,sans-serif;color:#1C1410" style-hover="background:rgba(28,20,16,.045)">Close Tab</div>
+    <div style="height:32px;display:flex;align-items:center;padding:0 11px;border-radius:5px;font:400 12.5px Inter,sans-serif;color:#1C1410" style-hover="background:rgba(28,20,16,.045)">Close Other Tabs</div>
+    <div style="height:32px;display:flex;align-items:center;padding:0 11px;border-radius:5px;font:400 12.5px Inter,sans-serif;color:#1C1410" style-hover="background:rgba(28,20,16,.045)">Reopen Closed Tab</div>
+  </div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 22</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Private tab always opened from the tab bar context menu or ⌘⇧N — never a full window switch.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The page behind stays fully rendered and unblurred. Nothing is being left behind, so nothing dims. Menu opens in 120ms ease-out, no scale.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Hover tint on the private item is pine green at 8% — the same value used for recommended actions everywhere else in Drift.</div>
+</div>
+</div>
+
+<!-- S23 -->
+<div data-screen-label="23 Private Tab Active" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#2D5016;color:#F6F2EA;border-radius:4px">23</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">Inside a private tab</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 3 · no overlay, no banner</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.1);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.1);background:#FAF7F2;display:flex;flex-direction:column">
+  <div style="height:42px;display:flex;align-items:center;gap:5px;padding:0 15px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.055)">
+    <div style="display:flex;gap:7px;margin-right:10px"><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div><div style="width:11px;height:11px;border-radius:50%;background:#DFD2BD"></div><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:164px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">The 9 best ANC headphones</span></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:164px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">Sony WH-1000XM5 — Kettle</span></div>
+    <div style="height:29px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:8px;background:#FAF7F2;border-top:2px solid #2D5016;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:190px;overflow:hidden;white-space:nowrap"><i class="ph-thin ph-shield" style="font-size:12px;color:#2D5016;flex:none"></i><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">Tinnitus — symptoms and causes</span></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:150px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">Bose QC45 — Voltline</span></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#A2958A;margin-left:4px"></i>
+    <div style="flex:1"></div>
+    <i class="ph-thin ph-shield" style="font-size:10px;color:#2D5016;margin-left:10px"></i>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#FAF7F2;border-bottom:1px solid rgba(28,20,16,.045)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#A69A8E"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="display:flex;align-items:center;flex:1;max-width:620px;gap:10px">
+      <i class="ph-thin ph-shield" style="font-size:14px;color:#2D5016;flex:none"></i>
+      <div style="flex:1;height:31px;border-radius:16px;background:#F2EDE4;border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;gap:9px;padding:0 14px"><i class="ph-thin ph-lock-simple" style="font-size:13px;color:#2D5016"></i><div style="font:400 12.5px Inter,sans-serif;color:#7A6E65">healthline.com<span style="color:#B5A89C">/conditions/tinnitus</span></div></div>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#2D5016"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#7A6E65"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#BCAFA3"></i>
+  </div>
+  <div style="flex:1;overflow:hidden;background:#fff">
+    <div style="height:58px;display:flex;align-items:center;gap:26px;padding:0 60px;border-bottom:1px solid #EAE7E3">
+      <div style="font:600 19px Inter,sans-serif;color:#26231F;letter-spacing:-.02em">healthline</div>
+      <div style="display:flex;gap:22px;font:400 12.5px Inter,sans-serif;color:#5C574F">Conditions · Symptoms · Treatments · Find care</div>
+    </div>
+    <div style="padding:42px 60px 0;max-width:860px">
+      <div style="font:400 11.5px Inter,sans-serif;color:#8C8479;letter-spacing:.06em;margin-bottom:14px">EAR, NOSE &amp; THROAT · MEDICALLY REVIEWED</div>
+      <div style="font:400 32px/1.3 Inter,sans-serif;color:#1A1815;margin-bottom:16px;max-width:700px">Tinnitus: symptoms, causes, and when to see a doctor</div>
+      <div style="font:400 13px/1.7 Inter,sans-serif;color:#6E6862;margin-bottom:30px">Reviewed by Dr. Meera Krishnan, MD · Updated 11 February 2026</div>
+      <div style="font:400 15px/1.9 Inter,sans-serif;color:#33302B;max-width:720px;margin-bottom:22px">Tinnitus is the perception of sound when no external sound is present — most often a ringing, but also described as buzzing, hissing, or clicking. It affects an estimated 15 percent of adults, and for roughly one in five of those it is persistent enough to interfere with sleep or concentration.</div>
+      <div style="font:400 15px/1.9 Inter,sans-serif;color:#33302B;max-width:720px;margin-bottom:26px">Prolonged exposure to loud sound is the most common identifiable cause. Volume above 85 decibels sustained over time damages the hair cells of the inner ear, and that damage does not reverse.</div>
+      <div style="display:flex;gap:18px">
+        <div style="width:230px;height:120px;border-radius:4px;background:linear-gradient(150deg,#ECEEEF,#DCE0E2)"></div>
+        <div style="width:230px;height:120px;border-radius:4px;background:linear-gradient(150deg,#EFECE6,#E0DBD2)"></div>
+      </div>
+    </div>
+  </div>
+  <div style="height:26px;flex:none;display:flex;align-items:center;padding:0 18px;background:#FAF7F2;border-top:1px solid rgba(28,20,16,.05);font:400 11px Inter,sans-serif;color:#7A6E65">Private tab · No history saved · No cookies kept after close</div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 23</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Private tab browsing is visually indistinguishable from normal browsing except the shield in the address bar and the tab bar treatment. This is intentional — calm, not paranoid.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The shield sits in the address bar's leading area, outside the URL pill, where a permission chip would sit. The URL text keeps its ordinary colour and weight.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The 11px status line at the frame's foot is the only sentence of copy in the whole mode. It states what is not happening, in three clauses, and never animates.</div>
+</div>
+</div>
+
+
+<!-- S24 -->
+<div data-screen-label="24 Guest Window" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#2D5016;color:#F6F2EA;border-radius:4px">24</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">Guest session · a whole window, handed over</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 4 · separate BrowserContext</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:2px solid #2D5016;box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.1);background:#FAF7F2;display:flex;flex-direction:column">
+  <div style="height:42px;display:flex;align-items:center;padding:0 15px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.055);position:relative">
+    <div style="display:flex;gap:7px"><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div><div style="width:11px;height:11px;border-radius:50%;background:#DFD2BD"></div><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div></div>
+    <div style="position:absolute;left:0;right:0;display:flex;justify-content:center;font:400 14px Lora,Georgia,serif;color:#7A6E65">Guest session</div>
+    <div style="flex:1"></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#A2958A"></i>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#FAF7F2;border-bottom:1px solid rgba(28,20,16,.045)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#C4B8AC"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="display:flex;align-items:center;flex:1;max-width:620px;gap:10px">
+      <i class="ph-thin ph-shield" style="font-size:14px;color:#2D5016;flex:none"></i>
+      <div style="flex:1;height:31px;border-radius:16px;background:#F2EDE4;border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;padding:0 14px;font:400 12.5px Inter,sans-serif;color:#A2958A">Browse privately — nothing will be saved</div>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#2D5016"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#C6BBAD"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#BCAFA3"></i>
+  </div>
+  <div style="flex:1;overflow:hidden;background:#FAF7F2;padding:52px 88px;display:flex;flex-direction:column">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:44px">
+      <div style="font:500 14px Inter,sans-serif;color:#2D5016;letter-spacing:-.01em">Drift</div>
+      <div style="font:400 22px/1.4 Lora,Georgia,serif;color:#1C1410">This is a guest session.</div>
+      <div style="font:400 13px/1.7 Inter,sans-serif;color:#7A6E65">Drift won't save anything from this window.</div>
+      <div style="height:32px;padding:0 16px;margin-top:8px;border-radius:8px;background:#2D5016;color:#F6F2EA;display:flex;align-items:center;font:500 12.5px Inter,sans-serif" style-hover="background:#3A6B1A">End guest session</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;flex:1">
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:32px;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px"><div style="font:500 13px Inter,sans-serif;color:#A2958A">Tasks</div><i class="ph-thin ph-plus" style="font-size:14px;color:#C6BBAD"></i></div>
+        <div style="font:400 12.5px/1.8 Inter,sans-serif;color:#A2958A">Nothing is carried into a guest session, and nothing leaves it.</div>
+      </div>
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:32px;display:flex;flex-direction:column">
+        <div style="font:500 13px Inter,sans-serif;color:#A2958A;margin-bottom:16px">Notes</div>
+        <div style="font:400 12.5px/1.8 Inter,sans-serif;color:#A2958A">Notes written here are cleared when the session ends.</div>
+      </div>
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:32px;display:flex;flex-direction:column;align-items:center">
+        <div style="align-self:flex-start;font:500 13px Inter,sans-serif;color:#A2958A;margin-bottom:22px">Timer</div>
+        <div style="position:relative;width:120px;height:120px">
+          <div style="position:absolute;inset:0;border-radius:50%;border:2px solid #E0D8CB"></div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 28px Inter,sans-serif;color:#C6BBAD">25:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="height:26px;flex:none;display:flex;align-items:center;padding:0 18px;background:#FAF7F2;border-top:1px solid rgba(28,20,16,.05);font:400 11px Inter,sans-serif;color:#7A6E65">Guest session · No history, cookies, or passwords saved from this window</div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 24</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Guest window: separate BrowserContext, thin pine green window border, empty widget surface, no history / cookies / passwords saved.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The widgets are present but inert — their empty copy explains the boundary rather than inviting use. The tray icon is muted: there is no object graph in a guest session.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The 2px border runs all four edges and is the only difference a stranger would ever see. Palette, chrome height, and type scale are untouched.</div>
+</div>
+</div>
+
+<!-- S25 -->
+<div data-screen-label="25 Hard Incognito" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#2D5016;color:#F6F2EA;border-radius:4px">25</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">Hard incognito · evening palette as a privacy signal</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 5 · File menu only</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.16);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.16);background:#1E1A16;display:flex;flex-direction:column;position:relative">
+  <div style="height:28px;flex:none;display:flex;align-items:center;gap:22px;padding:0 16px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.07);font:400 12px Inter,sans-serif;color:#3A342E">
+    <i class="ph-thin ph-drop-half" style="font-size:13px;color:#2D5016"></i>
+    <span style="font-weight:500">Drift</span>
+    <span style="padding:2px 8px;border-radius:4px;background:rgba(45,80,22,.12);color:#2D5016">File</span>
+    <span>Edit</span><span>View</span><span>History</span><span>Objects</span><span>Window</span><span>Help</span>
+  </div>
+  <div style="height:42px;display:flex;align-items:center;padding:0 15px;background:#2A2420;border-bottom:1px solid rgba(237,232,224,.07);position:relative">
+    <div style="position:absolute;left:0;top:0;bottom:0;width:4px;background:#4A7A2A"></div>
+    <div style="display:flex;gap:7px;margin-left:10px"><div style="width:11px;height:11px;border-radius:50%;background:#4A423B"></div><div style="width:11px;height:11px;border-radius:50%;background:#53493F"></div><div style="width:11px;height:11px;border-radius:50%;background:#4A423B"></div></div>
+    <div style="position:absolute;left:0;right:0;display:flex;justify-content:center;font:400 13.5px Lora,Georgia,serif;color:#EDE8E0">Hard incognito — fully isolated session.</div>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#2A2420;border-bottom:1px solid rgba(237,232,224,.055)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#6F655B"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="display:flex;align-items:center;flex:1;max-width:620px;gap:10px">
+      <i class="ph-thin ph-shield" style="font-size:14px;color:#4A7A2A;flex:none"></i>
+      <div style="flex:1;height:31px;border-radius:16px;background:#332E28;border:1px solid rgba(237,232,224,.07);display:flex;align-items:center;padding:0 14px;font:400 12.5px Inter,sans-serif;color:#9A9085">Search, or enter an address</div>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#4A7A2A"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#5F564D"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#6F655B"></i>
+  </div>
+  <div style="flex:1;overflow:hidden;background:#1E1A16;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+    <i class="ph-thin ph-eye-slash" style="font-size:36px;color:#4A7A2A"></i>
+    <div style="font:400 22px/1.4 Lora,Georgia,serif;color:#EDE8E0">Nothing here is written down.</div>
+    <div style="font:400 13px/1.8 Inter,sans-serif;color:#9A9085;max-width:440px;text-align:center">No history, no cookies, no cache, no object graph. Extensions are off. This window shares nothing with your other windows, and closing it leaves no trace on this device.</div>
+  </div>
+  <div style="position:absolute;left:66px;top:26px;width:262px;padding:6px;border-radius:8px;background:#FAF7F2;border:1px solid rgba(28,20,16,.07);box-shadow:0 14px 38px rgba(28,20,16,.22),0 1px 2px rgba(28,20,16,.08);z-index:6">
+    <div style="height:32px;display:flex;align-items:center;padding:0 11px;border-radius:5px;font:400 12.5px Inter,sans-serif;color:#1C1410" style-hover="background:rgba(28,20,16,.045)">New Window<span style="margin-left:auto;font:400 11.5px Inter,sans-serif;color:#B5A89C">⌘N</span></div>
+    <div style="height:32px;display:flex;align-items:center;gap:9px;padding:0 11px;border-radius:5px;font:400 12.5px Inter,sans-serif;color:#1C1410" style-hover="background:rgba(28,20,16,.045)">New Private Tab<span style="margin-left:auto;font:400 11.5px Inter,sans-serif;color:#B5A89C">⌘⇧N</span></div>
+    <div style="height:32px;display:flex;align-items:center;padding:0 11px;border-radius:5px;font:400 12.5px Inter,sans-serif;color:#1C1410" style-hover="background:rgba(28,20,16,.045)">New Guest Window</div>
+    <div style="height:32px;display:flex;align-items:center;padding:0 11px;border-radius:5px;font:400 12.5px Inter,sans-serif;color:#1C1410" style-hover="background:rgba(28,20,16,.045)">Open File…<span style="margin-left:auto;font:400 11.5px Inter,sans-serif;color:#B5A89C">⌘O</span></div>
+    <div style="height:32px;display:flex;align-items:center;padding:0 11px;border-radius:5px;font:400 12.5px Inter,sans-serif;color:#1C1410" style-hover="background:rgba(28,20,16,.045)">Save Objects to Library</div>
+    <div style="height:1px;background:rgba(28,20,16,.075);margin:5px 9px"></div>
+    <div style="height:32px;display:flex;align-items:center;gap:9px;padding:0 11px;border-radius:5px;background:rgba(28,20,16,.04);font:400 12.5px Inter,sans-serif;color:#7A6E65"><i class="ph-thin ph-eye-slash" style="font-size:13px"></i>Open Hard Incognito Window</div>
+  </div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 25</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Hard incognito: evening palette as a privacy signal — the only non-time-based use of dark mode. Accessed only via the File menu, deliberately not prominent.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The dark values are Drift's own evening tones, not a cold grey: #2A2420 frame on #1E1A16 canvas, warm off-white text. It should feel like stepping into a private room.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The 4px pine strip at the left of the tab bar is the mode marker. The leaf stays lit — inference is still local — and the tray is dimmed, since nothing is being collected.</div>
+</div>
+</div>
+
+<!-- ========== SECTION B ========== -->
+<div style="display:flex;align-items:baseline;gap:14px;border-top:1px solid rgba(28,20,16,.14);padding-top:22px">
+<div style="font:500 17px Lora,Georgia,serif;color:#1C1410">Section B · The connected widget surface</div>
+<div style="font:400 12px Inter,sans-serif;color:#8A7E74">Screens 26–30 · The warm table when no tabs are open</div>
+</div>
+
+<!-- S26 -->
+<div data-screen-label="26 Widget Surface Fresh" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#2D5016;color:#F6F2EA;border-radius:4px">26</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">Fresh state · nothing has happened yet</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 6 · no amber</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.1);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.1);background:#FAF7F2;display:flex;flex-direction:column">
+  <div style="height:42px;display:flex;align-items:center;padding:0 15px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.055)">
+    <div style="display:flex;gap:7px;margin-right:12px"><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div><div style="width:11px;height:11px;border-radius:50%;background:#DFD2BD"></div><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#A2958A"></i>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#FAF7F2;border-bottom:1px solid rgba(28,20,16,.045)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#C4B8AC"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="flex:1;max-width:600px;height:31px;border-radius:16px;background:#F2EDE4;border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;padding:0 14px;font:400 12.5px Inter,sans-serif;color:#A2958A">Search, or enter an address</div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#2D5016"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#7A6E65"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#BCAFA3"></i>
+  </div>
+  <div style="flex:1;overflow:hidden;background:#FAF7F2;padding:48px 88px 30px;display:flex;flex-direction:column">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:40px">
+      <div style="font:500 14px Inter,sans-serif;color:#2D5016;letter-spacing:-.01em">Drift</div>
+      <div style="font:400 24px/1.4 Lora,Georgia,serif;color:#1C1410">Good morning.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;flex:1">
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:32px;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px"><div style="font:500 13px Inter,sans-serif;color:#1C1410">Tasks</div><i class="ph-thin ph-plus" style="font-size:15px;color:#2D5016"></i></div>
+        <div style="font:400 12.5px/1.85 Inter,sans-serif;color:#7A6E65">Nothing yet. Drift will add items here when you compare products or finish a research session.</div>
+      </div>
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:32px;display:flex;flex-direction:column">
+        <div style="font:500 13px Inter,sans-serif;color:#1C1410;margin-bottom:18px">Notes</div>
+        <div style="font:400 12.5px/1.85 Inter,sans-serif;color:#7A6E65">Start typing, or let Drift capture your research here.</div>
+        <div style="flex:1;margin-top:14px;border-radius:6px;background:rgba(250,247,242,.55)"></div>
+      </div>
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:32px;display:flex;flex-direction:column;align-items:center">
+        <div style="align-self:flex-start;font:500 13px Inter,sans-serif;color:#1C1410;margin-bottom:26px">Timer</div>
+        <div style="position:relative;width:120px;height:120px;margin-bottom:26px">
+          <svg viewBox="0 0 120 120" style="width:120px;height:120px;transform:rotate(-90deg)"><circle cx="60" cy="60" r="56" fill="none" stroke="#C6BBAD" stroke-width="2"></circle><circle cx="60" cy="60" r="56" fill="none" stroke="#2D5016" stroke-width="2" stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="352"></circle></svg>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 28px Inter,sans-serif;color:#1C1410">25:00</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="height:30px;padding:0 18px;border-radius:8px;background:#2D5016;color:#F6F2EA;display:flex;align-items:center;font:500 12px Inter,sans-serif" style-hover="background:#3A6B1A">Start</div>
+          <div style="font:400 12px Inter,sans-serif;color:#A2958A" style-hover="color:#7A6E65">Reset</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;justify-content:center;padding-top:26px;font:400 12px Inter,sans-serif;color:#7A6E65">Open a new tab to start browsing <i class="ph-thin ph-arrow-right" style="font-size:14px;color:#2D5016"></i></div>
+  </div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 26</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The greeting is the only serif on the screen. It is an observation Drift makes about the time of day, not chrome, so it takes the intelligence typeface while staying in the ordinary text colour.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Cards are reorderable by drag. 32px internal padding, 24px gutters, 8px radii — the grid is the same one the Compare table sits on.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Timer is Pomodoro by default: stroke-only circle, #C6BBAD track, pine arc at zero progress. No further controls appear until it runs.</div>
+</div>
+</div>
+
+<!-- S27 -->
+<div data-screen-label="27 Widget Surface After Compare" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#D4820A;color:#FFFCF6;border-radius:4px">27</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">After a Compare session · the object graph arrives</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 7 · one amber pill</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.1);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.1);background:#FAF7F2;display:flex;flex-direction:column">
+  <div style="height:42px;display:flex;align-items:center;padding:0 15px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.055)">
+    <div style="display:flex;gap:7px;margin-right:12px"><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div><div style="width:11px;height:11px;border-radius:50%;background:#DFD2BD"></div><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#A2958A"></i>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#FAF7F2;border-bottom:1px solid rgba(28,20,16,.045)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#C4B8AC"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="flex:1;max-width:600px;height:31px;border-radius:16px;background:#F2EDE4;border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;padding:0 14px;font:400 12.5px Inter,sans-serif;color:#A2958A">Search, or enter an address</div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#2D5016"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#7A6E65"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#BCAFA3"></i>
+  </div>
+  <div style="flex:1;overflow:hidden;background:#FAF7F2;padding:48px 88px 30px;display:flex;flex-direction:column">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:40px">
+      <div style="font:500 14px Inter,sans-serif;color:#2D5016;letter-spacing:-.01em">Drift</div>
+      <div style="font:400 24px/1.4 Lora,Georgia,serif;color:#1C1410">Good afternoon.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;flex:1">
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:32px;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px"><div style="font:500 13px Inter,sans-serif;color:#1C1410">Tasks</div><i class="ph-thin ph-plus" style="font-size:15px;color:#2D5016"></i></div>
+        <div style="align-self:flex-start;height:20px;display:flex;align-items:center;padding:0 9px;border-radius:10px;background:rgba(212,130,10,.15);font:500 10px Inter,sans-serif;color:#B06E08;letter-spacing:.02em;margin-bottom:20px">2 items from your comparison</div>
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div style="display:flex;gap:11px;align-items:flex-start">
+            <div style="width:5px;height:5px;border-radius:50%;background:#2D5016;margin-top:6px;flex:none"></div>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><i class="ph-thin ph-shopping-bag" style="font-size:14px;color:#7A6E65;flex:none"></i><div style="font:400 12.5px/1.5 Inter,sans-serif;color:#1C1410">Buy Bose QC45 — $249 · Best Buy</div></div>
+              <div style="font:400 11px Inter,sans-serif;color:#A2958A;padding-left:22px">Added from Compare · 2 minutes ago</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:11px;align-items:flex-start">
+            <div style="width:5px;height:5px;border-radius:50%;background:#2D5016;margin-top:6px;flex:none"></div>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px"><i class="ph-thin ph-seal-check" style="font-size:14px;color:#7A6E65;flex:none"></i><div style="font:400 12.5px/1.5 Inter,sans-serif;color:#1C1410">Check Sony warranty terms — amazon.com</div></div>
+              <div style="font:400 11px Inter,sans-serif;color:#A2958A;padding-left:22px">Drift noticed · 2 minutes ago</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:auto;padding-top:22px;font:400 12px Inter,sans-serif;color:#2D5016" style-hover="color:#3A6B1A">Open Tasks</div>
+      </div>
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:32px;display:flex;flex-direction:column">
+        <div style="font:500 13px Inter,sans-serif;color:#1C1410;margin-bottom:20px">Notes</div>
+        <div style="font:400 16px/1.5 Lora,Georgia,serif;color:#1C1410;margin-bottom:12px">Sony vs Bose — 2:14 PM</div>
+        <div style="font:400 12.5px/1.85 Inter,sans-serif;color:#7A6E65;margin-bottom:22px">Bose QC45 won on price ($30 less). Sony rated marginally higher (4.7 vs 4.5). You compared on Amazon and Best Buy.</div>
+        <div style="height:1px;background:rgba(28,20,16,.08);margin-bottom:18px"></div>
+        <div style="font:400 12.5px Inter,sans-serif;color:#A2958A">Your notes…</div>
+        <div style="flex:1;margin-top:10px;border-radius:6px;background:rgba(250,247,242,.55)"></div>
+      </div>
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:32px;display:flex;flex-direction:column;align-items:center">
+        <div style="align-self:flex-start;font:500 13px Inter,sans-serif;color:#1C1410;margin-bottom:26px">Timer</div>
+        <div style="position:relative;width:120px;height:120px;margin-bottom:26px">
+          <svg viewBox="0 0 120 120" style="width:120px;height:120px;transform:rotate(-90deg)"><circle cx="60" cy="60" r="56" fill="none" stroke="#C6BBAD" stroke-width="2"></circle><circle cx="60" cy="60" r="56" fill="none" stroke="#2D5016" stroke-width="2" stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="127"></circle></svg>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 28px Inter,sans-serif;color:#1C1410">15:52</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="height:30px;padding:0 18px;border-radius:8px;border:1px solid #2D5016;background:rgba(45,80,22,.07);color:#2D5016;display:flex;align-items:center;font:500 12px Inter,sans-serif" style-hover="background:rgba(45,80,22,.14)">Pause</div>
+          <div style="font:400 12px Inter,sans-serif;color:#A2958A" style-hover="color:#7A6E65">Reset</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;justify-content:center;padding-top:26px;font:400 12px Inter,sans-serif;color:#7A6E65">Open a new tab to start browsing <i class="ph-thin ph-arrow-right" style="font-size:14px;color:#2D5016"></i></div>
+  </div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">MOTION · 27</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65"><span style="color:#1C1410">Arrival</span> — the amber pill and the two tasks fade in over 380ms with a 3px upward drift, staggered 60ms apart. The surface is already painted when they land; nothing reflows.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The amber pill is the only amber on the screen and the only amber in Section B: Drift has surfaced an understanding, so the window light falls here and nowhere else.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The note's serif heading is the same intelligence typeface used by Compare results and the Research feed. Its body stays in Inter — Drift's reasoning is serif, its records are sans.</div>
+</div>
+</div>
+
+<!-- S28 -->
+<div data-screen-label="28 Tasks Expanded" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#D4820A;color:#FFFCF6;border-radius:4px">28</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">Tasks expanded · sourced and personal, side by side</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 8 · 2px amber left border</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.1);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.1);background:#FAF7F2;display:flex;flex-direction:column">
+  <div style="height:42px;display:flex;align-items:center;padding:0 15px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.055)">
+    <div style="display:flex;gap:7px;margin-right:12px"><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div><div style="width:11px;height:11px;border-radius:50%;background:#DFD2BD"></div><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#A2958A"></i>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#FAF7F2;border-bottom:1px solid rgba(28,20,16,.045)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#C4B8AC"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="flex:1;max-width:600px;height:31px;border-radius:16px;background:#F2EDE4;border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;padding:0 14px;font:400 12.5px Inter,sans-serif;color:#A2958A">Search, or enter an address</div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#2D5016"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#7A6E65"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#BCAFA3"></i>
+  </div>
+  <div style="flex:1;overflow:hidden;background:#FAF7F2;padding:36px 60px 36px;display:flex;flex-direction:column">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:28px">
+      <div style="font:500 14px Inter,sans-serif;color:#2D5016;letter-spacing:-.01em">Drift</div>
+      <div style="font:400 20px/1.4 Lora,Georgia,serif;color:#1C1410">Good afternoon.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:200px minmax(0,1fr) 200px;gap:20px;flex:1;min-height:0">
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:22px;display:flex;flex-direction:column">
+        <div style="font:500 12.5px Inter,sans-serif;color:#1C1410;margin-bottom:16px">Notes</div>
+        <div style="font:400 13.5px/1.5 Lora,Georgia,serif;color:#1C1410;margin-bottom:8px">Sony vs Bose</div>
+        <div style="font:400 11.5px/1.75 Inter,sans-serif;color:#7A6E65">Bose QC45 won on price. Sony marginally higher rated.</div>
+      </div>
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 3px rgba(28,20,16,.05);display:flex;flex-direction:column;min-height:0">
+        <div style="height:58px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 30px;border-bottom:1px solid rgba(28,20,16,.07)">
+          <div style="font:500 13.5px Inter,sans-serif;color:#1C1410">Tasks · 5</div>
+          <i class="ph-thin ph-x" style="font-size:15px;color:#2D5016"></i>
+        </div>
+        <div style="flex:1;overflow:hidden;padding:26px 30px 0;display:flex;flex-direction:column;gap:26px">
+          <div>
+            <div style="font:500 10px Inter,sans-serif;color:#2D5016;letter-spacing:.11em;margin-bottom:16px">FROM COMPARE SESSIONS</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="border-left:2px solid #D4820A;padding:2px 0 2px 16px;display:flex;align-items:flex-start;gap:12px">
+                <i class="ph-thin ph-square" style="font-size:16px;color:#C6BBAD;margin-top:1px;flex:none"></i>
+                <div style="flex:1">
+                  <div style="font:400 13px/1.55 Inter,sans-serif;color:#1C1410;margin-bottom:4px">Buy Bose QC45 — $249 · Best Buy</div>
+                  <div style="font:400 11px Inter,sans-serif;color:#A2958A">Added from Compare · 2 minutes ago</div>
+                </div>
+                <i class="ph-thin ph-shopping-bag" style="font-size:15px;color:#A2958A;flex:none"></i>
+              </div>
+              <div style="border-left:2px solid #D4820A;padding:2px 0 2px 16px;display:flex;align-items:flex-start;gap:12px">
+                <i class="ph-thin ph-square" style="font-size:16px;color:#C6BBAD;margin-top:1px;flex:none"></i>
+                <div style="flex:1">
+                  <div style="font:400 13px/1.55 Inter,sans-serif;color:#1C1410;margin-bottom:4px">Check Sony warranty terms — amazon.com</div>
+                  <div style="font:400 11px Inter,sans-serif;color:#A2958A">Drift noticed · 2 minutes ago</div>
+                </div>
+                <i class="ph-thin ph-seal-check" style="font-size:15px;color:#A2958A;flex:none"></i>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font:500 10px Inter,sans-serif;color:#A2958A;letter-spacing:.11em;margin-bottom:14px">FROM RESEARCH</div>
+            <div style="font:400 12.5px/1.7 Inter,sans-serif;color:#A2958A;padding-left:18px">Research tasks will appear here</div>
+          </div>
+          <div>
+            <div style="font:500 10px Inter,sans-serif;color:#7A6E65;letter-spacing:.11em;margin-bottom:16px">PERSONAL</div>
+            <div style="display:flex;flex-direction:column;gap:16px;padding-left:18px">
+              <div style="display:flex;align-items:flex-start;gap:12px"><i class="ph-thin ph-check-square" style="font-size:16px;color:#2D5016;flex:none"></i><div style="font:400 13px/1.55 Inter,sans-serif;color:#A2958A;text-decoration:line-through">Renew the Shimla studio lease</div></div>
+              <div style="display:flex;align-items:flex-start;gap:12px"><i class="ph-thin ph-square" style="font-size:16px;color:#C6BBAD;flex:none"></i><div style="font:400 13px/1.55 Inter,sans-serif;color:#1C1410">Send Anjali the mixdown notes</div></div>
+              <div style="display:flex;align-items:flex-start;gap:12px"><i class="ph-thin ph-square" style="font-size:16px;color:#C6BBAD;flex:none"></i><div style="font:400 13px/1.55 Inter,sans-serif;color:#1C1410">Book the eye test — Thursday or Friday</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:none;padding:22px 30px 26px;display:flex;align-items:center;gap:12px">
+          <div style="flex:1;height:36px;border-radius:8px;background:#FAF7F2;border:1px solid rgba(28,20,16,.08);display:flex;align-items:center;padding:0 14px;font:400 12.5px Inter,sans-serif;color:#A2958A">Add a task…</div>
+          <div style="width:36px;height:36px;border-radius:8px;background:#2D5016;display:flex;align-items:center;justify-content:center" style-hover="background:#3A6B1A"><i class="ph-thin ph-plus" style="font-size:15px;color:#F6F2EA"></i></div>
+        </div>
+      </div>
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:22px;display:flex;flex-direction:column;align-items:center">
+        <div style="align-self:flex-start;font:500 12.5px Inter,sans-serif;color:#1C1410;margin-bottom:22px">Timer</div>
+        <div style="position:relative;width:96px;height:96px;margin-bottom:20px">
+          <svg viewBox="0 0 96 96" style="width:96px;height:96px;transform:rotate(-90deg)"><circle cx="48" cy="48" r="44" fill="none" stroke="#C6BBAD" stroke-width="2"></circle><circle cx="48" cy="48" r="44" fill="none" stroke="#2D5016" stroke-width="2" stroke-linecap="round" stroke-dasharray="276" stroke-dashoffset="100"></circle></svg>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 21px Inter,sans-serif;color:#1C1410">15:52</div>
+        </div>
+        <div style="font:400 11.5px Inter,sans-serif;color:#A2958A">Focus · 1 of 4</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 28</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The 2px amber left border is the only decoration in the panel. It means "Drift noticed this" — the same sentence the border carries on the Research feed's lead card.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Notes and Timer narrow rather than disappear, so the surface never loses its shape. Expansion is a 260ms ease-out width change on the three grid tracks.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Empty sections keep their header. A section that exists and holds nothing tells you more than a section that has been hidden.</div>
+</div>
+</div>
+
+<!-- S29 -->
+<div data-screen-label="29 Notes Expanded" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#D4820A;color:#FFFCF6;border-radius:4px">29</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">Notes expanded · captured above, typed below</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 9 · amber dot and cursor</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.1);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.1);background:#FAF7F2;display:flex;flex-direction:column">
+  <div style="height:42px;display:flex;align-items:center;padding:0 15px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.055)">
+    <div style="display:flex;gap:7px;margin-right:12px"><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div><div style="width:11px;height:11px;border-radius:50%;background:#DFD2BD"></div><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#A2958A"></i>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#FAF7F2;border-bottom:1px solid rgba(28,20,16,.045)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#C4B8AC"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="flex:1;max-width:600px;height:31px;border-radius:16px;background:#F2EDE4;border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;padding:0 14px;font:400 12.5px Inter,sans-serif;color:#A2958A">Search, or enter an address</div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#2D5016"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#7A6E65"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#BCAFA3"></i>
+  </div>
+  <div style="flex:1;overflow:hidden;background:#FAF7F2;padding:36px 60px 36px;display:flex;flex-direction:column">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:28px">
+      <div style="font:500 14px Inter,sans-serif;color:#2D5016;letter-spacing:-.01em">Drift</div>
+      <div style="font:400 20px/1.4 Lora,Georgia,serif;color:#1C1410">Good afternoon.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:200px minmax(0,1fr) 200px;gap:20px;flex:1;min-height:0">
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:22px;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px"><div style="font:500 12.5px Inter,sans-serif;color:#1C1410">Tasks</div><div style="font:400 11.5px Inter,sans-serif;color:#A2958A">5</div></div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="border-left:2px solid #D4820A;padding-left:12px;font:400 11.5px/1.6 Inter,sans-serif;color:#1C1410">Buy Bose QC45 — $249</div>
+          <div style="border-left:2px solid #D4820A;padding-left:12px;font:400 11.5px/1.6 Inter,sans-serif;color:#1C1410">Check Sony warranty terms</div>
+          <div style="padding-left:14px;font:400 11.5px/1.6 Inter,sans-serif;color:#7A6E65">Send Anjali the mixdown notes</div>
+        </div>
+      </div>
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 3px rgba(28,20,16,.05);display:flex;flex-direction:column;min-height:0">
+        <div style="height:58px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid rgba(28,20,16,.07)">
+          <div style="font:500 13.5px Inter,sans-serif;color:#1C1410">Notes</div>
+          <div style="display:flex;align-items:center;gap:16px"><i class="ph-thin ph-download-simple" style="font-size:15px;color:#7A6E65"></i><i class="ph-thin ph-x" style="font-size:15px;color:#2D5016"></i></div>
+        </div>
+        <div style="flex:1;overflow:hidden;padding:28px 32px 0;display:flex;flex-direction:column">
+          <div style="border-left:2px solid #2D5016;padding-left:20px;margin-bottom:30px">
+            <div style="font:500 10px Inter,sans-serif;color:#2D5016;letter-spacing:.11em;margin-bottom:14px">FROM YOUR SESSION — TODAY</div>
+            <div style="display:flex;align-items:flex-start;gap:11px;margin-bottom:8px">
+              <div style="width:6px;height:6px;border-radius:50%;background:#D4820A;margin-top:8px;flex:none"></div>
+              <div style="font:400 17px/1.55 Lora,Georgia,serif;color:#1C1410;max-width:560px">Sony vs Bose comparison: Bose QC45 won on price. Sony marginally higher rated.</div>
+            </div>
+            <div style="font:400 13px/1.8 Inter,sans-serif;color:#7A6E65;max-width:600px;padding-left:17px;margin-bottom:8px">$249 at Best Buy against $279 on Amazon, a $30 gap that held all week. Ratings 4.5 and 4.7 across 12,000 and 8,400 reviews.</div>
+            <div style="font:400 11px Inter,sans-serif;color:#A2958A;padding-left:17px">Captured by Drift · 2:14 PM</div>
+          </div>
+          <div style="font:400 14px/1.9 Inter,sans-serif;color:#1C1410;max-width:620px">Need to check if Bose has a student discount. Also check return policy before buying.<span style="display:inline-block;width:2px;height:16px;background:#D4820A;vertical-align:-3px;margin-left:2px"></span></div>
+        </div>
+        <div style="flex:none;padding:0 32px 26px;font:400 11px Inter,sans-serif;color:#A2958A">Saved locally · 2:31 PM</div>
+      </div>
+      <div style="border-radius:8px;background:#F2EDE4;box-shadow:0 1px 2px rgba(28,20,16,.04);padding:22px;display:flex;flex-direction:column;align-items:center">
+        <div style="align-self:flex-start;font:500 12.5px Inter,sans-serif;color:#1C1410;margin-bottom:22px">Timer</div>
+        <div style="position:relative;width:96px;height:96px;margin-bottom:20px">
+          <svg viewBox="0 0 96 96" style="width:96px;height:96px;transform:rotate(-90deg)"><circle cx="48" cy="48" r="44" fill="none" stroke="#C6BBAD" stroke-width="2"></circle><circle cx="48" cy="48" r="44" fill="none" stroke="#2D5016" stroke-width="2" stroke-linecap="round" stroke-dasharray="276" stroke-dashoffset="118"></circle></svg>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 21px Inter,sans-serif;color:#1C1410">14:07</div>
+        </div>
+        <div style="font:400 11.5px Inter,sans-serif;color:#A2958A">Focus · 1 of 4</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 29</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Two authorships, one page. The captured section carries a 2px pine left border and an amber dot; below it, unbordered, is the user's own writing. The border is where Drift stops.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The caret is 2px amber — the one amber outside an intelligence moment, justified because it marks the live point of interaction. 1.1s blink, no fade.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Export is a single icon in secondary colour. The panel is meant to read as paper, so no toolbar, no formatting row.</div>
+</div>
+</div>
+
+<!-- S30 -->
+<div data-screen-label="30 Widget Surface Evening" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#2D5016;color:#F6F2EA;border-radius:4px">30</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">Evening mode · pure calm</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 10 · no amber, no moonlight</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.2);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.18);background:#1E1A16;display:flex;flex-direction:column">
+  <div style="height:42px;display:flex;align-items:center;padding:0 15px;background:#2A2420;border-bottom:1px solid rgba(237,232,224,.07)">
+    <div style="display:flex;gap:7px;margin-right:12px"><div style="width:11px;height:11px;border-radius:50%;background:#4A423B"></div><div style="width:11px;height:11px;border-radius:50%;background:#53493F"></div><div style="width:11px;height:11px;border-radius:50%;background:#4A423B"></div></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#6F655B"></i>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#2A2420;border-bottom:1px solid rgba(237,232,224,.055)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#5F564D"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="flex:1;max-width:600px;height:31px;border-radius:16px;background:#332E28;border:1px solid rgba(237,232,224,.07);display:flex;align-items:center;padding:0 14px;font:400 12.5px Inter,sans-serif;color:#9A9085">Search, or enter an address</div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#4A7A2A"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#9A9085"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#6F655B"></i>
+  </div>
+  <div style="flex:1;overflow:hidden;background:#1E1A16;padding:48px 88px 30px;display:flex;flex-direction:column">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:40px">
+      <div style="font:500 14px Inter,sans-serif;color:#4A7A2A;letter-spacing:-.01em">Drift</div>
+      <div style="font:500 24px/1.4 Lora,Georgia,serif;color:#EDE8E0">Good evening.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;flex:1">
+      <div style="border-radius:8px;background:#332E28;padding:32px;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px"><div style="font:500 13px Inter,sans-serif;color:#EDE8E0">Tasks</div><i class="ph-thin ph-plus" style="font-size:15px;color:#4A7A2A"></i></div>
+        <div style="font:400 12.5px/1.85 Inter,sans-serif;color:#9A9085">Nothing yet. Drift will add items here when you compare products or finish a research session.</div>
+      </div>
+      <div style="border-radius:8px;background:#332E28;padding:32px;display:flex;flex-direction:column">
+        <div style="font:500 13px Inter,sans-serif;color:#EDE8E0;margin-bottom:18px">Notes</div>
+        <div style="font:400 12.5px/1.85 Inter,sans-serif;color:#9A9085">Start typing, or let Drift capture your research here.</div>
+        <div style="flex:1;margin-top:14px;border-radius:6px;background:rgba(30,26,22,.4)"></div>
+      </div>
+      <div style="border-radius:8px;background:#332E28;padding:32px;display:flex;flex-direction:column;align-items:center">
+        <div style="align-self:flex-start;font:500 13px Inter,sans-serif;color:#EDE8E0;margin-bottom:26px">Timer</div>
+        <div style="position:relative;width:120px;height:120px;margin-bottom:26px">
+          <svg viewBox="0 0 120 120" style="width:120px;height:120px;transform:rotate(-90deg)"><circle cx="60" cy="60" r="56" fill="none" stroke="#453D35" stroke-width="2"></circle><circle cx="60" cy="60" r="56" fill="none" stroke="#4A7A2A" stroke-width="2" stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="352"></circle></svg>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:500 28px Inter,sans-serif;color:#EDE8E0">25:00</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="height:30px;padding:0 18px;border-radius:8px;background:#4A7A2A;color:#1E1A16;display:flex;align-items:center;font:500 12px Inter,sans-serif" style-hover="background:#568C31">Start</div>
+          <div style="font:400 12px Inter,sans-serif;color:#9A9085" style-hover="color:#C0B6AB">Reset</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;justify-content:center;padding-top:26px;font:400 12px Inter,sans-serif;color:#9A9085">Open a new tab to start browsing <i class="ph-thin ph-arrow-right" style="font-size:14px;color:#4A7A2A"></i></div>
+  </div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 30</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Screen 26 in the evening palette. The greeting goes from 400 to 500 weight — that is the entire change. It reads as slightly lit rather than bolder.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Secondary text lifts to #9A9085 for the dark ground; the timer track drops to #453D35 so the muted pine arc still reads at 2px.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">No amber and no moonlight silver anywhere: nothing has been understood yet, so nothing is marked. The switch follows sunset, with a 400ms crossfade of colour only.</div>
+</div>
+</div>
+
+<!-- ========== SECTION C ========== -->
+<div style="display:flex;align-items:baseline;gap:14px;border-top:1px solid rgba(28,20,16,.14);padding-top:22px">
+<div style="font:500 17px Lora,Georgia,serif;color:#1C1410">Section C · Private Network, Pro tier</div>
+<div style="font:400 12px Inter,sans-serif;color:#8A7E74">Screens 31–34 · Premium, but still warm</div>
+</div>
+
+<!-- S31 -->
+<div data-screen-label="31 VPN Settings" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#2D5016;color:#F6F2EA;border-radius:4px">31</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">Private Network · not connected</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 11 · Pro user, unlocked</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.1);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.1);background:#FAF7F2;display:flex;flex-direction:column">
+  <div style="height:42px;display:flex;align-items:center;gap:5px;padding:0 15px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.055)">
+    <div style="display:flex;gap:7px;margin-right:10px"><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div><div style="width:11px;height:11px;border-radius:50%;background:#DFD2BD"></div><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div></div>
+    <div style="height:29px;display:flex;align-items:center;gap:9px;padding:0 13px;border-radius:8px;background:#FAF7F2;font:400 12.5px Inter,sans-serif;color:#1C1410"><i class="ph-thin ph-gear-six" style="font-size:12px;color:#2D5016"></i>Settings<i class="ph-thin ph-x" style="font-size:12px;color:#B5A89C;margin-left:4px"></i></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:164px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">Sony WH-1000XM5 — Kettle</span></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#A2958A;margin-left:4px"></i>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#FAF7F2;border-bottom:1px solid rgba(28,20,16,.045)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#C4B8AC"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="flex:1;max-width:600px;height:31px;border-radius:16px;background:#F2EDE4;border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;gap:9px;padding:0 14px"><i class="ph-thin ph-gear-six" style="font-size:13px;color:#2D5016"></i><div style="font:400 12.5px Inter,sans-serif;color:#7A6E65">drift://settings<span style="color:#B5A89C">/vpn</span></div></div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#2D5016"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#7A6E65"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#BCAFA3"></i>
+  </div>
+  <div style="flex:1;display:flex;overflow:hidden">
+    <div style="width:180px;flex:none;background:#F2EDE4;border-right:1px solid rgba(28,20,16,.07);padding:26px 14px;display:flex;flex-direction:column;gap:2px">
+      <div style="font:400 10px/1.7 Inter,sans-serif;color:#A2958A;letter-spacing:.09em;padding:0 10px;margin-bottom:12px">SETTINGS</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">General</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">Privacy</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">Intelligence</div>
+      <div style="padding:9px 10px;border-radius:6px;background:#FAF7F2;font:500 12.5px/1.6 Inter,sans-serif;color:#2D5016">VPN</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">Objects</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">About</div>
+    </div>
+    <div style="flex:1;overflow:hidden;padding:32px 64px 0;display:flex;flex-direction:column">
+      <div style="font:400 24px/1.45 Lora,Georgia,serif;color:#1C1410;margin-bottom:10px">Private Network</div>
+      <div style="font:400 13px/1.75 Inter,sans-serif;color:#7A6E65;margin-bottom:30px">Route your browsing through a secure, private network. Powered by Mullvad.</div>
+      <div style="border-radius:8px;background:#F2EDE4;display:flex;max-width:900px;overflow:hidden">
+        <div style="width:300px;flex:none;padding:36px 32px;border-right:1px solid rgba(28,20,16,.07);display:flex;flex-direction:column;align-items:flex-start">
+          <i class="ph-thin ph-shield" style="font-size:48px;color:#2D5016;margin-bottom:20px"></i>
+          <div style="font:500 20px Inter,sans-serif;color:#1C1410;margin-bottom:6px">VPN</div>
+          <div style="font:400 13px Inter,sans-serif;color:#7A6E65;margin-bottom:28px">Not connected</div>
+          <div style="width:100%;height:44px;border-radius:8px;background:#2D5016;color:#F6F2EA;display:flex;align-items:center;justify-content:center;font:500 13px Inter,sans-serif" style-hover="background:#3A6B1A">Connect</div>
+        </div>
+        <div style="flex:1;padding:36px 32px">
+          <div style="font:400 10.5px Inter,sans-serif;color:#A2958A;letter-spacing:.09em;margin-bottom:14px">SERVER LOCATION</div>
+          <div style="height:38px;border-radius:8px;background:#FAF7F2;border:1px solid rgba(28,20,16,.08);display:flex;align-items:center;justify-content:space-between;padding:0 14px;margin-bottom:24px">
+            <div style="display:flex;align-items:center;gap:10px;font:400 12.5px Inter,sans-serif;color:#1C1410"><i class="ph-thin ph-lightning" style="font-size:14px;color:#2D5016"></i>Automatic (closest server)</div>
+            <i class="ph-thin ph-caret-down" style="font-size:13px;color:#A2958A"></i>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <div style="height:28px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:14px;background:#2D5016;font:400 12px Inter,sans-serif;color:#F6F2EA"><i class="ph-thin ph-globe" style="font-size:13px"></i>Switzerland</div>
+            <div style="height:28px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:14px;border:1px solid rgba(45,80,22,.36);font:400 12px Inter,sans-serif;color:#2D5016" style-hover="background:rgba(45,80,22,.08)"><i class="ph-thin ph-globe" style="font-size:13px"></i>Sweden</div>
+            <div style="height:28px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:14px;border:1px solid rgba(45,80,22,.36);font:400 12px Inter,sans-serif;color:#2D5016" style-hover="background:rgba(45,80,22,.08)"><i class="ph-thin ph-globe" style="font-size:13px"></i>Germany</div>
+            <div style="height:28px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:14px;border:1px solid rgba(45,80,22,.36);font:400 12px Inter,sans-serif;color:#2D5016" style-hover="background:rgba(45,80,22,.08)"><i class="ph-thin ph-globe" style="font-size:13px"></i>Netherlands</div>
+            <div style="height:28px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:14px;border:1px solid rgba(45,80,22,.36);font:400 12px Inter,sans-serif;color:#2D5016" style-hover="background:rgba(45,80,22,.08)"><i class="ph-thin ph-globe" style="font-size:13px"></i>United States</div>
+          </div>
+        </div>
+      </div>
+      <div style="max-width:620px;padding-top:26px;display:flex;flex-direction:column;gap:12px">
+        <div style="font:400 13px/1.8 Inter,sans-serif;color:#7A6E65">Traffic is encrypted and routed through Mullvad's servers. Drift does not log your activity. Mullvad's privacy policy applies.</div>
+        <div style="display:flex;align-items:center;gap:7px;font:400 13px Inter,sans-serif;color:#2D5016" style-hover="color:#3A6B1A">View Mullvad privacy policy <i class="ph-thin ph-arrow-right" style="font-size:13px"></i></div>
+      </div>
+      <div style="margin-top:auto;padding:0 0 28px;display:flex;align-items:center;justify-content:flex-end;gap:16px">
+        <div style="height:22px;display:flex;align-items:center;padding:0 10px;border-radius:11px;border:1px solid rgba(28,20,16,.14);font:400 10.5px Inter,sans-serif;color:#7A6E65">Pro feature</div>
+        <div style="font:400 12.5px Inter,sans-serif;color:#2D5016" style-hover="color:#3A6B1A">Upgrade to Pro · $9.99/month</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 31</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Pine green throughout: this is trust and structure, not intelligence. No amber appears anywhere in the VPN surface until screen 34, where the offer itself is the moment of value.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The card splits status from choice — action on the left, geography on the right — so connecting never requires reading the server list first.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Mullvad is named in the subheading and again in the policy note. A network you route through should be sayable out loud.</div>
+</div>
+</div>
+
+<!-- S32 -->
+<div data-screen-label="32 VPN Connected" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#2D5016;color:#F6F2EA;border-radius:4px">32</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">Connected · Switzerland</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 12 · filled shield in chrome</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.1);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.1);background:#FAF7F2;display:flex;flex-direction:column">
+  <div style="height:42px;display:flex;align-items:center;gap:5px;padding:0 15px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.055)">
+    <div style="display:flex;gap:7px;margin-right:10px"><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div><div style="width:11px;height:11px;border-radius:50%;background:#DFD2BD"></div><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div></div>
+    <div style="height:29px;display:flex;align-items:center;gap:9px;padding:0 13px;border-radius:8px;background:#FAF7F2;font:400 12.5px Inter,sans-serif;color:#1C1410"><i class="ph-thin ph-gear-six" style="font-size:12px;color:#2D5016"></i>Settings<i class="ph-thin ph-x" style="font-size:12px;color:#B5A89C;margin-left:4px"></i></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:164px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">Sony WH-1000XM5 — Kettle</span></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#A2958A;margin-left:4px"></i>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#FAF7F2;border-bottom:1px solid rgba(28,20,16,.045)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#C4B8AC"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="display:flex;align-items:center;flex:1;max-width:620px;gap:10px">
+      <i class="ph-fill ph-shield" style="font-size:14px;color:#2D5016;flex:none"></i>
+      <div style="flex:1;height:31px;border-radius:16px;background:#F2EDE4;border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;gap:9px;padding:0 14px"><i class="ph-thin ph-gear-six" style="font-size:13px;color:#2D5016"></i><div style="font:400 12.5px Inter,sans-serif;color:#7A6E65">drift://settings<span style="color:#B5A89C">/vpn</span></div></div>
+    </div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#2D5016"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#7A6E65"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#BCAFA3"></i>
+  </div>
+  <div style="flex:1;display:flex;overflow:hidden">
+    <div style="width:180px;flex:none;background:#F2EDE4;border-right:1px solid rgba(28,20,16,.07);padding:26px 14px;display:flex;flex-direction:column;gap:2px">
+      <div style="font:400 10px/1.7 Inter,sans-serif;color:#A2958A;letter-spacing:.09em;padding:0 10px;margin-bottom:12px">SETTINGS</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">General</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">Privacy</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">Intelligence</div>
+      <div style="padding:9px 10px;border-radius:6px;background:#FAF7F2;font:500 12.5px/1.6 Inter,sans-serif;color:#2D5016">VPN</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">Objects</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">About</div>
+    </div>
+    <div style="flex:1;overflow:hidden;padding:32px 64px 0;display:flex;flex-direction:column">
+      <div style="font:400 24px/1.45 Lora,Georgia,serif;color:#1C1410;margin-bottom:10px">Private Network</div>
+      <div style="font:400 13px/1.75 Inter,sans-serif;color:#7A6E65;margin-bottom:30px">Route your browsing through a secure, private network. Powered by Mullvad.</div>
+      <div style="border-radius:8px;background:#F2EDE4;display:flex;max-width:900px;overflow:hidden">
+        <div style="width:300px;flex:none;padding:36px 32px;border-right:1px solid rgba(28,20,16,.07);display:flex;flex-direction:column;align-items:flex-start">
+          <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:50%;box-shadow:0 0 16px rgba(45,80,22,.2);margin-bottom:20px"><i class="ph-fill ph-shield" style="font-size:44px;color:#2D5016"></i></div>
+          <div style="font:500 20px Inter,sans-serif;color:#2D5016;margin-bottom:6px">Connected</div>
+          <div style="font:400 13px Inter,sans-serif;color:#7A6E65;margin-bottom:28px">Switzerland · Mullvad</div>
+          <div style="width:100%;height:44px;border-radius:8px;border:1px solid #2D5016;background:rgba(45,80,22,.07);color:#2D5016;display:flex;align-items:center;justify-content:center;font:500 13px Inter,sans-serif" style-hover="background:rgba(45,80,22,.14)">Disconnect</div>
+          <div style="padding-top:22px;font:400 12px/1.7 Inter,sans-serif;color:#7A6E65">Session: 42 minutes · Encrypted · No logs</div>
+        </div>
+        <div style="flex:1;padding:36px 32px">
+          <div style="font:400 10.5px Inter,sans-serif;color:#A2958A;letter-spacing:.09em;margin-bottom:14px">SERVER LOCATION</div>
+          <div style="height:38px;border-radius:8px;background:#FAF7F2;border:1px solid rgba(28,20,16,.08);display:flex;align-items:center;justify-content:space-between;padding:0 14px;margin-bottom:24px">
+            <div style="display:flex;align-items:center;gap:10px;font:400 12.5px Inter,sans-serif;color:#1C1410"><i class="ph-thin ph-globe" style="font-size:14px;color:#2D5016"></i>Switzerland · Zürich</div>
+            <i class="ph-thin ph-caret-down" style="font-size:13px;color:#A2958A"></i>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 32px;max-width:420px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid rgba(28,20,16,.07)"><div style="font:400 12.5px Inter,sans-serif;color:#7A6E65">Latency</div><div style="font:400 12.5px Inter,sans-serif;color:#2D5016">12 ms</div></div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:12px;border-bottom:1px solid rgba(28,20,16,.07)"><div style="font:400 12.5px Inter,sans-serif;color:#7A6E65">Protocol</div><div style="font:400 12.5px Inter,sans-serif;color:#1C1410">WireGuard</div></div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px"><div style="font:400 12.5px Inter,sans-serif;color:#7A6E65">Data this session</div><div style="font:400 12.5px Inter,sans-serif;color:#1C1410">148 MB</div></div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px"><div style="font:400 12.5px Inter,sans-serif;color:#7A6E65">DNS leak</div><div style="font:400 12.5px Inter,sans-serif;color:#2D5016">None</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="max-width:620px;padding-top:26px;display:flex;flex-direction:column;gap:12px">
+        <div style="font:400 13px/1.8 Inter,sans-serif;color:#7A6E65">Traffic is encrypted and routed through Mullvad's servers. Drift does not log your activity. Mullvad's privacy policy applies.</div>
+        <div style="display:flex;align-items:center;gap:7px;font:400 13px Inter,sans-serif;color:#2D5016" style-hover="color:#3A6B1A">View Mullvad privacy policy <i class="ph-thin ph-arrow-right" style="font-size:13px"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 32</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">VPN active state: filled pine green shield in the address bar joins the local-first leaf indicator. The settings card shows the filled shield with an ambient green glow. No other changes to the browsing experience.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Outline means available, filled means running — the same grammar the tray icon uses. The glow is a single 16px pine shadow at 20%, warmth rather than neon.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Connect transition: 300ms ease-out on the icon fill and label, no spinner. Latency only turns pine below 40ms.</div>
+</div>
+</div>
+
+<!-- S33 -->
+<div data-screen-label="33 Server Selector" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#2D5016;color:#F6F2EA;border-radius:4px">33</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">Server location · expanded</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 13 · latency, no flags</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.1);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.1);background:#FAF7F2;display:flex;flex-direction:column">
+  <div style="height:42px;display:flex;align-items:center;gap:5px;padding:0 15px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.055)">
+    <div style="display:flex;gap:7px;margin-right:10px"><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div><div style="width:11px;height:11px;border-radius:50%;background:#DFD2BD"></div><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div></div>
+    <div style="height:29px;display:flex;align-items:center;gap:9px;padding:0 13px;border-radius:8px;background:#FAF7F2;font:400 12.5px Inter,sans-serif;color:#1C1410"><i class="ph-thin ph-gear-six" style="font-size:12px;color:#2D5016"></i>Settings<i class="ph-thin ph-x" style="font-size:12px;color:#B5A89C;margin-left:4px"></i></div>
+    <div style="height:29px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:8px;font:400 12.5px Inter,sans-serif;color:#7A6E65;max-width:164px;overflow:hidden;white-space:nowrap"><div style="width:11px;height:11px;border-radius:3px;background:#E4DED2;flex:none"></div><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">Sony WH-1000XM5 — Kettle</span></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#A2958A;margin-left:4px"></i>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#FAF7F2;border-bottom:1px solid rgba(28,20,16,.045)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#C4B8AC"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="flex:1;max-width:600px;height:31px;border-radius:16px;background:#F2EDE4;border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;gap:9px;padding:0 14px"><i class="ph-thin ph-gear-six" style="font-size:13px;color:#2D5016"></i><div style="font:400 12.5px Inter,sans-serif;color:#7A6E65">drift://settings<span style="color:#B5A89C">/vpn</span></div></div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#2D5016"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#7A6E65"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#BCAFA3"></i>
+  </div>
+  <div style="flex:1;display:flex;overflow:hidden">
+    <div style="width:180px;flex:none;background:#F2EDE4;border-right:1px solid rgba(28,20,16,.07);padding:26px 14px;display:flex;flex-direction:column;gap:2px">
+      <div style="font:400 10px/1.7 Inter,sans-serif;color:#A2958A;letter-spacing:.09em;padding:0 10px;margin-bottom:12px">SETTINGS</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">General</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">Privacy</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">Intelligence</div>
+      <div style="padding:9px 10px;border-radius:6px;background:#FAF7F2;font:500 12.5px/1.6 Inter,sans-serif;color:#2D5016">VPN</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">Objects</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">About</div>
+    </div>
+    <div style="flex:1;overflow:hidden;padding:32px 64px 0;display:flex;flex-direction:column;position:relative">
+      <div style="font:400 24px/1.45 Lora,Georgia,serif;color:#1C1410;margin-bottom:10px">Private Network</div>
+      <div style="font:400 13px/1.75 Inter,sans-serif;color:#7A6E65;margin-bottom:30px">Route your browsing through a secure, private network. Powered by Mullvad.</div>
+      <div style="border-radius:8px;background:#F2EDE4;display:flex;max-width:900px;overflow:hidden">
+        <div style="width:300px;flex:none;padding:36px 32px;border-right:1px solid rgba(28,20,16,.07);display:flex;flex-direction:column;align-items:flex-start">
+          <i class="ph-thin ph-shield" style="font-size:48px;color:#2D5016;margin-bottom:20px"></i>
+          <div style="font:500 20px Inter,sans-serif;color:#1C1410;margin-bottom:6px">VPN</div>
+          <div style="font:400 13px Inter,sans-serif;color:#7A6E65;margin-bottom:28px">Not connected</div>
+          <div style="width:100%;height:44px;border-radius:8px;background:#2D5016;color:#F6F2EA;display:flex;align-items:center;justify-content:center;font:500 13px Inter,sans-serif">Connect</div>
+        </div>
+        <div style="flex:1;padding:36px 32px">
+          <div style="font:400 10.5px Inter,sans-serif;color:#A2958A;letter-spacing:.09em;margin-bottom:14px">SERVER LOCATION</div>
+          <div style="height:38px;border-radius:8px;background:#FAF7F2;border:1px solid #2D5016;display:flex;align-items:center;justify-content:space-between;padding:0 14px">
+            <div style="display:flex;align-items:center;gap:10px;font:400 12.5px Inter,sans-serif;color:#1C1410"><i class="ph-thin ph-globe" style="font-size:14px;color:#2D5016"></i>Switzerland</div>
+            <i class="ph-thin ph-caret-up" style="font-size:13px;color:#2D5016"></i>
+          </div>
+        </div>
+      </div>
+      <div style="position:absolute;left:566px;top:196px;width:280px;border-radius:8px;background:#F2EDE4;border:1px solid rgba(28,20,16,.07);box-shadow:0 20px 48px rgba(28,20,16,.18),0 1px 3px rgba(28,20,16,.07);padding:18px 0 8px;z-index:5">
+        <div style="padding:0 18px 14px;font:500 14px Inter,sans-serif;color:#1C1410">Choose server location</div>
+        <div style="margin:0 18px 12px;height:32px;border-radius:8px;background:#FAF7F2;border:1px solid rgba(28,20,16,.08);display:flex;align-items:center;gap:9px;padding:0 12px"><i class="ph-thin ph-magnifying-glass" style="font-size:13px;color:#A2958A"></i><div style="font:400 12px Inter,sans-serif;color:#A2958A">Search countries…</div></div>
+        <div style="padding:0 8px">
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px;background:rgba(45,80,22,.08)"><i class="ph-thin ph-globe" style="font-size:15px;color:#2D5016"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#1C1410">Switzerland</div><div style="font:400 11.5px Inter,sans-serif;color:#2D5016">12ms</div><i class="ph-thin ph-check" style="font-size:14px;color:#2D5016"></i></div>
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px" style-hover="background:rgba(250,247,242,.8)"><i class="ph-thin ph-globe" style="font-size:15px;color:#A2958A"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#1C1410">Germany</div><div style="font:400 11.5px Inter,sans-serif;color:#2D5016">18ms</div></div>
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px" style-hover="background:rgba(250,247,242,.8)"><i class="ph-thin ph-globe" style="font-size:15px;color:#A2958A"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#1C1410">Netherlands</div><div style="font:400 11.5px Inter,sans-serif;color:#2D5016">21ms</div></div>
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px" style-hover="background:rgba(250,247,242,.8)"><i class="ph-thin ph-globe" style="font-size:15px;color:#A2958A"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#1C1410">France</div><div style="font:400 11.5px Inter,sans-serif;color:#2D5016">24ms</div></div>
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px" style-hover="background:rgba(250,247,242,.8)"><i class="ph-thin ph-globe" style="font-size:15px;color:#A2958A"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#1C1410">Sweden</div><div style="font:400 11.5px Inter,sans-serif;color:#2D5016">31ms</div></div>
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px" style-hover="background:rgba(250,247,242,.8)"><i class="ph-thin ph-globe" style="font-size:15px;color:#A2958A"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#1C1410">United Kingdom</div><div style="font:400 11.5px Inter,sans-serif;color:#2D5016">36ms</div></div>
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px" style-hover="background:rgba(250,247,242,.8)"><i class="ph-thin ph-globe" style="font-size:15px;color:#A2958A"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#1C1410">Norway</div><div style="font:400 11.5px Inter,sans-serif;color:#7A6E65">44ms</div></div>
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px" style-hover="background:rgba(250,247,242,.8)"><i class="ph-thin ph-globe" style="font-size:15px;color:#A2958A"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#1C1410">Spain</div><div style="font:400 11.5px Inter,sans-serif;color:#7A6E65">52ms</div></div>
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px" style-hover="background:rgba(250,247,242,.8)"><i class="ph-thin ph-globe" style="font-size:15px;color:#A2958A"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#1C1410">Canada</div><div style="font:400 11.5px Inter,sans-serif;color:#7A6E65">78ms</div></div>
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px" style-hover="background:rgba(250,247,242,.8)"><i class="ph-thin ph-globe" style="font-size:15px;color:#A2958A"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#1C1410">United States</div><div style="font:400 11.5px Inter,sans-serif;color:#7A6E65">84ms</div></div>
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px" style-hover="background:rgba(250,247,242,.8)"><i class="ph-thin ph-globe" style="font-size:15px;color:#A2958A"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#1C1410">Japan</div><div style="font:400 11.5px Inter,sans-serif;color:#7A6E65">112ms</div></div>
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px" style-hover="background:rgba(250,247,242,.8)"><i class="ph-thin ph-globe" style="font-size:15px;color:#A2958A"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#1C1410">Australia</div><div style="font:400 11.5px Inter,sans-serif;color:#7A6E65">148ms</div></div>
+        </div>
+        <div style="margin-top:6px;border-top:1px solid rgba(28,20,16,.07);padding:8px">
+          <div style="height:34px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:6px" style-hover="background:rgba(45,80,22,.08)"><i class="ph-thin ph-lightning" style="font-size:15px;color:#2D5016"></i><div style="flex:1;font:400 13px Inter,sans-serif;color:#2D5016">Automatic (closest)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 33</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">No flags. Country name and latency are enough to choose by, and a list of names reads faster than a list of pictures.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Latency below 40ms is pine; above it the number drops to secondary text. Faster is greener, so the ranking is legible without sorting controls.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Automatic sits last, under a rule — it is a fallback, not a recommendation, and the list above it is the actual decision.</div>
+</div>
+</div>
+
+<!-- S34 -->
+<div data-screen-label="34 Pro Upgrade" style="display:flex;gap:26px;align-items:flex-start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:baseline;gap:10px"><span style="font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:#D4820A;color:#FFFCF6;border-radius:4px">34</span><span style="font:500 13px Inter,sans-serif;color:#1C1410">Locked · the Pro offer</span><span style="font:400 12px Inter,sans-serif;color:#8A7E74">brief's screen 14 · amber as value, not alarm</span></div>
+<div style="width:1440px;height:812px;border-radius:10px;overflow:hidden;border:1px solid rgba(28,20,16,.1);box-shadow:0 1px 2px rgba(28,20,16,.05),0 16px 44px rgba(28,20,16,.1);background:#FAF7F2;display:flex;flex-direction:column">
+  <div style="height:42px;display:flex;align-items:center;gap:5px;padding:0 15px;background:#F2EDE4;border-bottom:1px solid rgba(28,20,16,.055)">
+    <div style="display:flex;gap:7px;margin-right:10px"><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div><div style="width:11px;height:11px;border-radius:50%;background:#DFD2BD"></div><div style="width:11px;height:11px;border-radius:50%;background:#D6C1A4"></div></div>
+    <div style="height:29px;display:flex;align-items:center;gap:9px;padding:0 13px;border-radius:8px;background:#FAF7F2;font:400 12.5px Inter,sans-serif;color:#1C1410"><i class="ph-thin ph-gear-six" style="font-size:12px;color:#2D5016"></i>Settings<i class="ph-thin ph-x" style="font-size:12px;color:#B5A89C;margin-left:4px"></i></div>
+    <i class="ph-thin ph-plus" style="font-size:14px;color:#A2958A;margin-left:4px"></i>
+  </div>
+  <div style="height:44px;display:flex;align-items:center;gap:16px;padding:0 18px;background:#FAF7F2;border-bottom:1px solid rgba(28,20,16,.045)">
+    <div style="display:flex;gap:14px;font-size:16px;color:#C4B8AC"><i class="ph-thin ph-caret-left"></i><i class="ph-thin ph-caret-right"></i><i class="ph-thin ph-arrow-clockwise"></i></div>
+    <div style="flex:1;max-width:600px;height:31px;border-radius:16px;background:#F2EDE4;border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;gap:9px;padding:0 14px"><i class="ph-thin ph-gear-six" style="font-size:13px;color:#2D5016"></i><div style="font:400 12.5px Inter,sans-serif;color:#7A6E65">drift://settings<span style="color:#B5A89C">/vpn</span></div></div>
+    <div style="flex:1"></div>
+    <div style="display:flex;align-items:center;gap:13px;margin-right:12px"><i class="ph-thin ph-leaf" style="font-size:16px;color:#2D5016"></i><i class="ph-thin ph-tray" style="font-size:16px;color:#7A6E65"></i></div>
+    <i class="ph-thin ph-dots-three" style="font-size:16px;color:#BCAFA3"></i>
+  </div>
+  <div style="flex:1;display:flex;overflow:hidden">
+    <div style="width:180px;flex:none;background:#F2EDE4;border-right:1px solid rgba(28,20,16,.07);padding:26px 14px;display:flex;flex-direction:column;gap:2px">
+      <div style="font:400 10px/1.7 Inter,sans-serif;color:#A2958A;letter-spacing:.09em;padding:0 10px;margin-bottom:12px">SETTINGS</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">General</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">Privacy</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">Intelligence</div>
+      <div style="padding:9px 10px;border-radius:6px;background:#FAF7F2;font:500 12.5px/1.6 Inter,sans-serif;color:#2D5016">VPN</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">Objects</div>
+      <div style="padding:9px 10px;border-radius:6px;font:400 12.5px/1.6 Inter,sans-serif;color:#7A6E65" style-hover="background:rgba(250,247,242,.7);color:#1C1410">About</div>
+    </div>
+    <div style="flex:1;overflow:hidden;padding:32px 64px 0;display:flex;flex-direction:column">
+      <div style="font:400 24px/1.45 Lora,Georgia,serif;color:#1C1410;margin-bottom:10px">Private Network</div>
+      <div style="font:400 13px/1.75 Inter,sans-serif;color:#7A6E65;margin-bottom:30px">Route your browsing through a secure, private network. Powered by Mullvad.</div>
+      <div style="border-radius:8px;background:#F2EDE4;max-width:900px;overflow:hidden">
+        <div style="display:flex">
+          <div style="width:300px;flex:none;padding:36px 32px;border-right:1px solid rgba(28,20,16,.07);display:flex;flex-direction:column;align-items:flex-start">
+            <i class="ph-thin ph-shield" style="font-size:48px;color:#C6BBAD;margin-bottom:20px"></i>
+            <div style="font:500 20px Inter,sans-serif;color:#7A6E65;margin-bottom:6px">VPN</div>
+            <div style="font:400 13px Inter,sans-serif;color:#A2958A;margin-bottom:28px">Not available on your plan</div>
+            <div style="width:100%;height:44px;border-radius:8px;border:1px solid #C6BBAD;color:#7A6E65;display:flex;align-items:center;justify-content:center;font:500 13px Inter,sans-serif">Connect</div>
+          </div>
+          <div style="flex:1;padding:36px 32px">
+            <div style="font:400 10.5px Inter,sans-serif;color:#C0B4A7;letter-spacing:.09em;margin-bottom:14px">SERVER LOCATION</div>
+            <div style="height:38px;border-radius:8px;background:rgba(250,247,242,.6);border:1px solid rgba(28,20,16,.06);display:flex;align-items:center;justify-content:space-between;padding:0 14px;margin-bottom:24px">
+              <div style="display:flex;align-items:center;gap:10px;font:400 12.5px Inter,sans-serif;color:#A2958A"><i class="ph-thin ph-lightning" style="font-size:14px;color:#C6BBAD"></i>Automatic (closest server)</div>
+              <i class="ph-thin ph-caret-down" style="font-size:13px;color:#C6BBAD"></i>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <div style="height:28px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:14px;border:1px solid rgba(28,20,16,.1);font:400 12px Inter,sans-serif;color:#A2958A"><i class="ph-thin ph-globe" style="font-size:13px"></i>Switzerland</div>
+              <div style="height:28px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:14px;border:1px solid rgba(28,20,16,.1);font:400 12px Inter,sans-serif;color:#A2958A"><i class="ph-thin ph-globe" style="font-size:13px"></i>Sweden</div>
+              <div style="height:28px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:14px;border:1px solid rgba(28,20,16,.1);font:400 12px Inter,sans-serif;color:#A2958A"><i class="ph-thin ph-globe" style="font-size:13px"></i>Germany</div>
+              <div style="height:28px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:14px;border:1px solid rgba(28,20,16,.1);font:400 12px Inter,sans-serif;color:#A2958A"><i class="ph-thin ph-globe" style="font-size:13px"></i>Netherlands</div>
+              <div style="height:28px;display:flex;align-items:center;gap:7px;padding:0 12px;border-radius:14px;border:1px solid rgba(28,20,16,.1);font:400 12px Inter,sans-serif;color:#A2958A"><i class="ph-thin ph-globe" style="font-size:13px"></i>United States</div>
+            </div>
+          </div>
+        </div>
+        <div style="border-top:1px solid #D4820A;background:rgba(212,130,10,.06);padding:30px 32px;display:flex;align-items:flex-end;justify-content:space-between;gap:40px">
+          <div style="max-width:440px">
+            <div style="font:400 19px/1.5 Lora,Georgia,serif;color:#1C1410;margin-bottom:10px">Private Network is a Pro feature.</div>
+            <div style="font:400 13px/1.75 Inter,sans-serif;color:#7A6E65">Get encrypted browsing, cloud sync, and the Drift widget library.</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:22px;flex:none">
+            <div style="height:40px;padding:0 20px;border-radius:8px;background:#2D5016;color:#F6F2EA;display:flex;align-items:center;font:500 13px Inter,sans-serif" style-hover="background:#3A6B1A">Upgrade to Pro · $9.99/month</div>
+            <div style="display:flex;align-items:center;gap:7px;font:400 13px Inter,sans-serif;color:#2D5016" style-hover="color:#3A6B1A">See what's included <i class="ph-thin ph-arrow-right" style="font-size:13px"></i></div>
+          </div>
+        </div>
+      </div>
+      <div style="max-width:620px;padding-top:26px;font:400 13px/1.8 Inter,sans-serif;color:#7A6E65">Traffic is encrypted and routed through Mullvad's servers. Drift does not log your activity. Mullvad's privacy policy applies.</div>
+    </div>
+  </div>
+</div>
+</div>
+<div style="width:244px;padding-top:42px;display:flex;flex-direction:column;gap:16px">
+  <div style="font:400 10px/1.7 ui-monospace,Menlo,monospace;color:#9C9086;letter-spacing:.08em">ANNOTATION · 34</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The Pro upgrade prompt uses the amber-gold tint — the only non-intelligence use of amber, justified because this is a product value moment, not a warning.</div>
+  <div style="height:1px;background:rgba(28,20,16,.1)"></div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">Locked means quiet, not forbidden: the shield drops to #C6BBAD, the button keeps its shape in muted grey, and nothing is crossed out or reddened.</div>
+  <div style="font:400 11.5px/1.8 Inter,sans-serif;color:#7A6E65">The offer is inline at the foot of the card, never a modal. It reads like the waiter mentioning the specials — once, on the way past.</div>
+</div>
+</div>
+
+</div>
+</x-dc>
+</body>
+</html>
