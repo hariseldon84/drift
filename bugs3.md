@@ -293,3 +293,14 @@ Root cause: Full download history tab (EP-01-T11b) is in backlog. No keyboard sh
 
 Workaround: ⌘J opens ~/Downloads in Finder (Chrome parity shortcut). Full download history page logged as EP-01-T11b in tasks.md backlog.
 
+---
+
+## BUG-28 | EP-06-T08 | FIXED 2026-09-18
+
+**GitHub rejected `main` because CEF and generated build output exceeded the 100 MB per-file limit.**
+
+Root cause: the full CEF binary distribution was tracked under `docs/`, and the generated `build/` tree was tracked as source. The same 229 MB Chromium Embedded Framework binary therefore existed twice. Removing these files in a later commit would not help because the oversized blobs were already reachable from the unpublished branch history.
+
+Fix: Replaced the unpublished `main` history with a clean root commit while preserving the previous history at the local backup ref `backup/pre-github-cleanup-20260918`. Added `.gitignore` rules for generated builds, downloaded dependencies, local agent state, and macOS metadata. Added `scripts/fetch-cef.sh` to download the pinned per-architecture CEF distribution into `.deps/` and verify its SHA-1. CMake now discovers that local dependency by default and gives a direct bootstrap instruction when it is missing. Git LFS was not used because CEF and app bundles are reproducible dependencies/artifacts, not authored source assets.
+
+Verification: GitHub accepted `main`; its largest blob is 5.4 MB. A fresh GitHub clone downloaded and checksum-verified CEF, extracted it into ignored `.deps/`, and configured successfully. A separate clean 244-step build completed and the resulting app launched with its CEF helper processes.

@@ -1,7 +1,7 @@
 # Drift — Status Quo
 
 > One page. Rewritten (not appended) when state changes materially. Read this first every session.
-> Last updated: 2026-09-18 (SP-03 complete + BUG-23/24 fixed)
+> Last updated: 2026-09-18 (SP-03 complete + reproducible Git/CEF bootstrap)
 
 ---
 
@@ -19,9 +19,10 @@
 - **EP-01-T09 DONE** — Bookmarks: star button in URL pill (⌘D), bookmarks bar (⌘⇧B toggle), JSON persistence at ~/Library/Application Support/Drift/bookmarks.json (2026-09-18)
 - **EP-01-T10 DONE** — History: recorded on every page title change, 5000-entry cap, floating panel (⌘Y), double-click to navigate, Clear History, JSON persistence (2026-09-18)
 - **EP-01-T11 DONE** — Downloads: CefDownloadHandler, NSSavePanel for "Save Link As", per-item "Show in Finder" + "✕" clear in download bar, amber progress, auto-hides 5s after complete (2026-09-18)
-- bugs3.md: 24 bugs logged; BUG-01–BUG-24 all fixed
+- **EP-06-T08 DONE** — clean GitHub source history; generated `build/` and downloaded CEF excluded; pinned checksum-verified CEF bootstrap works from a fresh clone (2026-09-18)
+- bugs3.md: 28 bugs logged; BUG-01–BUG-26 and BUG-28 fixed; BUG-27 has a shipped workaround and a backlog follow-up
 
-Key architecture facts in CLAUDE.md. Key gotchas in handover.md.
+Key architecture facts in CLAUDE.md. Key gotchas and clone/build commands in handover.md and commands.md.
 
 ## What is half-built
 

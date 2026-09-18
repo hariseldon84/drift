@@ -91,7 +91,6 @@
 
 ## SP-14 — Distribution & Beta
 
-- [ ] EP-06-T08: Reproducible source checkout — exclude generated artifacts and bootstrap the pinned CEF dependency (PRD §22)
 - [ ] EP-06-T01: macOS app bundle — signed, notarised, Gatekeeper compliant
 - [ ] EP-06-T02: .dmg installer — drag-to-Applications, auto-launch
 - [ ] EP-06-T03: Auto-update — Sparkle 2.x, silent background updates
@@ -136,3 +135,4 @@
 - [x] status_quo.md — cold-start anchor written
 - [x] Serif typeface → Lora (2026-09-16)
 - [x] Action execution targets → Amazon, Best Buy, Flipkart (2026-09-16)
+- [x] EP-06-T08: Reproducible source checkout — generated artifacts excluded; pinned CEF bootstrap verified from a fresh clone (2026-09-18, PRD §22)
