@@ -1,5 +1,9 @@
 # Drift Browser — PRD Gate
 
+> Historical gate questions. Resolved decisions live in `PRD.md`; the Mac-first
+> platform answer was superseded by the four-platform decision in PRD §21 on
+> 2026-09-18.
+
 The PRD is intentionally **not yet written**.
 
 Per product process, it should be created only after the preceding decisions are reviewed and frozen.

@@ -1,5 +1,10 @@
 # Drift Browser — Technical Architecture
 
+> Historical product-system architecture. Platform and code-organization assumptions
+> are superseded by `docs/08_cross_platform_architecture.md` (2026-09-18).
+> The Web Object, page-understanding, action, security, and provenance concepts below
+> remain design inputs unless the PRD says otherwise.
+
 ## 1. Architectural Thesis
 
 Drift should be built as a **Chromium-derived desktop browser shell** whose differentiated capability sits above the rendering engine.

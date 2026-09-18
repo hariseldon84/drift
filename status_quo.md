@@ -1,51 +1,51 @@
 # Drift — Status Quo
 
-> One page. Rewritten (not appended) when state changes materially. Read this first every session.
-> Last updated: 2026-09-18 (SP-03 complete + reproducible Git/CEF bootstrap)
-
----
+> One-page cold-start anchor. Rewritten, not appended, when state changes materially.
+> Last updated: 2026-09-18 (cross-platform Phase 0 and Phase 1 complete)
 
 ## What works
 
-- CEF 152 bootstrap on macOS ARM64: window opens, multi-process confirmed
-- **EP-01-T01 DONE** — CEF bootstrap (2026-09-16)
-- **EP-01-T02 DONE** — Tab bar: open, close, drag-reorder, pin, favicon letter badge (2026-09-16)
-- **EP-01-T03 DONE** — Address bar: URL navigation, search fallback, HTTPS lock icon (2026-09-16)
-- **EP-01-T04 DONE** — Back/forward/reload buttons + amber loading progress bar (2026-09-17)
-- **EP-01-T05 DONE** — Window management: fullscreen, zoom, resize, miniaturize, double-click-to-zoom (2026-09-17)
-- **EP-01-T06 DONE** — Keyboard shortcuts: ⌘T ⌘W ⌘L ⌘R ⌘⇧T ⌘1–9 ⌃Tab ⌃⇧Tab (2026-09-17)
-- **EP-01-T07 DONE** — Drift visual theme: Inter everywhere, warm palette, nav button hover/tint, URL host/path colour split (2026-09-17)
-- **EP-01-T08 DONE** — Context menus: page/link/image right-click; tab strip right-click with New/Duplicate/Close/Close Others/Pin (2026-09-17)
-- **EP-01-T09 DONE** — Bookmarks: star button in URL pill (⌘D), bookmarks bar (⌘⇧B toggle), JSON persistence at ~/Library/Application Support/Drift/bookmarks.json (2026-09-18)
-- **EP-01-T10 DONE** — History: recorded on every page title change, 5000-entry cap, floating panel (⌘Y), double-click to navigate, Clear History, JSON persistence (2026-09-18)
-- **EP-01-T11 DONE** — Downloads: CefDownloadHandler, NSSavePanel for "Save Link As", per-item "Show in Finder" + "✕" clear in download bar, amber progress, auto-hides 5s after complete (2026-09-18)
-- **EP-06-T08 DONE** — clean GitHub source history; generated `build/` and downloaded CEF excluded; pinned checksum-verified CEF bootstrap works from a fresh clone (2026-09-18)
-- bugs3.md: 28 bugs logged; BUG-01–BUG-26 and BUG-28 fixed; BUG-27 has a shipped workaround and a backlog follow-up
-
-Key architecture facts in CLAUDE.md. Key gotchas and clone/build commands in handover.md and commands.md.
+- The macOS CEF 152 browser builds and runs with its multi-process architecture.
+- EP-01-T01–T08: browser shell, tabs, navigation, window behavior, keyboard shortcuts, Drift theme, and context menus are complete.
+- EP-01-T09: basic bookmark toggle/bar/navigation and JSON persistence work.
+- EP-01-T10: basic history recording/panel/navigation/clear and JSON persistence work.
+- EP-01-T11: download save flow/progress/clear/reveal-in-Finder works.
+- EP-06-T08: clean macOS clone/bootstrap works; CEF and generated artifacts are ignored and fetched/generated locally.
+- GitHub `V018Sep2026` pins the pre-migration snapshot at `9dfda174291a6345032fbb62e50c67bcd2475af9`; `main` descends from that checkpoint.
+- Published commit attribution is `hariseldon84`; a local backup ref preserves the pre-rewrite commit objects.
+- The product scope and architecture now explicitly target macOS, Windows, Android, and iPhone.
+- EP-00-T01: shared C++20 core, native shells, BrowserEngine adapters, bounded Lit surfaces, and the platform capability matrix are locked in `docs/08_cross_platform_architecture.md`.
 
 ## What is half-built
 
-Nothing.
+- Nothing in source is half-migrated. The current macOS implementation remains intact in `src/browser/`.
+- The architecture exists in documentation; its shared contracts and test harness do not exist yet.
 
 ## What is missing
 
-- EP-01-T12: Chrome extension compatibility (SP-04, next)
-- EP-02 onwards: Page understanding pipeline
+- Automated C++ core tests, serialization fixtures, and macOS characterization checks.
+- Platform-neutral command/event/error types and `BrowserEngine` contract.
+- Extracted shared state for bookmarks, history, downloads, tabs, and navigation.
+- macOS CEF adapter behind the new engine boundary.
+- SQLite repository implementation and migration tests.
+- Windows, Android, and iPhone runnable proofs.
+- The page-understanding, object, Compare Mode, action, and widget product layers.
 
 ## In flight
 
-Nothing.
+EP-00 remains the active migration epic. No source extraction is half-finished; Phase 1 is complete and SP-05/Phase 2 is the next bounded unit of work.
 
 ## Open decisions waiting on Anand
 
 | Decision | Needed by | Task |
 |---|---|---|
-| VPN vendor: Mullvad vs Guardian | V1 planning | EP-09 |
-| Analytics: Matomo self-hosted confirmed, or defer? | SP-14 | EP-06-T07 |
-| Beta programme: invite-only vs open waitlist | SP-14 | EP-06 |
-| Symbol server for Breakpad: self-hosted or defer? | SP-14 | EP-06-T06 |
+| VPN vendor: Mullvad vs Guardian | Scale planning | EP-09 |
+| Analytics: self-hosted Matomo or explicit deferral | Distribution planning | EP-06-T07 |
+| Beta program: invite-only or open waitlist | Distribution planning | EP-06 |
+| Crash symbol infrastructure | Distribution planning | EP-06-T06 |
+
+Android WebView versus GeckoView is not a preference question yet; EP-00-T12 resolves it from the measured platform proof.
 
 ## The single most useful next action
 
-SP-04: EP-01-T12 Chrome extension compatibility — CRX load, chrome.* API surface.
+Start Phase 2 with EP-00-T02 and EP-00-T03: add the smallest runnable C++ test target, define platform-neutral IDs/commands/events/errors, and capture current bookmark/state behavior before extraction.

@@ -1,138 +1,130 @@
 # Drift — Tasks
 
-> One line per task. Detail in PRD.md. Reference by code only: "EP-04-T03 is blocked."
-> Completed work moves to ## Done. Never deleted.
+> One line per task. Detail in PRD.md. Reference by code only: "EP-00-T03 is blocked."
+> Completed work moves to `## Done` and is never deleted.
 
 ---
 
-## SP-01 — Chromium Shell (part 1) · IN PROGRESS
+## Active Epic — Cross-Platform Migration
 
-- [x] EP-01-T01: Bootstrap CEF on macOS — basic window renders, process architecture
-- [x] EP-01-T02: Tab bar — open, close, reorder (drag), pin, favicon
-- [x] EP-01-T03: Address bar — URL navigation, autocomplete, search engine
-- [x] EP-01-T04: Back / forward / reload, loading progress indicator
-- [x] EP-01-T05: Window management — fullscreen, native macOS resize/zoom
+- [ ] EP-00-T00: Execute the approved four-platform migration (`_wip_cross_platform_migration.md`; PRD §21)
 
-## SP-02 — Chromium Shell (part 2)
+## SP-05 — Shared Contracts and Characterization · NEXT
 
-- [x] EP-01-T06: Keyboard shortcuts — Chrome parity (⌘T, ⌘W, ⌘L, ⌘R, ⌘⇧T, ⌘1–9, ⌃Tab, ⌃⇧Tab)
-- [x] EP-01-T07: Drift visual theme on chrome — warm cream palette, Inter, thin tab bar
-- [x] EP-01-T08: Context menus — right-click on page, tab, link, image
+- [ ] EP-00-T02: Add platform-neutral browser identifiers, commands, events, errors, and deterministic tests
+- [ ] EP-00-T03: Add macOS characterization fixtures and a behavior-parity gate before extraction
 
-## SP-03 — Browser Baseline
+## SP-06 — Shared State Extraction
 
-- [x] EP-01-T09: Bookmarks — add, folder, toolbar, import from Chrome/Safari
-- [x] EP-01-T10: History — browsing history, search, clear
-- [x] EP-01-T11: Downloads — download bar, progress, open/show in Finder
+- [ ] EP-00-T04: Extract bookmarks behind a tested shared-core state model
+- [ ] EP-00-T05: Extract history and download state behind shared-core models
+- [ ] EP-00-T06: Extract tab, navigation, and session state behind shared-core models
 
-## SP-04 — Extension Compatibility
+## SP-07 — Engine and Persistence Boundaries
 
-- [ ] EP-01-T12: Chrome extension compatibility — CRX load, chrome.* API surface
+- [ ] EP-00-T07: Introduce the platform-neutral BrowserEngine interface and macOS CEF adapter
+- [ ] EP-00-T08: Preserve JSON compatibility, then add SQLite behind versioned repository interfaces
+- [ ] EP-00-T09: Pass the macOS behavior-parity and performance gate after extraction
 
-## SP-05 — Password Manager & Settings
+## SP-08 — Windows Proof
 
-- [ ] EP-01-T13: Password manager — save/fill credentials, local keychain integration
-- [ ] EP-01-T14: Settings page — general, search engine, privacy, appearance
+- [ ] EP-00-T10: Build a Windows shell with one CEF tab driven by shared commands/events
+- [ ] EP-00-T11: Add pinned Windows CEF bootstrap and a Windows build/CI smoke path
 
-## SP-06 — Page Understanding Pipeline (part 1)
+## SP-09 — Mobile Proofs
 
-- [ ] EP-02-T01: DOM extraction module — JSON-LD, schema.org, OpenGraph parser
-- [ ] EP-02-T02: Heuristic rule engine — CSS selectors for price, title, rating, availability
+- [ ] EP-00-T12: Build an Android engine proof and decide WebView versus GeckoView from measured capability gaps
+- [ ] EP-00-T13: Build an iPhone WKWebView proof using the same shared command/event contract
+- [ ] EP-00-T14: Produce one normalized extraction result on Android and iPhone through the shared core
+- [ ] EP-00-T15: Pass the cross-platform foundation gate before feature sprints resume
 
-## SP-07 — Page Understanding Pipeline (part 2)
+## Post-Foundation Product Queue
 
-- [ ] EP-02-T03: Local ML classifier — product page vs non-product page
-- [ ] EP-02-T04: Confidence scoring — combine all pipeline signals into 0–1 score
-- [ ] EP-02-T05: Core ML model integration — local inference on macOS
-- [ ] EP-02-T06: Performance harness — full pipeline < 500ms on M1 8GB (GD-07)
-- [ ] EP-02-T07: Graceful degradation — stay silent if confidence < 0.5
-
-## SP-08 — Product Schema + Core ML
-
-- [ ] EP-03-T01: Product object schema (GD-02) — typed, validated, serialisable
-- [ ] EP-03-T02: Object materialisation — pipeline output → Product object
-
-## SP-09 — Object Recognition UI
-
-- [ ] EP-03-T03: Recognition indicator — amber-gold pill in chrome ("1 product recognised")
-- [ ] EP-03-T04: Object card (hover) — warm serif (Lora) name, key fields, "Add to Compare" CTA
-- [ ] EP-03-T05: Object Panel (full, right-side) — all fields, two-column, pine green actions
-- [ ] EP-03-T06: Object persistence — survives tab refresh, same-domain navigation
-- [ ] EP-03-T07: Multi-object pages — recognise primary (most prominent) product only
-
-## SP-10 — Compare Mode: Selection
-
-- [ ] EP-04-T01: Compare Tray — persistent bottom bar, held product(s), cross-tab
-- [ ] EP-04-T02: Cross-tab object state — held products survive tab switching for session
-
-## SP-11 — Compare Mode: Compare View
-
-- [ ] EP-04-T03: Compare View — two-column layout, matched field rows
-- [ ] EP-04-T04: Field matching logic — align fields, handle missing fields gracefully
-- [ ] EP-04-T05: Winner detection — lower price, higher rating → amber-gold cell highlight
-- [ ] EP-04-T06: Compare View actions — "Take Action", "Save Comparison" (local)
-- [ ] EP-04-T10: Compare limit enforcement — 2-product cap in V0
-
-## SP-12 — Compare Mode: Action Engine
-
-- [ ] EP-04-T07: Action Suggestion card — calm suggestion, non-pushy treatment
-- [ ] EP-04-T08: Action Confirmation gate — minimal modal, stoppable mid-action
-- [ ] EP-04-T09: Action execution — add-to-cart DOM interaction (Amazon, Best Buy, Flipkart)
-
-## SP-13 — Widget Surface
-
-- [ ] EP-05-T01: Widget surface container — renders when zero tabs open
-- [ ] EP-05-T02: Tasks widget — local list, receives Product objects from EP-04
-- [ ] EP-05-T03: Notes widget — local rich-text, captures Compare session summary
-- [ ] EP-05-T04: Timer widget — countdown + stopwatch, standalone
-- [ ] EP-05-T05: Widget layout — resize/reorder, preference saved locally
-- [ ] EP-05-T06: Object graph connection — Compare complete → "Add to Tasks" offer
-- [ ] EP-05-T07: New Tab trigger — widget surface as new tab page
-
-## SP-14 — Distribution & Beta
-
-- [ ] EP-06-T01: macOS app bundle — signed, notarised, Gatekeeper compliant
-- [ ] EP-06-T02: .dmg installer — drag-to-Applications, auto-launch
-- [ ] EP-06-T03: Auto-update — Sparkle 2.x, silent background updates
-- [ ] EP-06-T04: Set as default browser — first launch prompt, system API
-- [ ] EP-06-T05: First-run onboarding — Screen 11 design, import from Chrome/Safari
-- [ ] EP-06-T06: Crash reporting — Breakpad, local logs, no cloud telemetry
-- [ ] EP-06-T07: Basic analytics — Matomo opt-in only, local aggregate counts
+- [ ] EP-01-T12: Desktop Chrome extension compatibility — MV3 CRX load and required chrome.* API surface
+- [ ] EP-01-T13: Password manager — save/fill credentials with platform secure-storage adapters
+- [ ] EP-01-T14: Settings — shared settings model with platform-appropriate surfaces
+- [ ] EP-02-T01: DOM extraction — JSON-LD, schema.org, and OpenGraph into a normalized result
+- [ ] EP-02-T02: Heuristic rule engine — selectors for price, title, rating, and availability
+- [ ] EP-02-T03: Local ML classifier — product page versus non-product page
+- [ ] EP-02-T04: Confidence scoring — combine pipeline signals into a 0–1 score
+- [ ] EP-02-T05: Portable local inference — Core ML/ONNX/platform adapters behind one contract
+- [ ] EP-02-T06: Performance harness — enforce platform-specific pipeline budgets
+- [ ] EP-02-T07: Graceful degradation — stay silent when confidence is below 0.5
+- [ ] EP-03-T01: Product schema — typed, validated, serializable shared-core model
+- [ ] EP-03-T02: Object materialization — normalized pipeline output to Product
+- [ ] EP-03-T03: Recognition indicator — amber-gold product-recognized signal
+- [ ] EP-03-T04: Object card — key fields and Add to Compare action
+- [ ] EP-03-T05: Object Panel — complete product fields and actions
+- [ ] EP-03-T06: Object persistence — survive refresh and same-domain navigation
+- [ ] EP-03-T07: Multi-object pages — identify the primary product in the first release
+- [ ] EP-04-T01: Compare Tray — persistent cross-tab product selection
+- [ ] EP-04-T02: Cross-tab object state — preserve held products during the session
+- [ ] EP-04-T03: Compare View — two-column matched-field layout
+- [ ] EP-04-T04: Field matching — align fields and handle missing values
+- [ ] EP-04-T05: Winner detection — highlight lower price and higher rating
+- [ ] EP-04-T06: Compare actions — Take Action and local Save Comparison
+- [ ] EP-04-T07: Action suggestion — calm, non-pushy recommendation
+- [ ] EP-04-T08: Action confirmation — explicit, stoppable human gate
+- [ ] EP-04-T09: Action execution — Amazon, Best Buy, and Flipkart adapters
+- [ ] EP-04-T10: Compare limit — two products in the first release
+- [ ] EP-05-T01: Widget surface container — useful empty-tab/new-tab state
+- [ ] EP-05-T02: Tasks widget — local list connected to Product objects
+- [ ] EP-05-T03: Notes widget — local rich text and comparison capture
+- [ ] EP-05-T04: Timer widget — countdown and stopwatch
+- [ ] EP-05-T05: Widget layout — resize, reorder, and local preference persistence
+- [ ] EP-05-T06: Object graph connection — offer Add to Tasks after a comparison
+- [ ] EP-05-T07: New-tab trigger — expose the widget surface as the new tab page
+- [ ] EP-06-T01: macOS signed and notarized app bundle
+- [ ] EP-06-T02: macOS DMG installer
+- [ ] EP-06-T03: macOS auto-update through Sparkle
+- [ ] EP-06-T04: Platform default-browser registration and prompt
+- [ ] EP-06-T05: First-run onboarding and supported browser-data import
+- [ ] EP-06-T06: Local crash reporting and platform symbol management
+- [ ] EP-06-T07: Opt-in privacy-preserving analytics, or explicit launch deferral
 
 ---
 
-## Backlog — Browser Baseline Polish (queued after SP-05)
+## Backlog — Browser Baseline Polish
 
-- [ ] EP-01-T10a: History page as a tab (chrome://history-style) — HTML+JS rendered in a Drift-owned tab via custom scheme handler. Replaces the V0 NSPanel. Includes: grouped-by-day timeline, per-item timestamps, in-page search, per-item delete, "Delete browsing data" (time-range picker).
-- [ ] EP-01-T10b: ML-driven history categorisation — auto-tag every visited URL into categories (Work, News, Shopping, Social, Docs, Video…). Local model, no LLM at inference. Category chips as filters in the history page. Training data: LLM-labelled seed set of URL+title pairs → distil into small local classifier (Core ML). Feeds into EP-07 Research Mode later.
-- [ ] EP-01-T11a: Downloads — pause / resume / cancel per item, KB/s rate, ETA. Match Chrome's downloads shelf behaviour.
-- [ ] EP-01-T11b: Downloads page (chrome://downloads-style) as a tab — full history of past downloads, search, re-download, show in Finder.
+- [ ] EP-01-T10a: Shared History internal page — grouped timeline, search, item deletion, and time-range clearing
+- [ ] EP-01-T10b: Local history categorization — on-device category model and filters
+- [ ] EP-01-T11a: Downloads — pause, resume, cancel, transfer rate, and ETA
+- [ ] EP-01-T11b: Shared Downloads internal page — history, search, repeat download, and reveal action
 
-## Backlog — V1 (EP-07 through EP-13)
+## Backlog — Scale
 
-- [ ] EP-07: Research Mode — ambient detection, timeline feed, source attribution
-- [ ] EP-08: Per-Tab Incognito & Guest Mode
-- [ ] EP-09: VPN Integration — partner (Mullvad/Guardian), Pro tier
-- [ ] EP-10: Object Library & Cross-Session Persistence
-- [ ] EP-11: Widget Library & Cloud Sync
-- [ ] EP-12: Windows Distribution
-- [ ] EP-13: Pro Tier & Account System
+- [ ] EP-07: Research Mode — ambient detection, timeline feed, and source attribution
+- [ ] EP-08: Per-tab incognito and Guest Mode
+- [ ] EP-09: VPN integration — partner evaluation and Pro tier
+- [ ] EP-10: Object Library and cross-session persistence
+- [ ] EP-11: Widget Library and encrypted multi-device sync
+- [ ] EP-13: Pro tier and optional account system
 
-## Backlog — V2+
+## Backlog — Platform
 
-- [ ] EP-14: App Store / Third-Party Widget Ecosystem
-- [ ] EP-15: Auto Pilot (autonomous multi-step actions)
-- [ ] EP-16: Expanded Object Types (Chart, Video, Company, Person)
+- [ ] EP-14: App Store / third-party widget ecosystem
+- [ ] EP-15: Auto Pilot with human confirmation gates
+- [ ] EP-16: Expanded object types — Chart, Video, Company, Person
 
 ---
 
 ## Done
 
-- [x] Design: 34 screens across 3 mockup sets (Compare Mode, Research/Memory, Privacy/Widgets/VPN)
-- [x] docs/design_specification.md — complete, Lora locked, hex values confirmed
-- [x] PRD.md — 22 sections, all gate decisions + open source stack locked
-- [x] CLAUDE.md — stack, architecture, repo structure, locked decisions
-- [x] status_quo.md — cold-start anchor written
-- [x] Serif typeface → Lora (2026-09-16)
-- [x] Action execution targets → Amazon, Best Buy, Flipkart (2026-09-16)
-- [x] EP-06-T08: Reproducible source checkout — generated artifacts excluded; pinned CEF bootstrap verified from a fresh clone (2026-09-18, PRD §22)
+- [x] EP-00-T01: Locked the four-platform capability matrix and architecture contract (2026-09-18)
+- [x] EP-01-T01: Bootstrap CEF 152 on macOS with the required multi-process architecture
+- [x] EP-01-T02: Tab bar — open, close, drag-reorder, pin, and favicon badge
+- [x] EP-01-T03: Address bar — URL navigation, search fallback, and HTTPS indicator
+- [x] EP-01-T04: Back, forward, reload/stop, and loading progress
+- [x] EP-01-T05: macOS window management — resize, fullscreen, zoom, and minimize
+- [x] EP-01-T06: Keyboard shortcuts — core Chrome-parity navigation and tab commands
+- [x] EP-01-T07: Drift chrome theme — bundled Inter and warm design tokens
+- [x] EP-01-T08: Page/link/image and tab-strip context menus
+- [x] EP-01-T09: Basic bookmarks — toggle, toolbar, navigation, and JSON persistence
+- [x] EP-01-T10: Basic history — record, panel, navigation, clear, and JSON persistence
+- [x] EP-01-T11: Basic downloads — save flow, progress, clear, and reveal in Finder
+- [x] EP-06-T08: Reproducible macOS checkout — fetched/checksummed CEF; generated artifacts excluded (2026-09-18)
+- [x] Design: 34 screens across three mockup sets
+- [x] `docs/design_specification.md`: Lora, Inter, palette, and interaction language locked
+- [x] PRD/engineering/session documentation baseline created
+- [x] Serif typeface: Lora locked (2026-09-16)
+- [x] Action targets: Amazon, Best Buy, and Flipkart locked (2026-09-16)

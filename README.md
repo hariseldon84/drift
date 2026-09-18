@@ -1,58 +1,51 @@
 # Drift
 
-A Chromium-based desktop browser for macOS that understands what you're looking at.
+A local-first, multi-device browser that understands the things inside pages.
 
-Drift runs a four-stage page understanding pipeline after every page load. It extracts typed objects — starting with products — builds a cross-tab object graph, and surfaces intelligence through Compare Mode and a connected widget layer. All inference runs locally. No browsing data leaves the machine.
+Drift targets macOS, Windows, Android, and iPhone. It extracts typed objects — starting with products — and makes them useful across tabs and devices through Compare Mode, a connected object graph, and human-gated actions.
 
----
+## Current status
 
-## What makes it different
+The runnable implementation today is a macOS CEF browser with tabs, navigation, bookmarks, history, downloads, native chrome, keyboard shortcuts, and JSON persistence. That working browser is preserved on branch `V018Sep2026`.
 
-| Feature | Description |
+`main` is beginning the Cross-Platform Foundation. Before new intelligence features resume, the project will extract tested browser state into a shared C++20 core, isolate engines behind adapters, and prove Windows, Android, and iPhone vertical slices.
+
+| Phase | State |
 |---|---|
-| **Page Understanding** | DOM extraction → heuristic rules → local ML classifier → structured field extraction, all in < 500ms |
-| **Compare Mode** | Hold products from any tab, compare side-by-side, see price/rating winner highlighted, take action (add to cart) |
-| **Object Graph** | Products recognised across tabs persist for the session; Compare Tray survives tab switches |
-| **Widget Surface** | Tasks, Notes, Timer — connected to the object graph. Replaces the new tab page |
-| **100% local** | Core ML on Apple Silicon. No cloud calls in V0. No account required |
+| macOS browser baseline (SP-01–SP-03) | Complete |
+| Architecture and platform contract (SP-04) | Complete |
+| Shared contracts and characterization (SP-05) | Next |
+| State extraction and engine boundary (SP-06–SP-07) | Planned |
+| Windows proof (SP-08) | Planned |
+| Android and iPhone proofs (SP-09) | Planned |
+| Product intelligence and Compare Mode | Queued after the foundation gate |
 
----
+See `tasks.md` for the task-level plan and `docs/08_cross_platform_architecture.md` for the locked architecture.
 
-## Status
+## Architecture
 
-V0 browser baseline is complete. Intelligence pipeline and Compare Mode are next.
+Drift is not one identical executable and not four independent codebases:
 
-| Sprint | What | State |
-|---|---|---|
-| SP-01 – SP-02 | CEF shell, tab bar, address bar, nav, keyboard shortcuts, Drift theme, context menus | **Done** |
-| SP-03 | Bookmarks, History, Downloads | **Done** |
-| SP-04 | Chrome extension compatibility | Up next |
-| SP-06 – SP-08 | Page understanding pipeline + Product schema | Planned |
-| SP-09 – SP-12 | Object card, Compare Mode, Action Engine | Planned |
-| SP-13 | Widget surface | Planned |
-| SP-14 | Distribution, signing, auto-update, onboarding | Planned |
+- **Shared C++20 core:** browser state, typed objects, Compare/Action logic, storage contracts, and future sync contracts.
+- **Native shells:** Objective-C++/AppKit on macOS, C++/Win32 or WinUI on Windows, Kotlin on Android, and Swift on iPhone.
+- **Engine adapters:** CEF on macOS and Windows; Android WebView proof with GeckoView as fallback; WKWebView on iPhone.
+- **Shared Lit surfaces:** Drift-owned object, Compare, widget, and internal-page UI where web components are a good fit.
 
-Full task list in `tasks.md`. Design in `design_inspirations/` (34 screens).
+C++ is selected for continuity, native interoperability, and performance control. It does not guarantee stability: Drift requires RAII, explicit ownership/threading, narrow ABI boundaries, tests, sanitizers, and measurements.
 
----
+## What makes Drift different
 
-## Tech stack
-
-| Layer | Technology |
+| Capability | Description |
 |---|---|
-| Browser engine | CEF (Chromium Embedded Framework), C++20 |
-| macOS shell | Objective-C++ + AppKit (current V0 shell) |
-| Product UI panels | TypeScript + Lit web components (planned shared layer) |
-| Local ML | Core ML (Apple Silicon primary), ONNX Runtime (Windows fallback) |
-| Storage | SQLite 3 + sqlcipher, key in macOS Keychain |
-| Build | CMake 3.25+ |
-| Fonts | Inter (UI), Lora (intelligence moments) — bundled, no CDN |
+| Page understanding | Deterministic extraction, heuristics, and local inference produce typed, sourced fields |
+| Compare Mode | Hold products across tabs, align fields, show meaningful differences, and take a gated action |
+| Object graph | Products and later object types compose beyond a single page or tab |
+| Connected surfaces | Tasks, Notes, Timer, history, and downloads can use the same product state |
+| Local first | Browsing data and page understanding remain on-device by default |
 
----
+## Build the current macOS browser
 
-## Building
-
-**Requirements:** macOS 13+, Xcode 15+, CMake 3.25+, CEF 152 binaries.
+Requirements: macOS 13+, Xcode 15+, CMake 3.25+, and Ninja.
 
 ```bash
 ./scripts/fetch-cef.sh
@@ -61,16 +54,8 @@ cmake --build build --parallel
 open build/src/browser/Drift.app
 ```
 
-See `commands.md` for the full command reference.
-
----
+CEF and generated build products are fetched/generated locally and ignored by Git. Do not add them to Git LFS. See `commands.md` for the full command reference.
 
 ## Design
 
-Warm cream palette (`#FAF7F2` base). Amber (`#D4820A`) appears only when intelligence activates — never decorative. Pine green (`#2D5016`) for navigation and confirmations. Full token reference in `docs/design_specification.md`.
-
----
-
-## Platform
-
-macOS 13 Ventura minimum. Apple M1+ recommended. Windows is V1 (EP-12).
+Drift uses a warm cream base (`#FAF7F2`), amber (`#D4820A`) only for intelligence, and pine green (`#2D5016`) for structure and confirmation. Inter is the UI typeface; Lora is reserved for intelligence moments. The source of truth is `docs/design_specification.md`.

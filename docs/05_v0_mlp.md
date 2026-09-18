@@ -1,5 +1,9 @@
 # Drift Browser — V0 MLP (Commercially Usable Minimal Lovable Product)
 
+> Historical first-release framing. The four-platform scope and staged foundation
+> plan in `PRD.md` §7/§21 and `docs/08_cross_platform_architecture.md` supersede
+> platform sequencing here.
+
 ## Goal
 V0 must be a browser that a real power user can install as a daily browser and reasonably pay for.
 

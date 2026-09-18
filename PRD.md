@@ -1,7 +1,7 @@
 # Drift — Product Requirements Document
 
 > Authoritative source for what Drift is, why decisions were made, and what gets built.
-> Last updated: 2026-09-15. Maintained by Anand.
+> Last updated: 2026-09-18. Maintained by Anand.
 > Design source of truth: docs/design_specification.md
 > Task tracking: tasks.md (uses nomenclature defined in §6 of this document)
 
@@ -9,7 +9,7 @@
 
 ## 1. Vision
 
-Drift is a Chromium-based desktop browser that understands what is inside pages, not just what pages say. It recognises typed objects — products, prices, articles, people, job listings — and lets the user work across tabs as if the web were one structured database.
+Drift is a multi-device browser for macOS, Windows, Android, and iPhone that understands what is inside pages, not just what pages say. It recognises typed objects — products, prices, articles, people, job listings — and lets the user work across tabs and devices as if the web were one structured database.
 
 **One-line positioning:** "Drift understands the things inside pages."
 
@@ -25,7 +25,7 @@ Not "AI browser." Not "smart browser." The intelligence is the object model — 
 
 **Secondary:** Privacy-conscious users who want local-first intelligence with no cloud dependency.
 
-**Not in V0:** Enterprise IT buyers, developers (no DevTools focus), casual mobile-first users.
+**Not in the first public release:** Enterprise IT buyers and developers seeking a DevTools-focused browser. Mobile is part of the product scope, but mobile shells reach capability parity in stages rather than delaying every release until all four platforms are identical.
 
 ---
 
@@ -54,14 +54,14 @@ Non-negotiable. Full design language in docs/design_specification.md.
 
 ---
 
-## 5. Gate Decisions (all locked 2026-09-15)
+## 5. Gate Decisions
 
 These were blocked in docs/07_PRD_GATE.md. All resolved here with reasoning. Do not re-litigate without a documented reason to change.
 
-### GD-01 — Launch OS: Mac first, Windows in V1
-**Decision:** macOS only for V0.
-**Why:** CEF is most mature on Mac. Target users skew heavily Mac. Polished experience on one platform beats mediocre on two. Windows distribution, installer, and auto-update complexity is deferred.
-**Revisit when:** V0 has >500 DAU and Windows demand is evidenced by user requests.
+### GD-01 — Four-platform product, staged implementation
+**Decision (supersedes the 2026-09-15 Mac-only decision):** Drift targets macOS, Windows, Android, and iPhone. The current macOS implementation remains the reference browser while a shared C++20 core, engine adapters, and native platform shells are established. Windows and mobile proofs happen before the intelligence/product feature roadmap resumes.
+**Why:** Mac-first code organized around AppKit and CEF would make every later platform a rewrite. Requiring identical launch dates would also slow validation. One shared product model with staged, runnable platform slices preserves momentum without treating mobile or Windows as an afterthought.
+**Revisit when:** A platform proof demonstrates that a selected engine cannot satisfy a required capability, or measured maintenance cost shows the shared boundary is more expensive than a platform-specific implementation.
 
 ### GD-02 — V0 Object Taxonomy: Product only
 **Decision:** V0 recognises exactly one object type — Product.
@@ -98,11 +98,13 @@ Product {
 **Why:** V0 ships Free only — no monetisation pressure while the core is being proven. Pro tier is designed in V0 but not activated. Free tier must be genuinely useful as a daily browser; Pro is additive.
 
 ### GD-06 — Intelligence strategy: Local-first, cloud fallback with permission
-**V0:** 100% local. No cloud calls. Object recognition, page understanding, and comparison logic run entirely on device via Core ML.
-**V1:** Cloud fallback available, off by default. Only with user permission. Only structured summaries sent — never raw page content, never browsing history.
+**First release:** 100% local. No cloud calls. Object recognition, page understanding, and comparison logic run on-device through a portable inference contract: Core ML where appropriate, ONNX Runtime or platform runtimes elsewhere.
+**Scale phase:** Cloud fallback may be available, off by default and only with user permission. Only scoped structured data may be sent — never raw browsing history.
 **Why:** Local-first is a core principle and competitive differentiator. Cloud-first requires server infrastructure day one and compromises the privacy promise.
 
-### GD-07 — Performance budgets (measured on M1 MacBook Pro, 8GB RAM)
+### GD-07 — Performance budgets
+
+The existing figures are the macOS reference budgets, measured on an M1 MacBook Pro with 8GB RAM. EP-00 must establish equivalent reference devices and budgets for Windows, Android, and iPhone before claiming cross-platform parity.
 
 | Metric | Budget |
 |---|---|
@@ -154,55 +156,81 @@ All tasks, sprints, bugs, and gate decisions use this system. Reference by code 
 
 ## 7. Release Plan
 
-### V0 — MLP (Minimum Lovable Product)
-**Platform:** Mac only.
-**Definition of done:** A user can install Drift, use it as their daily browser, and complete a product comparison across two sites without friction.
+### Foundation — four-platform viability
 
-**V0 Epics:**
-- EP-01: Chromium Shell & Browser Baseline
+**Definition of done:** The working macOS browser still passes its behavior-parity gate; a Windows CEF shell and Android/iPhone shells execute the same versioned command/event contract; both mobile shells produce one normalized extraction result through the shared core.
+
+**Foundation epic:** EP-00 — Cross-Platform Foundation.
+
+| Sprint | Focus | Exit evidence |
+|---|---|---|
+| SP-04 | Scope and architecture | Canonical documents and capability matrix agree |
+| SP-05 | Contracts and characterization | Shared value types and deterministic tests run |
+| SP-06 | State extraction | Existing bookmarks/history/downloads/tabs use shared models |
+| SP-07 | Engine and persistence boundaries | macOS runs through the adapter with data compatibility |
+| SP-08 | Windows proof | One CEF tab navigates through shared commands/events |
+| SP-09 | Mobile proofs | Android and iPhone run the same core contract |
+
+### First lovable release — Product comparison
+
+**Definition of done:** A user can install a supported Drift build, use it as a browser, and complete a product comparison across two sites without friction. Platform release dates may be staged, but product logic and data contracts must remain shared.
+
+**Product epics:**
+
+- EP-01: Browser Baseline
 - EP-02: Page Understanding Pipeline
 - EP-03: Product Object Recognition
 - EP-04: Compare Mode
 - EP-05: Connected Widget Surface
-- EP-06: Distribution & Installation (Mac)
+- EP-06: Distribution & Installation
 
-**Sprint plan (2-week sprints, ~7 months total):**
+### Scale
 
-| Sprint | Focus | Epics |
-|---|---|---|
-| SP-01 | Chromium shell, window management, basic navigation | EP-01 |
-| SP-02 | Tab management, address bar, keyboard shortcuts | EP-01 |
-| SP-03 | Bookmarks, history, downloads | EP-01 |
-| SP-04 | Chrome extension compatibility layer | EP-01 |
-| SP-05 | Password manager, settings infrastructure | EP-01 |
-| SP-06 | DOM parsing pipeline, deterministic extraction | EP-02 |
-| SP-07 | Heuristic object detection, local ML integration | EP-02 |
-| SP-08 | Product schema, confidence scoring, Core ML | EP-02 + EP-03 |
-| SP-09 | Recognition UI — amber-gold indicator, object card, object panel | EP-03 |
-| SP-10 | Compare Tray, cross-tab state, selection flow | EP-04 |
-| SP-11 | Compare View — field matching, winner highlighting | EP-04 |
-| SP-12 | Action engine — suggestion card, confirmation gate, execution | EP-04 |
-| SP-13 | Widget surface — Tasks, Notes, Timer + object graph connections | EP-05 |
-| SP-14 | Performance tuning, polish, Mac installer, beta distribution | EP-06 |
+**Goal:** The object model generalizes, optional encrypted multi-device sync is introduced, the Pro tier launches, and Research Mode ships.
+**Epics:** EP-07 through EP-13 (see §9).
 
-### V1 — Scale
-**Platform:** Mac + Windows.
-**Goal:** Object model generalises. Pro tier launches. Research Mode ships.
-**V1 Epics:** EP-07 through EP-13 (see §9).
+### Platform
 
-### V2+ — Platform
-**Goal:** Ecosystem. Developer platform. Autonomous actions.
-**V2 Epics:** EP-14 through EP-16 (see §9).
+**Goal:** Ecosystem, developer platform, and carefully gated autonomous actions.
+**Epics:** EP-14 through EP-16 (see §10).
 
 ---
 
-## 8. V0 Epic Specifications
+## 8. Epic Specifications
+
+### EP-00 — Cross-Platform Foundation
+
+**Goal:** Turn the working macOS implementation into the first adapter of a four-platform product without discarding its behavior.
+**Architecture:** Native platform shells issue versioned commands to a shared C++20 state/product core. Engine-specific behavior is isolated behind `BrowserEngine`; normalized events flow back to the core. Lit is used only for Drift-owned product surfaces and internal pages.
+**Detailed contract:** `docs/08_cross_platform_architecture.md`.
+**Sprints:** SP-04 through SP-09.
+
+**Gate:** Product feature sprints do not resume until macOS parity, Windows navigation, and Android/iPhone normalized-extraction proofs are runnable.
+
+| Code | Task |
+|---|---|
+| EP-00-T00 | Execute and track the complete migration through the temporary phase checklist |
+| EP-00-T01 | Lock the platform capability matrix and architecture contract (complete) |
+| EP-00-T02 | Add platform-neutral browser IDs, commands, events, errors, and deterministic tests |
+| EP-00-T03 | Characterize the existing macOS browser and define its behavior-parity gate |
+| EP-00-T04 | Extract bookmarks as the first tested shared-core vertical slice |
+| EP-00-T05 | Extract history and download state into shared-core models |
+| EP-00-T06 | Extract tab, navigation, and session state into shared-core models |
+| EP-00-T07 | Introduce `BrowserEngine` and move CEF integration into the macOS/desktop adapter |
+| EP-00-T08 | Preserve JSON compatibility, then add SQLite behind repository interfaces |
+| EP-00-T09 | Pass the macOS parity and performance gate after extraction |
+| EP-00-T10 | Prove Windows navigation with one CEF tab and shared commands/events |
+| EP-00-T11 | Add the Windows CEF bootstrap and build/CI smoke path |
+| EP-00-T12 | Prove Android capabilities and decide WebView versus GeckoView from measurements |
+| EP-00-T13 | Prove the iPhone WKWebView shell against the same shared contract |
+| EP-00-T14 | Produce one normalized extraction result through both mobile adapters |
+| EP-00-T15 | Pass the cross-platform foundation gate before product feature work resumes |
 
 ### EP-01 — Chromium Shell & Browser Baseline
 
 **Goal:** A working, stable browser users would not be embarrassed to use as their daily driver.
-**Sprint:** SP-01 through SP-05.
-**Out of V0:** Custom tab groups, vertical tabs, sidebar, sync.
+**Sprint:** SP-01 through SP-03 completed; remaining work resumes after EP-00.
+**Out of first release:** Custom tab groups, vertical tabs, sidebar, and cloud sync.
 
 **Tasks:**
 | Code | Task |
@@ -215,18 +243,18 @@ All tasks, sprints, bugs, and gate decisions use this system. Reference by code 
 | EP-01-T06 | Keyboard shortcuts — Chrome parity (⌘T, ⌘W, ⌘L, ⌘R, ⌘⇧T, ⌘1–9, etc.) |
 | EP-01-T07 | Drift visual theme on chrome — warm cream palette, Inter, thin tab bar per design_specification.md |
 | EP-01-T08 | Context menus — right-click on page, tab, link, image |
-| EP-01-T09 | Bookmarks — add, folder, toolbar, import from Chrome/Safari |
-| EP-01-T10 | History — browsing history, search, clear |
-| EP-01-T11 | Downloads — download bar, progress, open/show in Finder |
-| EP-01-T12 | Chrome extension compatibility — CRX load, chrome.* API surface |
-| EP-01-T13 | Password manager — save/fill credentials, local keychain integration |
-| EP-01-T14 | Settings page — general, search engine, privacy, appearance |
+| EP-01-T09 | Basic bookmarks — toggle, toolbar, navigation, and JSON persistence (complete); folders/import remain backlog |
+| EP-01-T10 | Basic history — record, panel, navigation, clear, and JSON persistence (complete); search/internal page remain backlog |
+| EP-01-T11 | Basic downloads — save flow, progress, clear, and reveal in Finder (complete); pause/resume/history remain backlog |
+| EP-01-T12 | Desktop Chrome extension compatibility — MV3 CRX load and required chrome.* API surface |
+| EP-01-T13 | Password manager — save/fill credentials using platform secure-storage adapters |
+| EP-01-T14 | Settings — shared settings model with platform-appropriate surfaces |
 
 ### EP-02 — Page Understanding Pipeline
 
 **Goal:** Drift reads a page and extracts structured meaning, entirely on-device, within 500ms.
-**Architecture:** Four-stage pipeline: (1) Deterministic extraction (JSON-LD, schema.org, OpenGraph), (2) Heuristic rules (CSS selectors, DOM patterns), (3) Local ML classifier, (4) Core ML local model. Cloud not in V0 pipeline.
-**Sprint:** SP-06 through SP-07.
+**Architecture:** Four-stage pipeline: (1) deterministic extraction, (2) heuristic rules, (3) local classifier, and (4) portable local model inference. Normalized inputs/outputs live in the shared core; Core ML, ONNX Runtime, and mobile platform runtimes are adapters. Cloud is not in the first-release pipeline.
+**Sprint:** Resumes after the EP-00 foundation gate.
 
 **Tasks:**
 | Code | Task |
@@ -235,15 +263,15 @@ All tasks, sprints, bugs, and gate decisions use this system. Reference by code 
 | EP-02-T02 | Heuristic rule engine — CSS selector patterns for price, title, rating, availability |
 | EP-02-T03 | Local ML classifier — identify product page vs non-product page |
 | EP-02-T04 | Confidence scoring — combine all pipeline stage signals into 0–1 score |
-| EP-02-T05 | Core ML model integration — local inference on macOS, compiled model |
-| EP-02-T06 | Performance harness — full pipeline < 500ms on M1, 8GB RAM (GD-07) |
+| EP-02-T05 | Portable local inference — Core ML/ONNX/platform adapters behind one contract |
+| EP-02-T06 | Performance harness — enforce the platform-specific budgets in GD-07 |
 | EP-02-T07 | Graceful degradation — if no stage produces confidence > 0.5, stay silent |
 
 ### EP-03 — Product Object Recognition
 
 **Goal:** When the pipeline identifies a product with sufficient confidence, Drift materialises a typed Product object visible to the user.
 **Confidence threshold:** 0.75 to show recognition indicator. 0.5–0.75 logs silently, no UI.
-**Sprint:** SP-08 through SP-09.
+**Sprint:** After the EP-00 foundation gate; assign during product sprint planning.
 
 **Tasks:**
 | Code | Task |
@@ -261,7 +289,7 @@ All tasks, sprints, bugs, and gate decisions use this system. Reference by code 
 **Goal:** The flagship V0 workflow. User compares two products from different sites as structured objects.
 **Flow:** Recognise → Add to Compare → Compare Tray → browse second site → Add second → Compare View.
 **Design reference:** Screens 5–9, design_inspirations/Drift - Compare Mode Mockups.html.
-**Sprint:** SP-10 through SP-12.
+**Sprint:** After the EP-00 foundation gate; assign during product sprint planning.
 
 **Tasks:**
 | Code | Task |
@@ -282,7 +310,7 @@ All tasks, sprints, bugs, and gate decisions use this system. Reference by code 
 **Goal:** Empty browser state becomes a calm, useful productivity surface connected to the object graph.
 **V0 widgets:** Tasks (local, object graph connected), Notes (local), Timer (standalone).
 **Design reference:** Evolution of Screen 1, design_inspirations/Drift - Compare Mode Mockups.html.
-**Sprint:** SP-13.
+**Sprint:** After the EP-00 foundation gate; assign during product sprint planning.
 
 **Tasks:**
 | Code | Task |
@@ -295,27 +323,27 @@ All tasks, sprints, bugs, and gate decisions use this system. Reference by code 
 | EP-05-T06 | Object graph connection — Compare session completion offers "Add to Tasks" |
 | EP-05-T07 | New Tab trigger — widget surface available as new tab page also |
 
-### EP-06 — Distribution & Installation (Mac)
+### EP-06 — Distribution & Installation
 
-**Goal:** User can download, install, and update Drift on macOS without friction.
+**Goal:** Users can install, update, and register Drift safely on every released platform. Each native shell owns its operating-system packaging and trust integration.
 **Design reference:** Screen 11 (Onboarding), design_inspirations/Drift - Compare Mode Mockups.html.
-**Sprint:** SP-14.
+**Sprint:** After the EP-00 platform proofs and product gates.
 
 **Tasks:**
 | Code | Task |
 |---|---|
-| EP-06-T01 | macOS app bundle — signed, notarised, Gatekeeper compliant |
-| EP-06-T02 | .dmg installer — drag-to-Applications, auto-launch on first install |
-| EP-06-T03 | Auto-update — Sparkle framework integration, silent background updates |
-| EP-06-T04 | Set as default browser — prompt on first launch, system API |
-| EP-06-T05 | First-run onboarding — Screen 11 design, import from Chrome/Safari |
-| EP-06-T06 | Crash reporting — local crash logs, no cloud telemetry in V0 |
-| EP-06-T07 | Basic analytics — opt-in only, local aggregate counts (DAU, compare sessions) |
-| EP-06-T08 | Reproducible source checkout — generated build output and CEF binaries excluded; pinned CEF bootstrap for each supported platform |
+| EP-06-T01 | macOS app bundle — signed, notarized, Gatekeeper compliant |
+| EP-06-T02 | macOS DMG installer — drag-to-Applications, safe first launch |
+| EP-06-T03 | macOS auto-update — Sparkle with signed feeds |
+| EP-06-T04 | Platform default-browser registration and first-run prompt |
+| EP-06-T05 | First-run onboarding and supported browser-data import per platform |
+| EP-06-T06 | Local crash logs plus platform symbol management; submission is opt-in |
+| EP-06-T07 | Privacy-preserving analytics only with opt-in, or explicit launch deferral |
+| EP-06-T08 | Reproducible macOS source checkout — generated output and CEF binaries excluded; pinned/checksummed macOS bootstrap (complete) |
 
 ---
 
-## 9. V1 Epics — Overview
+## 9. Scale Epics — Overview
 
 Full task specifications written when V0 ships or when sprint planning for V1 begins.
 
@@ -336,15 +364,15 @@ Right-side panel, all collected objects grouped by type (Products, Articles, Peo
 ### EP-11 — Widget Library & Cloud Sync
 Additional Drift-built widgets (Calendar, Reading List, 2–3 more TBD). Cloud sync for Tasks and Notes (Pro). Local-first remains default; sync is opt-in.
 
-### EP-12 — Windows Distribution
-Windows installer (MSIX or WinSparkle), CEF parity on Windows, performance validation on target Windows hardware.
+### EP-12 — Retired into EP-00 and EP-06
+The former Windows-only distribution epic is superseded. Windows architecture and the runnable proof are part of EP-00; release packaging belongs to EP-06. The task code is retained here so historical references do not silently change meaning.
 
 ### EP-13 — Pro Tier & Account System
 Optional Drift account (Sign in with Google or Apple). Unlocks cloud sync, VPN, Research Mode advanced features, Widget library. $9.99/month or $99/year.
 
 ---
 
-## 10. V2+ Epics — Placeholder
+## 10. Platform Epics — Placeholder
 
 ### EP-14 — App Store / Third-Party Widget Ecosystem
 Developer SDK, widget review process, trust and safety. A company within a company — do not open until V1 is proven.
@@ -352,7 +380,7 @@ Developer SDK, widget review process, trust and safety. A company within a compa
 ### EP-15 — Auto Pilot
 Autonomous multi-step action sequences. User defines a workflow; Drift executes with confirmation gates at each consequential step.
 
-### EP-16 — Expanded Object Types (V2)
+### EP-16 — Expanded Object Types
 Chart, Video, Company, Person as first-class typed objects. Cross-type composition (e.g., compare two companies using their person graphs).
 
 ---
@@ -363,14 +391,19 @@ Locked 2026-09-16. These replace "build from scratch" wherever a proven open sou
 
 | Component | Tool | Rationale |
 |---|---|---|
-| Chromium embedding | **CEF (Chromium Embedded Framework)** | Only production-grade option for embedding Chromium on macOS. C++. Used by VS Code, Figma, Discord. |
-| Structured data extraction (EP-02-T01) | **extruct pattern** — JSON-LD, schema.org, OpenGraph parsers | No single open source product extractor exists. Deterministic stage uses standard markup parsers. Heuristic + ML stages are custom (that is the moat). |
-| Local ML inference (EP-02-T05, EP-03) | **Core ML** (primary) + **ONNX Runtime** (fallback) | Core ML gives hardware acceleration on Apple Silicon at zero cost. ONNX Runtime enables cross-platform portability for V1 Windows. Use one runtime per inference job to avoid memory thrashing. |
-| Local storage — object graph + widgets | **SQLite + sqlcipher** | SQLite is built into macOS. sqlcipher adds encryption. OS Keychain manages encryption keys — do not roll custom key management. |
-| macOS auto-update (EP-06-T03) | **Sparkle** | macOS gold standard. Used by Dropbox, Slack. Handles signing, delta updates, rollback. |
-| Crash reporting (EP-06-T06) | **Breakpad** (Google) | Already inside Chromium. Zero additional dependency. Requires symbol management — plan symbol server before beta. |
-| Browser testing | **Playwright** | Best debugging tooling, multi-browser, Microsoft-maintained. Use jsdom for fast headless unit tests of the page understanding pipeline. |
-| Analytics — opt-in only (EP-06-T07) | **Matomo** (self-hosted) | Only truly open source privacy-respecting analytics. Requires a server — defer to SP-14. Ship V0 without analytics if server is not ready; add Matomo in the first post-launch patch. |
+| Shared product/state core | **C++20** | Fits the working CEF implementation, crosses native platforms, and permits predictable latency. Reliability comes from RAII, tests, sanitizers, and narrow ABI boundaries — not from the language being close to the machine. |
+| Desktop Chromium embedding | **CEF (Chromium Embedded Framework)** | Production-grade Chromium embedding on macOS and Windows. The pinned binary is fetched per platform, never committed. |
+| Android engine | **Android WebView proof; GeckoView fallback** | Decide from measured capability gaps during EP-00, not from framework preference. |
+| iPhone engine | **WKWebView baseline** | Compatible with normal App Store distribution. Alternative engines require separate entitlement/region evaluation and are not the baseline. |
+| Native shells | **AppKit/Objective-C++, Win32/WinUI, Kotlin, Swift** | Lifecycle, accessibility, secure storage, permissions, and engine hosting remain platform-native. |
+| Shared Drift surfaces | **TypeScript + Lit** | Reuse product UI and internal pages without pretending the browser engine or native shell is a web component. |
+| Structured data extraction (EP-02-T01) | **Standards-based parser modules** — JSON-LD, schema.org, OpenGraph | Use the extruct-style deterministic approach without shipping a Python runtime. Heuristic + ML stages remain custom. |
+| Local ML inference (EP-02-T05, EP-03) | **Portable contract with Core ML, ONNX Runtime, or platform adapters** | One normalized model/result boundary allows hardware-appropriate runtimes without forking product logic. |
+| Local storage — object graph + widgets | **SQLite + SQLCipher-capable repository** | Use the platform SQLite distribution or a pinned build. Encryption keys live in platform secure storage; do not roll custom key management. |
+| macOS auto-update (EP-06-T03) | **Sparkle** | macOS-specific release infrastructure; other platforms use their native distribution/update path. |
+| Crash reporting (EP-06-T06) | **CEF/Breakpad on desktop plus native mobile crash facilities** | Keep collection local by default and treat upload as opt-in. Every released native binary needs symbols. |
+| Testing | **CTest/core tests + adapter contract tests + platform smoke runners** | Lit/internal pages may use browser tooling, but no single UI runner proves native engine integration on all platforms. |
+| Analytics — opt-in only (EP-06-T07) | **Matomo** (self-hosted candidate) | Requires server operations and a separate privacy review. Defer analytics entirely if that work is not ready for distribution. |
 
 **What has NO open source substitute:**
 - Product extraction heuristics (EP-02-T02) — custom CSS selector rules per retailer
@@ -382,22 +415,16 @@ Locked 2026-09-16. These replace "build from scratch" wherever a proven open sou
 
 ## 12. System Requirements
 
-Locked 2026-09-16.
+The existing implementation requires macOS 13 Ventura or later and is optimized first on Apple Silicon. Exact supported Windows, Android, and iPhone versions are an EP-00 output: they must be selected from engine support, security-update lifetime, store rules, and measurements from the platform proofs rather than guessed in the PRD.
 
-**Minimum supported:** macOS 13 Ventura (released 2022).
-**Why:** Core ML features required by EP-02-T05 use APIs introduced in macOS 13. Ventura also introduced improved process sandbox APIs used by CEF.
-**Recommended:** macOS 14 Sonoma or later (better Core ML performance, Neural Engine improvements).
-**Apple Silicon:** Primary development and optimisation target. Intel Mac support maintained but not the performance benchmark.
-
-| Requirement | Minimum | Recommended |
+| Platform | Foundation baseline | Version decision gate |
 |---|---|---|
-| macOS | 13 Ventura | 14 Sonoma+ |
-| RAM | 8GB | 16GB |
-| Disk space | 500MB | 1GB |
-| CPU | Intel Core i5 / M1 | Apple M1+ |
-| Internet | Required for browsing | — |
+| macOS | macOS 13+, CEF 152, Apple Silicon primary | Revalidate before public release |
+| Windows | CEF 152 desktop proof | Lock after the SP-08 build/CI proof |
+| Android | WebView proof; GeckoView fallback | Lock after SP-09 capability/performance comparison |
+| iPhone | WKWebView proof | Lock after SP-09 capability/performance validation |
 
-Performance budgets in GD-07 are measured on M1, 8GB RAM (the minimum recommended configuration).
+Every public release must receive security updates supported by its selected engine and operating-system baseline.
 
 ---
 
@@ -417,7 +444,7 @@ Performance budgets in GD-07 are measured on M1, 8GB RAM (the minimum recommende
 
 Specific requirements:
 - Keyboard navigation: all Drift UI panels fully operable without a mouse. Tab order logical, focus visible.
-- Screen reader: VoiceOver (macOS) compatibility for chrome elements, object panel, and widget surface.
+- Screen reader: VoiceOver on Apple platforms, Narrator on Windows, and TalkBack on Android for Drift-owned controls and surfaces.
 - Colour contrast: amber-gold `#D4820A` on cream `#FAF7F2` — verify contrast ratio meets 3:1 minimum for large text / UI components (not body copy). Use deeper amber `#B86E08` if any element fails.
 - No colour-only information: the incognito tab indicator uses both colour (pine green border) and icon (shield) — not colour alone.
 - Motion: respect `prefers-reduced-motion`. All transition animations disabled when set.
@@ -446,9 +473,9 @@ Specific requirements:
 
 ## 16. Extension Compatibility Scope
 
-**V0 targets Manifest V3 (MV3) only.** Chrome deprecated MV2 in 2024; Drift does not re-introduce it.
+**Desktop only for the first release.** macOS and Windows target Manifest V3 (MV3). Chrome deprecated MV2; Drift does not re-introduce it. Android and iPhone extension compatibility is explicitly outside the foundation and first mobile scope.
 
-**Must work in V0 (tested and verified before beta):**
+**Must work before desktop extension compatibility is declared complete:**
 - uBlock Origin (MV3 version) — most-used extension globally
 - 1Password / Bitwarden — password managers (complement Drift's own)
 - Grammarly — content script on all pages
@@ -459,23 +486,31 @@ Specific requirements:
 - Extensions that aggressively remove DOM nodes (some ad blockers) may reduce extraction confidence. This is logged but not surfaced to the user.
 - Drift does not expose its object graph to extensions in V0. No extension API for the object model.
 
-**Explicitly out of scope for V0:**
+**Explicitly out of scope:**
 - MV2 extensions
 - Chrome DevTools extensions
 - Extensions requiring `chrome.debugger` API
+- Chrome-extension parity on Android or iPhone
 
 ---
 
 ## 17. Privacy Model Detail
 
-**What never leaves the device (ever, regardless of settings):**
+**What never leaves the device or participates in sync:**
 - Browsing history
 - Page content (HTML, text, images)
-- Extracted object data
-- Widget data (tasks, notes)
+- Downloaded files and download history
 - Keystrokes or form data
+- Passwords and credentials (future password sync requires a separate security decision)
 
-**What leaves the device only with explicit opt-in:**
+**What is local by default but may join optional end-to-end encrypted sync:**
+- Bookmarks and user settings
+- Saved Product objects and comparisons (structured fields only; never source HTML)
+- Widget data such as tasks and notes
+
+Each category is separately enabled. The sync service stores ciphertext and cannot use sync data for inference, analytics, or advertising. Versioned schemas, migrations, conflict rules, key recovery, deletion propagation, and a second-device threat model must be locked before implementation.
+
+**What may leave the device through a separate explicit opt-in:**
 - Anonymous aggregate usage counts (DAU, compare sessions per day) — no user identity, no session linking
 - Crash reports (local by default; user can choose to submit via a "Send crash report" prompt post-crash)
 
@@ -485,25 +520,24 @@ Specific requirements:
 - Object recognition success/failure rate (aggregate)
 - Does NOT collect: URLs visited, page content, search queries, object data
 
-**With cloud fallback enabled (V1, off by default):**
-- Only structured summaries are sent — typed object fields, not page content
-- No browsing history, no URLs, no session context
-- Request/response is encrypted in transit
-- Drift's cloud receives: `{ type: "Product", fields: [...] }` — never `{ url: "...", html: "..." }`
+**With cloud inference fallback enabled in the Scale phase (separate consent, off by default):**
+- Only the minimum typed fields needed for that one request are sent; never source HTML, history, URLs, or session context.
+- Transport is encrypted and request data is not retained or added to sync.
+- Sync consent never implies cloud-inference consent, and neither implies analytics consent.
 
 ---
 
 ## 18. Browser Security Model
 
-**Process isolation:** CEF's multi-process architecture is preserved. Each tab runs in a separate renderer process. Drift's intelligence layer runs in the browser process, not the renderer — extracted object data crosses the process boundary as structured data, never as executable code.
+**Process isolation:** Each selected engine's supported isolation model is preserved; Drift does not weaken it for code sharing. CEF renderer processes, Android/iPhone web-content processes, and the shared core communicate through scoped, serialized data rather than executable code or raw DOM references.
 
-**Content Security Policy:** Drift respects page-level CSP headers. Drift's own injected UI elements (object card, compare tray) are injected via CEF's native UI overlay mechanism, not via script injection into the page — they are not subject to the page's CSP.
+**Content Security Policy:** Drift respects page-level CSP headers. Drift-owned product UI is hosted by the shell or a privileged internal surface, not inserted as page-owned UI that a site can impersonate.
 
 **Object data trust model:** Data extracted from a page is treated as untrusted user input. All extracted strings are sanitised before display in Drift's UI. An attacker cannot execute code by crafting a product page with malicious markup in a product name field.
 
-**Action engine security:** Actions (add to cart) interact with the DOM via CEF's browser process, not via injected scripts. The action confirmation gate is rendered by Drift's native UI, not by the page — it cannot be spoofed by a malicious page.
+**Action engine security:** Engine adapters execute typed actions using the safest supported engine API. Consequential action confirmation is rendered in trusted Drift chrome or a privileged Drift surface, not by the page.
 
-**V0 stance on tracking:** No built-in tracker blocking in V0 (uBlock Origin covers this via extensions). V1 evaluates native tracker blocking. This is a deliberate deferral — tracker blocking is table-stakes but not Drift's moat.
+**First-release stance on tracking:** Native tracker blocking is deferred while the product moat is validated. Desktop users may use supported MV3 blockers after EP-01-T12; mobile does not depend on extension availability for its eventual privacy model.
 
 ---
 
@@ -511,7 +545,7 @@ Specific requirements:
 
 **In-app feedback:** A "Send Feedback" item in the Help menu. Opens a simple form (rendered in a Drift panel, not a web page). User types feedback; on submit, writes a local markdown file to `~/Library/Application Support/Drift/feedback/` and optionally opens the user's default mail client with the file attached. No server required.
 
-**Bug reporting:** Settings → Advanced → Export Diagnostics. Creates a zip of: local crash logs, recognition pipeline logs (last 100 entries, no page content), and system info (macOS version, RAM). User submits manually via email or GitHub Issues.
+**Bug reporting:** Settings → Advanced → Export Diagnostics. Creates a zip of local crash logs, the last 100 recognition diagnostics without page content, and platform/version/memory metadata. User submits it manually via email or GitHub Issues.
 
 **Documentation:** A static docs site (generated from markdown, hosted on GitHub Pages). Linked from Help menu. No in-app help system in V0.
 
@@ -525,34 +559,43 @@ Specific requirements:
 |---|---|---|
 | ~~Serif typeface~~ | ~~SP-09~~ | **Locked: Lora** (2026-09-16) |
 | ~~Action execution targets~~ | ~~SP-12~~ | **Locked: Amazon, Best Buy, Flipkart** (2026-09-16) |
-| VPN vendor shortlist (Mullvad vs Guardian) | V1 planning | Anand |
-| Analytics vendor — Matomo self-hosted confirmed? Or defer entirely? | SP-14 | Anand |
-| Beta programme: invite-only vs open waitlist | SP-14 | Anand |
-| Symbol server for Breakpad: self-hosted or defer to post-launch? | SP-14 | Anand |
+| VPN vendor shortlist (Mullvad vs Guardian) | Scale planning | Anand |
+| Analytics — self-hosted Matomo or explicit deferral? | Distribution planning | Anand |
+| Beta programme: invite-only vs open waitlist | Distribution planning | Anand |
+| Crash symbol infrastructure per released desktop platform | Distribution planning | Anand |
+
+---
+
+## 21. Cross-Platform Architecture Decision
+
+Locked 2026-09-18. Detailed specification: `docs/08_cross_platform_architecture.md`.
+
+- **Product targets:** macOS, Windows, Android, and iPhone.
+- **Shared center:** C++20 owns platform-neutral browser state, the object model, comparison/action logic, storage contracts, and future sync contracts.
+- **Platform edges:** AppKit/Objective-C++ on macOS, Win32/WinUI on Windows, Kotlin on Android, and Swift on iPhone own lifecycle, accessibility, secure storage, permissions, packaging, and engine hosting.
+- **Engine adapters:** CEF on macOS and Windows; an Android WebView proof with GeckoView as fallback; WKWebView as the iPhone baseline.
+- **UI sharing:** Lit is for Drift-owned product surfaces and internal pages. It is not the browser engine or a replacement for native shells.
+- **Boundary:** platform UI issues versioned commands; shared core updates state and calls `BrowserEngine`; adapters return normalized events/results. No AppKit, CEF, JNI, Swift, Kotlin, or WebKit types enter the core.
+- **Multi-device sync:** a later, separately enabled, end-to-end encrypted service for eligible categories only. Raw browsing history, page content, downloads, keystrokes/forms, and credentials do not sync; consent is per category and separate from cloud inference or analytics.
+- **Migration:** preserve the working macOS browser, characterize it, and extract thin vertical slices. Do not restart the application.
+
+**Reasoning:** Browser engines, process models, extension support, store policy, and system integration differ materially across desktop and mobile. A fully cross-platform UI framework cannot remove that native work. Sharing Drift's differentiating product behavior while isolating engines gives useful reuse without forcing the weakest common denominator.
 
 ---
 
 ## 22. Technical Architecture Principles
 
-Full architecture: docs/04_architecture.md. PRD-level locked decisions:
+Full architecture: `docs/08_cross_platform_architecture.md`; product-system concepts: `docs/04_architecture.md`.
 
-1. **CEF, not Electron.** CEF gives browser-grade rendering performance. Electron is not appropriate for a daily browser.
-2. **Core ML for local inference on Mac.** No Python runtime shipped. Models compiled to Core ML format.
-3. **Object graph in-process.** Lives in the browser process. V1 may add SQLite persistence layer.
-4. **Zero telemetry without opt-in.** No browsing data sent anywhere in V0.
-5. **Chrome extension API compatibility.** CRX format, chrome.* API surface. No custom extension format in V0.
-6. **Binary dependencies are fetched, not committed.** CEF is required for the desktop browser, but the pinned platform distribution and every generated build artifact live in ignored local directories. A bootstrap script downloads and checksum-verifies CEF after clone. Git LFS is reserved for authored assets that genuinely need versioning, not reproducible SDKs or app bundles. This keeps clones small, avoids GitHub's binary-size limits, and lets macOS and future Windows builds fetch their own platform package from the same version pin.
-
----
-
-## 12. Open Decisions
-
-Not blocking build-start. Must be resolved before the relevant sprint.
-
-| Decision | Needed by | Owner |
-|---|---|---|
-| ~~Serif typeface~~ | ~~SP-09~~ | **Locked: Lora** (2026-09-16) |
-| ~~Action execution targets~~ | ~~SP-12~~ | **Locked: Amazon, Best Buy, Flipkart** (2026-09-16) |
-| VPN vendor shortlist: Mullvad vs Guardian vs other | EP-09 planning (V1) | Anand |
-| Analytics vendor (opt-in): self-hosted vs PostHog vs Plausible | SP-14 (EP-06-T07) | Anand |
-| Beta programme: invite-only vs open waitlist | SP-14 | Anand |
+1. **C++20 shared core, not C++ everywhere.** C++ is selected for continuity, native interoperability, and control. It does not guarantee speed or reliability; ownership rules, tests, sanitizers, measurements, and narrow boundaries do.
+2. **CEF is a desktop engine adapter, not the architecture.** CEF serves macOS and Windows. Shared logic never includes CEF types.
+3. **Native shells are intentional.** Each operating system keeps responsibility for lifecycle, accessibility, secure storage, permissions, and distribution.
+4. **Stable cross-language boundary.** Never expose C++ standard-library types across DLL/mobile boundaries. Use a narrow C ABI or a versioned serialized command/event protocol.
+5. **Portable local inference.** No Python runtime ships. Core ML, ONNX Runtime, and platform runtimes implement one normalized contract.
+6. **Shared core owns Drift state.** Engine adapters report facts; shells render observable state and collect user intent.
+7. **Lit has a bounded role.** Use it for Drift-owned product surfaces and internal pages, not browser engine hosting or universal native abstraction.
+8. **Persistence is replaceable.** Preserve current JSON behavior first; introduce SQLite/encryption behind repository contracts only after compatibility tests.
+9. **Extensions are desktop-scoped initially.** macOS and Windows may target MV3; Android and iPhone do not inherit that promise.
+10. **Zero telemetry without opt-in.** Browsing data and page content do not leave the device by default.
+11. **Binary dependencies are fetched, not committed.** CEF distributions and generated outputs stay ignored and checksum-verified. Git LFS is not used for reproducible SDKs or app bundles.
+12. **Vertical slices prove architecture.** A new folder or interface is not progress until an existing behavior runs through it and tests protect the result.
