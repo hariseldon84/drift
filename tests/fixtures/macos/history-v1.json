@@ -1,0 +1,12 @@
+[
+  {
+    "url": "https://example.com/second",
+    "title": "Second Page",
+    "timestamp": "2026-09-18T10:05:00Z"
+  },
+  {
+    "url": "https://example.com/first",
+    "title": "First Page",
+    "timestamp": "2026-09-18T10:04:00Z"
+  }
+]

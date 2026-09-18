@@ -103,7 +103,11 @@ The UI does not call CEF, WebView, or WKWebView directly for product behavior. T
 
 ## 6. BrowserEngine contract
 
-The first contract is intentionally small and driven by existing behavior.
+The final engine contract is intentionally small and driven by existing
+behavior. EP-00-T02 establishes the shared state vocabulary for tabs,
+navigation, downloads, extraction, and errors. EP-00-T07 expands that baseline
+at the adapter boundary with metadata, favicon, host-state, and download
+start/inspection operations before any non-macOS engine is integrated.
 
 Commands include:
 

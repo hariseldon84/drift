@@ -71,6 +71,10 @@ Do not rewrite working code into another language merely for architectural symme
 
 ```text
 drift/
+  core/browser-state/
+    browser_contract.h       platform-neutral command/event/error vocabulary
+    browser_state.*          deterministic tab/download reducer
+    browser_state_codec.*    bounded versioned DRIFTBS1 snapshot codec
   src/browser/
     main.mm                 CEF process setup and macOS entry point
     browser_window.mm       current UI, browser state, persistence, and CEF integration
@@ -80,7 +84,8 @@ drift/
   scripts/fetch-cef.sh      pinned/checksummed macOS CEF bootstrap
   resources/                bundled fonts and authored assets
   docs/                     product, design, and architecture documents
-  tests/                    not present yet; introduced in EP-00-T02/T03
+  tests/core/               CTest executable for state/codec behavior
+  tests/fixtures/macos/     current bookmark/history JSON compatibility inputs
 ```
 
 `browser_window.mm` currently combines native UI, tabs/navigation, bookmarks, history, downloads, JSON persistence, and direct CEF calls. Extraction must be behavior-preserving and proceed in tested vertical slices.
@@ -118,15 +123,19 @@ tests/
 
 Do not create this tree as empty architecture theater. Each move must put an existing behavior through the new boundary and include its test.
 
-## First Shared Contracts
+## Shared Contract Vocabulary
 
-The initial `BrowserEngine` surface is driven by the existing browser:
+EP-00-T02 now provides platform-neutral C++20 values in
+`core/browser-state/`:
 
-- commands: create/select/close/reorder/restore tab; navigate; back/forward; reload/stop; request metadata/extraction; start/cancel/inspect download;
-- events: tab lifecycle; URL/title/favicon; loading and navigation capability; load failure; renderer termination; download progress/completion; extraction result; typed error;
-- values: stable platform-neutral IDs, URLs, timestamps, progress, results, and error codes.
+- commands: create/select/close/move/restore tab; navigate; back/forward; reload/stop; request extraction; cancel download;
+- events: tab create/select/close/move/pin; URL/title/loading/navigation capability; load progress; download update; extraction result; typed engine error;
+- values: strong tab/download/request IDs, URLs, progress, normalized results, status values, and error codes.
 
-The shared core is authoritative for Drift state. Engines report facts; shells render state and collect intent.
+The tested reducer owns tab/navigation/download state transitions, and the
+`DRIFTBS1` codec locks deterministic snapshot bytes. These are internal C++
+types; do not export STL types across a platform boundary. The actual
+`BrowserEngine` interface and ABI/protocol mapping remain EP-00-T07.
 
 ## Persistence
 
@@ -160,14 +169,29 @@ cmake --build build --parallel
 open build/src/browser/Drift.app
 ```
 
-Current automated application tests do not yet exist. EP-00-T02/T03 must establish:
+The shared core can build without CEF or Objective-C++:
 
-- deterministic C++ core unit tests;
-- serialization compatibility tests;
+```bash
+cmake -S . -B build-core -G Ninja -DDRIFT_BUILD_BROWSER_APP=OFF -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Debug
+cmake --build build-core --parallel
+ctest --test-dir build-core --output-on-failure
+```
+
+`drift.browser_state` covers deterministic state transitions, invalid-event
+non-mutation, download progress, golden/round-trip serialization, versioning,
+and malformed input. `docs/09_macos_behavior_parity.md` is the manual gate for
+the working shell and current JSON formats.
+
+UBSan is verified through the command in `commands.md`. BUG-29 records an
+AppleClang 17/macOS 26.5.1 ASan runtime spin before `main()`; ASan remains a
+required future CI gate on a supported toolchain, not a claimed pass here.
+
+Still required in later phases:
+
+- executable bookmark/history JSON compatibility tests during extraction;
 - BrowserEngine adapter contract tests;
-- macOS characterization/smoke checks;
-- sanitizer configurations where supported;
-- platform build smoke jobs as platform proofs land.
+- platform integration/build smoke jobs;
+- the full macOS parity run after extraction.
 
 No cross-platform parity, performance, or stability claim is accepted without execution on its target platform.
 
@@ -181,6 +205,7 @@ The existing macOS budgets in GD-07 remain the first reference. SP-08/SP-09 must
 |---|---|
 | What and why? | `PRD.md` |
 | Cross-platform contract? | `docs/08_cross_platform_architecture.md` |
+| macOS behavior gate? | `docs/09_macos_behavior_parity.md` |
 | What is true today? | `status_quo.md` |
 | What is next? | `tasks.md` |
 | How do I build/run? | `commands.md` |

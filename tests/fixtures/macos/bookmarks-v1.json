@@ -1,0 +1,17 @@
+[
+  {
+    "url": "https://example.com/products/one",
+    "title": "Example Product",
+    "timestamp": "2026-09-18T10:00:00Z"
+  },
+  {
+    "url": "file:///Users/example/reference.html",
+    "title": "Local Reference",
+    "timestamp": "2026-09-18T10:01:00Z"
+  },
+  {
+    "url": "about:blank",
+    "title": "Legacy invalid entry",
+    "timestamp": "2026-09-18T10:02:00Z"
+  }
+]

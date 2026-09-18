@@ -122,7 +122,8 @@ Subsequent incremental builds are fast (~seconds).
 open build/src/browser/Drift.app
 ```
 
-Expected: A native macOS window opens and loads `https://example.com`.
+Expected: A native macOS window opens at `about:blank` with the address field
+ready for input.
 
 > Always use `open`, not the binary directly. `open` goes through LaunchServices so macOS treats it as a proper app bundle — required for the multi-process architecture to work.
 
@@ -155,9 +156,72 @@ This confirms the multi-process CEF architecture is working.
 
 ```bash
 cmake --build build --parallel
+ctest --test-dir build --output-on-failure
 ```
 
 No need to re-run `cmake` unless you add new source files to `CMakeLists.txt`.
+
+---
+
+## Shared core only — no CEF or Objective-C++
+
+Use this for the platform-neutral C++20 state/contract tests:
+
+```bash
+cmake \
+  -S . \
+  -B build-core \
+  -G Ninja \
+  -DDRIFT_BUILD_BROWSER_APP=OFF \
+  -DBUILD_TESTING=ON \
+  -DCMAKE_BUILD_TYPE=Debug
+cmake --build build-core --parallel
+ctest --test-dir build-core --output-on-failure
+```
+
+Expected: `drift.browser_state` passes without downloading or locating CEF.
+
+---
+
+## Shared core with UndefinedBehaviorSanitizer
+
+```bash
+cmake \
+  -S . \
+  -B build-core-ubsan \
+  -G Ninja \
+  -DDRIFT_BUILD_BROWSER_APP=OFF \
+  -DBUILD_TESTING=ON \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DCMAKE_CXX_FLAGS="-fsanitize=undefined -fno-omit-frame-pointer" \
+  -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=undefined"
+cmake --build build-core-ubsan --parallel
+ctest --test-dir build-core-ubsan --output-on-failure
+```
+
+Expected: `drift.browser_state` passes with no UBSan findings.
+
+AddressSanitizer is currently blocked on this macOS 26.5.1 / AppleClang 17
+host by BUG-29: the runtime spins inside dyld shadow-memory initialization
+before `main()`. The configuration used to reproduce it is:
+
+```bash
+cmake \
+  -S . \
+  -B build-core-asan \
+  -G Ninja \
+  -DDRIFT_BUILD_BROWSER_APP=OFF \
+  -DBUILD_TESTING=ON \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DCMAKE_CXX_FLAGS="-fsanitize=address -fno-omit-frame-pointer" \
+  -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address"
+cmake --build build-core-asan --parallel
+ctest --test-dir build-core-asan --output-on-failure
+```
+
+Do not run that CTest unattended on the affected host. Re-enable it as a gate
+on a supported CI/toolchain combination. Use ThreadSanitizer as a separate job
+when shared-core concurrency is added; do not combine it with AddressSanitizer.
 
 ---
 

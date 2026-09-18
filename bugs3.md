@@ -304,3 +304,20 @@ Root cause: the full CEF binary distribution was tracked under `docs/`, and the 
 Fix: Replaced the unpublished `main` history with a clean root commit while preserving the previous history at the local backup ref `backup/pre-github-cleanup-20260918`. Added `.gitignore` rules for generated builds, downloaded dependencies, local agent state, and macOS metadata. Added `scripts/fetch-cef.sh` to download the pinned per-architecture CEF distribution into `.deps/` and verify its SHA-1. CMake now discovers that local dependency by default and gives a direct bootstrap instruction when it is missing. Git LFS was not used because CEF and app bundles are reproducible dependencies/artifacts, not authored source assets.
 
 Verification: GitHub accepted `main`; its largest blob is 5.4 MB. A fresh GitHub clone downloaded and checksum-verified CEF, extracted it into ignored `.deps/`, and configured successfully. A separate clean 244-step build completed and the resulting app launched with its CEF helper processes.
+
+---
+
+## BUG-29 | EP-00-T02 | OPEN 2026-09-18 · toolchain workaround documented
+
+**AddressSanitizer-instrumented core tests spin before `main()` on the current macOS 26.5.1 / AppleClang 17 host.**
+
+Evidence: both the ASan-only and combined ASan+UBSan binaries consume one CPU
+core without reaching test output. A live `sample` places the loop in
+`libclang_rt.asan_osx_dynamic.dylib` during dyld shadow-memory initialization
+(`AsanInitInternal` → `InitializeShadowMemory` → sanitizer spin mutex), before
+any Drift test or static initializer runs. The normal Debug build and the
+UBSan-only build both pass the same test binary.
+
+Workaround: use the verified UBSan command in `commands.md` on this host. Keep
+ASan required on a supported CI/toolchain combination once one is established;
+do not report the current host's ASan job as a Drift code failure or as a pass.

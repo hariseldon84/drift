@@ -211,8 +211,8 @@ All tasks, sprints, bugs, and gate decisions use this system. Reference by code 
 |---|---|
 | EP-00-T00 | Execute and track the complete migration through the temporary phase checklist |
 | EP-00-T01 | Lock the platform capability matrix and architecture contract (complete) |
-| EP-00-T02 | Add platform-neutral browser IDs, commands, events, errors, and deterministic tests |
-| EP-00-T03 | Characterize the existing macOS browser and define its behavior-parity gate |
+| EP-00-T02 | Add platform-neutral browser IDs, commands, events, errors, and deterministic tests (complete) |
+| EP-00-T03 | Capture source-derived macOS fixtures and define its manual behavior-parity gate (complete; execution evidence is required at T09) |
 | EP-00-T04 | Extract bookmarks as the first tested shared-core vertical slice |
 | EP-00-T05 | Extract history and download state into shared-core models |
 | EP-00-T06 | Extract tab, navigation, and session state into shared-core models |

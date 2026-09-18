@@ -9,12 +9,7 @@
 
 - [ ] EP-00-T00: Execute the approved four-platform migration (`_wip_cross_platform_migration.md`; PRD §21)
 
-## SP-05 — Shared Contracts and Characterization · NEXT
-
-- [ ] EP-00-T02: Add platform-neutral browser identifiers, commands, events, errors, and deterministic tests
-- [ ] EP-00-T03: Add macOS characterization fixtures and a behavior-parity gate before extraction
-
-## SP-06 — Shared State Extraction
+## SP-06 — Shared State Extraction · NEXT
 
 - [ ] EP-00-T04: Extract bookmarks behind a tested shared-core state model
 - [ ] EP-00-T05: Extract history and download state behind shared-core models
@@ -110,6 +105,8 @@
 
 ## Done
 
+- [x] EP-00-T02: Added platform-neutral IDs/commands/events/errors, deterministic reducer/codec, and tests (2026-09-18)
+- [x] EP-00-T03: Captured source-derived macOS JSON fixtures and defined the manual behavior-parity gate (2026-09-18)
 - [x] EP-00-T01: Locked the four-platform capability matrix and architecture contract (2026-09-18)
 - [x] EP-01-T01: Bootstrap CEF 152 on macOS with the required multi-process architecture
 - [x] EP-01-T02: Tab bar — open, close, drag-reorder, pin, and favicon badge

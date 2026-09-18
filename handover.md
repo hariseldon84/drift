@@ -35,6 +35,7 @@ The macOS implementation supports:
 ## Current implementation map
 
 ```text
+core/browser-state/       platform-neutral C++20 contract, reducer, and codec
 src/browser/
   main.mm                 process setup and macOS entry point
   browser_window.mm       AppKit UI, state, JSON persistence, and direct CEF calls
@@ -42,9 +43,14 @@ src/browser/
   drift_client.*          CEF client callbacks routed to the UI
   drift_app.*             CEF application setup and command-line configuration
 scripts/fetch-cef.sh      pinned/checksummed CEF bootstrap
+tests/core/               drift.browser_state CTest target
+tests/fixtures/macos/     bookmark/history JSON compatibility inputs
 ```
 
-`browser_window.mm` is about 1,800 lines and currently mixes concerns that EP-00 will separate. There is no shared core, BrowserEngine abstraction, Lit implementation, automated test suite, Windows shell, Android shell, or iPhone shell yet.
+`browser_window.mm` is about 1,800 lines and still owns all live macOS state.
+The shared contract is tested but intentionally not wired into the app yet.
+There is no BrowserEngine abstraction, Lit implementation, Windows shell,
+Android shell, or iPhone shell.
 
 ## Locked architecture
 
@@ -67,19 +73,22 @@ shared observable state -> UI
 
 No CEF, AppKit, WebKit, JNI, Swift, Kotlin, or WinUI type enters the shared core. No C++ standard-library type crosses a DLL/mobile language boundary.
 
-## Next work: EP-00-T02 and EP-00-T03
+## Next work: EP-00-T04
 
-Phase 1 documentation is complete. Phase 2 must establish contracts and characterization before moving existing state.
+Phase 2 is complete: strong IDs, commands/events/errors, a deterministic
+tab/download reducer, the versioned `DRIFTBS1` codec, CTest coverage, macOS
+JSON fixtures, and the parity checklist now exist.
 
-Recommended first vertical sequence:
+Extract bookmarks as the first behavior-preserving vertical slice:
 
-1. add the smallest C++ test target and run it in the current CMake build;
-2. define opaque IDs plus command/event/error value types with no engine types;
-3. characterize current bookmark JSON and state transitions with fixtures/tests;
-4. write the macOS parity checklist from observable behavior;
-5. only then extract bookmarks for EP-00-T04.
+1. turn `bookmarks-v1.json` into an executable compatibility test;
+2. add a platform-neutral Bookmark value and deterministic bookmark state;
+3. keep current Objective-C++ JSON I/O temporarily, mapping it to/from core values;
+4. route add/remove/query behavior through the shared state;
+5. build, run core tests, and execute the bookmark section of the parity gate.
 
-Do not start by moving every file or creating empty target folders.
+Repository interfaces belong to EP-00-T08; do not pull SQLite or the final
+persistence boundary into this slice.
 
 ## Build and run
 
@@ -87,10 +96,15 @@ Do not start by moving every file or creating empty target folders.
 ./scripts/fetch-cef.sh
 cmake -S . -B build -G Ninja -DPROJECT_ARCH="$(uname -m)" -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel
+ctest --test-dir build --output-on-failure
 open build/src/browser/Drift.app
 ```
 
 The app is ad-hoc signed for development. CEF is loaded in dylib mode. Full commands and fresh-clone steps are in `commands.md`.
+
+Core-only and UBSan commands are also in `commands.md`. Normal and UBSan
+tests pass. BUG-29 records the current host's ASan runtime deadlock before
+`main()`; do not misreport it as a Drift test failure or a passing gate.
 
 ## Important CEF / Objective-C++ facts
 

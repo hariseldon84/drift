@@ -1,7 +1,7 @@
 # Drift — Status Quo
 
 > One-page cold-start anchor. Rewritten, not appended, when state changes materially.
-> Last updated: 2026-09-18 (cross-platform Phase 0 and Phase 1 complete)
+> Last updated: 2026-09-18 (cross-platform Phase 0 through Phase 2 complete)
 
 ## What works
 
@@ -15,25 +15,27 @@
 - Published commit attribution is `hariseldon84`; a local backup ref preserves the pre-rewrite commit objects.
 - The product scope and architecture now explicitly target macOS, Windows, Android, and iPhone.
 - EP-00-T01: shared C++20 core, native shells, BrowserEngine adapters, bounded Lit surfaces, and the platform capability matrix are locked in `docs/08_cross_platform_architecture.md`.
+- EP-00-T02: `core/browser-state/` now supplies strong IDs, command/event/error values, deterministic tab/download transitions, and the versioned `DRIFTBS1` codec.
+- EP-00-T02 verification: normal Debug and UBSan core builds pass `drift.browser_state`; the core-only build does not require CEF or Objective-C++.
+- EP-00-T03: macOS bookmark/history JSON fixtures and `docs/09_macos_behavior_parity.md` define the extraction gate.
+- BUG-29 records a host-toolchain ASan initialization deadlock before `main()`; it remains open while UBSan is the verified sanitizer on this machine.
 
 ## What is half-built
 
-- Nothing in source is half-migrated. The current macOS implementation remains intact in `src/browser/`.
-- The architecture exists in documentation; its shared contracts and test harness do not exist yet.
+- Nothing in the macOS app is half-migrated. The current implementation remains intact in `src/browser/`.
+- The new core is deliberately not wired to the app until the EP-00-T04 bookmark slice has executable compatibility coverage.
 
 ## What is missing
 
-- Automated C++ core tests, serialization fixtures, and macOS characterization checks.
-- Platform-neutral command/event/error types and `BrowserEngine` contract.
 - Extracted shared state for bookmarks, history, downloads, tabs, and navigation.
-- macOS CEF adapter behind the new engine boundary.
+- The `BrowserEngine` interface, adapter contract tests, and macOS CEF adapter.
 - SQLite repository implementation and migration tests.
 - Windows, Android, and iPhone runnable proofs.
 - The page-understanding, object, Compare Mode, action, and widget product layers.
 
 ## In flight
 
-EP-00 remains the active migration epic. No source extraction is half-finished; Phase 1 is complete and SP-05/Phase 2 is the next bounded unit of work.
+EP-00 remains the active migration epic. Phase 2 is complete; SP-06/Phase 3 is the next bounded unit of work.
 
 ## Open decisions waiting on Anand
 
@@ -48,4 +50,4 @@ Android WebView versus GeckoView is not a preference question yet; EP-00-T12 res
 
 ## The single most useful next action
 
-Start Phase 2 with EP-00-T02 and EP-00-T03: add the smallest runnable C++ test target, define platform-neutral IDs/commands/events/errors, and capture current bookmark/state behavior before extraction.
+Start EP-00-T04: make the bookmark JSON fixture executable, add a pure Bookmark state model, and route the existing macOS bookmark behavior through it without changing the JSON format or UI.

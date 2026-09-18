@@ -22,9 +22,9 @@
 
 ## Phase 2 — Contracts and characterization tests
 
-- [ ] Add platform-neutral browser identifiers, state models, commands, and events.
-- [ ] Add deterministic unit tests for state transitions and serialization.
-- [ ] Add a macOS behavior-parity checklist before extraction begins.
+- [x] Add platform-neutral browser identifiers, state models, commands, and events.
+- [x] Add deterministic unit tests for state transitions and serialization.
+- [x] Add a macOS behavior-parity checklist before extraction begins.
 
 ## Phase 3 — Extract shared browser state
 

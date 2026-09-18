@@ -8,14 +8,15 @@ Drift targets macOS, Windows, Android, and iPhone. It extracts typed objects —
 
 The runnable implementation today is a macOS CEF browser with tabs, navigation, bookmarks, history, downloads, native chrome, keyboard shortcuts, and JSON persistence. That working browser is preserved on branch `V018Sep2026`.
 
-`main` is beginning the Cross-Platform Foundation. Before new intelligence features resume, the project will extract tested browser state into a shared C++20 core, isolate engines behind adapters, and prove Windows, Android, and iPhone vertical slices.
+`main` now contains the first tested, platform-neutral C++20 browser-state contract. Before new intelligence features resume, the project will move existing macOS state through that core, isolate engines behind adapters, and prove Windows, Android, and iPhone vertical slices.
 
 | Phase | State |
 |---|---|
 | macOS browser baseline (SP-01–SP-03) | Complete |
 | Architecture and platform contract (SP-04) | Complete |
-| Shared contracts and characterization (SP-05) | Next |
-| State extraction and engine boundary (SP-06–SP-07) | Planned |
+| Shared contracts and characterization (SP-05) | Complete |
+| Shared state extraction (SP-06) | Next |
+| Engine and persistence boundaries (SP-07) | Planned |
 | Windows proof (SP-08) | Planned |
 | Android and iPhone proofs (SP-09) | Planned |
 | Product intelligence and Compare Mode | Queued after the foundation gate |
@@ -51,6 +52,7 @@ Requirements: macOS 13+, Xcode 15+, CMake 3.25+, and Ninja.
 ./scripts/fetch-cef.sh
 cmake -S . -B build -G Ninja -DPROJECT_ARCH="$(uname -m)" -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel
+ctest --test-dir build --output-on-failure
 open build/src/browser/Drift.app
 ```
 
