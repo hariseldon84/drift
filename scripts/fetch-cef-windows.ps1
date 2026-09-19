@@ -45,7 +45,7 @@ Write-Host "Extracting $Archive..."
 & tar -xjf $ArchivePath -C $DepsDir
 
 if (-not (Test-Path (Join-Path $CefRoot "cmake\FindCEF.cmake"))) {
-    Write-Error "CEF extraction failed — expected directory not found: $CefRoot"
+    Write-Error "CEF extraction failed - expected directory not found: $CefRoot"
     exit 1
 }
 
