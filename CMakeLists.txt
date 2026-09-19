@@ -7,34 +7,40 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(DRIFT_BUILD_BROWSER_APP "Build the current macOS CEF browser" ON)
 
+# Pin a sane deployment target before CEF's cef_variables.cmake overrides it,
+# so core libraries don't inherit the host OS version (e.g. macOS 26 on dev machines).
+if(APPLE AND NOT DEFINED CMAKE_OSX_DEPLOYMENT_TARGET)
+  set(CMAKE_OSX_DEPLOYMENT_TARGET "13.0" CACHE STRING "Minimum macOS version" FORCE)
+endif()
+
 include(CTest)
 add_subdirectory(core/browser-state)
+add_subdirectory(core/bookmarks)
+add_subdirectory(core/history)
+add_subdirectory(core/storage)
 if(BUILD_TESTING)
   add_subdirectory(tests/core)
 endif()
 
 if(DRIFT_BUILD_BROWSER_APP)
-  if(NOT APPLE)
-    message(FATAL_ERROR
-      "The current browser app builds on macOS only. Configure with "
-      "-DDRIFT_BUILD_BROWSER_APP=OFF to build and test the shared core.")
-  endif()
-
-  enable_language(OBJCXX)
-
-  # CEF's cef_variables.cmake overrides CMAKE_OSX_DEPLOYMENT_TARGET.
-
-  # CEF is a pinned external build dependency, not repository content. The
-  # bootstrap script downloads the matching binary distribution into .deps/.
+  # CEF is a pinned external build dependency, not repository content.
+  # macOS: run ./scripts/fetch-cef.sh
+  # Windows: run .\scripts\fetch-cef-windows.ps1
   set(DRIFT_CEF_VERSION "152.0.6+g708dc14+chromium-152.0.7977.83")
+
   if(NOT DEFINED CEF_ROOT OR CEF_ROOT STREQUAL "")
-    if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(arm64|aarch64)$")
-      set(DRIFT_CEF_PLATFORM "macosarm64")
-    elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64)$")
-      set(DRIFT_CEF_PLATFORM "macosx64")
+    if(APPLE)
+      if(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(arm64|aarch64)$")
+        set(DRIFT_CEF_PLATFORM "macosarm64")
+      elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(x86_64|AMD64)$")
+        set(DRIFT_CEF_PLATFORM "macosx64")
+      else()
+        message(FATAL_ERROR "Unsupported macOS architecture: ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+      endif()
+    elseif(WIN32)
+      set(DRIFT_CEF_PLATFORM "windows64")
     else()
-      message(FATAL_ERROR
-        "Unsupported macOS architecture: ${CMAKE_HOST_SYSTEM_PROCESSOR}")
+      message(FATAL_ERROR "DRIFT_BUILD_BROWSER_APP is only supported on macOS and Windows.")
     endif()
 
     set(CEF_ROOT
@@ -43,9 +49,18 @@ if(DRIFT_BUILD_BROWSER_APP)
   endif()
 
   if(NOT EXISTS "${CEF_ROOT}/cmake/FindCEF.cmake")
-    message(FATAL_ERROR
-      "CEF was not found at:\n  ${CEF_ROOT}\n"
-      "Run ./scripts/fetch-cef.sh from the repository root, then configure again.")
+    if(APPLE)
+      set(_FETCH_HINT "Run ./scripts/fetch-cef.sh from the repository root, then configure again.")
+    else()
+      set(_FETCH_HINT "Run .\\scripts\\fetch-cef-windows.ps1 from the repository root, then configure again.")
+    endif()
+    message(FATAL_ERROR "CEF was not found at:\n  ${CEF_ROOT}\n${_FETCH_HINT}")
+  endif()
+
+  # CEF's cef_variables.cmake sets OBJCXX flags on macOS; enable the language
+  # before find_package(CEF) so those variables resolve correctly.
+  if(APPLE)
+    enable_language(OBJCXX)
   endif()
 
   list(APPEND CMAKE_MODULE_PATH "${CEF_ROOT}/cmake")
@@ -54,6 +69,11 @@ if(DRIFT_BUILD_BROWSER_APP)
   # The C++ wrapper ships as source inside the binary distribution and must be
   # compiled against the local toolchain; it is not a prebuilt static library.
   add_subdirectory("${CEF_LIBCEF_DLL_WRAPPER_PATH}" libcef_dll_wrapper)
+  add_subdirectory(engine/cef)
 
-  add_subdirectory(src/browser)
+  if(APPLE)
+    add_subdirectory(src/browser)
+  elseif(WIN32)
+    add_subdirectory(apps/windows)
+  endif()
 endif()

@@ -1,13 +1,13 @@
 # Drift — Status Quo
 
 > One-page cold-start anchor. Rewritten, not appended, when state changes materially.
-> Last updated: 2026-09-18 (cross-platform Phase 0 through Phase 2 complete)
+> Last updated: 2026-09-19 (EP-00-T08 complete — SQLite behind repository interfaces)
 
 ## What works
 
 - The macOS CEF 152 browser builds and runs with its multi-process architecture.
 - EP-01-T01–T08: browser shell, tabs, navigation, window behavior, keyboard shortcuts, Drift theme, and context menus are complete.
-- EP-01-T09: basic bookmark toggle/bar/navigation and JSON persistence work.
+- EP-01-T09: basic bookmark toggle/bar/navigation and JSON persistence work — now routed through shared core.
 - EP-01-T10: basic history recording/panel/navigation/clear and JSON persistence work.
 - EP-01-T11: download save flow/progress/clear/reveal-in-Finder works.
 - EP-06-T08: clean macOS clone/bootstrap works; CEF and generated artifacts are ignored and fetched/generated locally.
@@ -18,24 +18,26 @@
 - EP-00-T02: `core/browser-state/` now supplies strong IDs, command/event/error values, deterministic tab/download transitions, and the versioned `DRIFTBS1` codec.
 - EP-00-T02 verification: normal Debug and UBSan core builds pass `drift.browser_state`; the core-only build does not require CEF or Objective-C++.
 - EP-00-T03: macOS bookmark/history JSON fixtures and `docs/09_macos_behavior_parity.md` define the extraction gate.
+- EP-00-T04: `core/bookmarks/` provides `BookmarkState`, `add_bookmark`, `remove_bookmark`, `has_bookmark`, and `is_bookmarkable_url`. `browser_window.mm` routes all bookmark operations through it. `drift.bookmarks` CTest (6 checks including fixture compat) passes. `DriftBookmark` ObjC class removed.
+- EP-00-T05: History and download state extracted behind `drift_history` and `drift_browser_state`; 7 CTests passing.
+- EP-00-T06: Tab/navigation/session state routed through `drift_browser_state`; build clean.
+- EP-00-T07: `IBrowserEngine` interface + `CefEngineAdapter`; all browser calls in shell routed through engine abstraction.
+- EP-00-T08: `IBookmarkRepository` + `IHistoryRepository` interfaces in `core/`; `SqliteBookmarkRepo` + `SqliteHistoryRepo` in `core/storage/` (sqlite3 system lib); JSON-to-SQLite migration on first launch; 4 CTest suites passing including `drift.storage`.
 - BUG-29 records a host-toolchain ASan initialization deadlock before `main()`; it remains open while UBSan is the verified sanitizer on this machine.
 
 ## What is half-built
 
-- Nothing in the macOS app is half-migrated. The current implementation remains intact in `src/browser/`.
-- The new core is deliberately not wired to the app until the EP-00-T04 bookmark slice has executable compatibility coverage.
+- Nothing in the macOS app is half-migrated. Each extracted slice is behavior-preserving.
 
 ## What is missing
 
-- Extracted shared state for bookmarks, history, downloads, tabs, and navigation.
-- The `BrowserEngine` interface, adapter contract tests, and macOS CEF adapter.
-- SQLite repository implementation and migration tests.
+- The macOS behavior-parity gate (EP-00-T09) — manual run after extraction.
 - Windows, Android, and iPhone runnable proofs.
 - The page-understanding, object, Compare Mode, action, and widget product layers.
 
 ## In flight
 
-EP-00 remains the active migration epic. Phase 2 is complete; SP-06/Phase 3 is the next bounded unit of work.
+EP-00 is the active migration epic. SP-07 complete (T07, T08). Next: EP-00-T09 (macOS parity gate).
 
 ## Open decisions waiting on Anand
 
@@ -50,4 +52,4 @@ Android WebView versus GeckoView is not a preference question yet; EP-00-T12 res
 
 ## The single most useful next action
 
-Start EP-00-T04: make the bookmark JSON fixture executable, add a pure Bookmark state model, and route the existing macOS bookmark behavior through it without changing the JSON format or UI.
+EP-00-T09: run `docs/09_macos_behavior_parity.md` manually against `open build/src/browser/Drift.app` to confirm the extraction left behavior intact, then declare SP-07 done.

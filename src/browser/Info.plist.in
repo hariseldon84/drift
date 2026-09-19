@@ -10,6 +10,8 @@
   <string>com.drift.browser</string>
   <key>CFBundleInfoDictionaryVersion</key>
   <string>6.0</string>
+  <key>CFBundleIconFile</key>
+  <string>drift</string>
   <key>CFBundleName</key>
   <string>Drift</string>
   <key>CFBundlePackageType</key>

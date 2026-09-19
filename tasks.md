@@ -11,14 +11,14 @@
 
 ## SP-06 — Shared State Extraction · NEXT
 
-- [ ] EP-00-T04: Extract bookmarks behind a tested shared-core state model
-- [ ] EP-00-T05: Extract history and download state behind shared-core models
-- [ ] EP-00-T06: Extract tab, navigation, and session state behind shared-core models
+- [x] EP-00-T04: Extract bookmarks behind a tested shared-core state model
+- [x] EP-00-T05: Extract history and download state behind shared-core models
+- [x] EP-00-T06: Extract tab, navigation, and session state behind shared-core models
 
 ## SP-07 — Engine and Persistence Boundaries
 
-- [ ] EP-00-T07: Introduce the platform-neutral BrowserEngine interface and macOS CEF adapter
-- [ ] EP-00-T08: Preserve JSON compatibility, then add SQLite behind versioned repository interfaces
+- [x] EP-00-T07: Introduce the platform-neutral BrowserEngine interface and macOS CEF adapter
+- [x] EP-00-T08: Preserve JSON compatibility, then add SQLite behind versioned repository interfaces
 - [ ] EP-00-T09: Pass the macOS behavior-parity and performance gate after extraction
 
 ## SP-08 — Windows Proof
@@ -105,6 +105,11 @@
 
 ## Done
 
+- [x] EP-00-T08: IBookmarkRepository + IHistoryRepository interfaces; SqliteBookmarkRepo + SqliteHistoryRepo in core/storage; JSON-to-SQLite migration on first launch; 4 CTest suites passing (2026-09-19)
+- [x] EP-00-T07: IBrowserEngine interface + CefEngineAdapter; all browser calls in shell routed through engine abstraction; build clean, 3 CTest suites passing (2026-09-18)
+- [x] EP-00-T06: Slimmed DriftTabModel to CEF-only fields; all tab/nav/session state routed through drift_browser_state; build clean, 3 CTest suites passing (2026-09-18)
+- [x] EP-00-T05: Extracted history into drift_history + wired downloads through drift_browser_state; 7 CTests passing (2026-09-18)
+- [x] EP-00-T04: Extracted bookmarks into drift_bookmarks shared-core library with 6 CTest unit tests (2026-09-18)
 - [x] EP-00-T02: Added platform-neutral IDs/commands/events/errors, deterministic reducer/codec, and tests (2026-09-18)
 - [x] EP-00-T03: Captured source-derived macOS JSON fixtures and defined the manual behavior-parity gate (2026-09-18)
 - [x] EP-00-T01: Locked the four-platform capability matrix and architecture contract (2026-09-18)

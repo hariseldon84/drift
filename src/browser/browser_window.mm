@@ -3,6 +3,14 @@
 #include "drift_client.h"
 #include "include/cef_browser.h"
 #include "include/cef_app.h"
+#include "engine/cef/cef_engine_adapter.h"
+#include "bookmarks/bookmark_state.h"
+#include "history/history_state.h"
+#include "browser-state/browser_state.h"
+#include "storage/sqlite_bookmark_repo.h"
+#include "storage/sqlite_history_repo.h"
+
+#include <algorithm>
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
@@ -23,33 +31,6 @@ static const CGFloat kDownloadBarH   = 48.0;
 static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DriftBookmark / DriftHistoryEntry / DriftDownloadItem
-// ─────────────────────────────────────────────────────────────────────────────
-@interface DriftBookmark : NSObject
-@property (copy) NSString* url;
-@property (copy) NSString* title;
-@property (copy) NSString* timestamp;
-@end
-@implementation DriftBookmark @end
-
-@interface DriftHistoryEntry : NSObject
-@property (copy) NSString* url;
-@property (copy) NSString* title;
-@property (copy) NSString* timestamp;
-@end
-@implementation DriftHistoryEntry @end
-
-@interface DriftDownloadItem : NSObject
-@property NSInteger  downloadId;
-@property (copy) NSString* filename;
-@property (copy) NSString* filePath;  // full path chosen by user or ~/Downloads default
-@property int64_t totalBytes;
-@property int64_t receivedBytes;
-@property BOOL isComplete;
-@property BOOL isCanceled;
-@property (strong) NSDate* startTime;
-@end
-@implementation DriftDownloadItem @end
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DriftTabInfo — immutable display snapshot for one tab in the strip
@@ -489,27 +470,19 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 @end
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DriftTabModel — mutable data model for one tab
+// DriftTabModel — CEF-specific fields only; canonical tab state lives in _browserState
 // ─────────────────────────────────────────────────────────────────────────────
 @interface DriftTabModel : NSObject
+@property uint64_t                       tabId;   // drift::browser::TabId value
 @property int                            browserId;
-@property (nonatomic) CefRefPtr<CefBrowser> browser;  // nonatomic: CefRefPtr owns its thread-safety
-@property (copy) NSString*               url;
-@property (copy) NSString*      title;
-@property (copy) NSString*      faviconURL;
-@property (strong) NSImage*     favicon;
-@property BOOL                  pinned;
-@property BOOL                  loading;
-@property BOOL                  canGoBack;
-@property BOOL                  canGoForward;
-@property CGFloat               loadProgress;
+@property (assign) drift::engine::IBrowserEngine* engine;
+@property (copy) NSString*               faviconURL;
+@property (strong) NSImage*              favicon;
 @end
 @implementation DriftTabModel
 - (instancetype)init {
   if (!(self = [super init])) return nil;
   _browserId = -1;
-  _url       = @"about:blank";
-  _title     = @"New Tab";
   return self;
 }
 @end
@@ -525,7 +498,6 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 @property (strong) NSView*             contentContainer;
 @property (strong) NSMutableArray<DriftTabModel*>* tabs;
 @property (strong) NSMutableArray<DriftTabModel*>* closingTabs; // keeps CefRefPtr alive until OnBeforeClose
-@property NSInteger                    activeIndex;
 @property (strong) NSView*             urlPill;
 @property (strong) NSImageView*        lockIcon;
 @property (strong) NSTextField*        urlField;
@@ -535,34 +507,38 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 @property (strong) NSButton*           forwardButton;
 @property (strong) NSButton*           reloadStopButton;
 @property (strong) NSView*             progressBar;
-@property (strong) NSMutableArray<NSString*>* closedTabURLs;
 @property BOOL urlBarFocusPending;  // set when blank tab opens; cleared in DriftOnAddressChange
-// Bookmarks
-@property (strong) NSMutableArray<DriftBookmark*>*     bookmarks;
+// Bookmarks — state lives in _bookmarkState C++ ivar (see @implementation)
 @property (strong) NSView*    bookmarksBar;
 @property (strong) NSButton*  starButton;
 @property BOOL bookmarksBarVisible;
 // History
-@property (strong) NSMutableArray<DriftHistoryEntry*>* history;
 @property (strong) NSPanel*       historyPanel;
 @property (strong) NSTableView*   historyTableView;
-// Downloads
-@property (strong) NSMutableArray<DriftDownloadItem*>* downloads;
+// Downloads (display-only macOS metadata; canonical state is in _browserState.downloads)
 @property (strong) NSView*    downloadBar;
 @property (strong) NSView*    downloadItemsView;  // cleared on each refresh
 @end
 
-@implementation DriftBrowserWindowController
+@implementation DriftBrowserWindowController {
+  drift::bookmarks::BookmarkState  _bookmarkState;
+  drift::history::HistoryState     _historyState;
+  drift::browser::BrowserState     _browserState;
+  std::unique_ptr<drift::storage::SqliteBookmarkRepo> _bookmarkRepo;
+  std::unique_ptr<drift::storage::SqliteHistoryRepo>  _historyRepo;
+  uint64_t                         _nextTabId;
+  std::vector<std::unique_ptr<drift::engine::CefEngineAdapter>> _engines;
+  NSMutableDictionary<NSNumber*, NSString*>* _dlFilePaths;   // downloadId -> file path
+  NSMutableDictionary<NSNumber*, NSDate*>*   _dlStartTimes;  // downloadId -> start time
+}
 
 - (instancetype)initWithURL:(NSString*)url width:(int)w height:(int)h {
   if (!(self = [super init])) return nil;
   _tabs           = [NSMutableArray array];
   _closingTabs    = [NSMutableArray array];
-  _closedTabURLs  = [NSMutableArray array];
-  _activeIndex    = -1;
-  _bookmarks      = [NSMutableArray array];
-  _history        = [NSMutableArray array];
-  _downloads      = [NSMutableArray array];
+  _nextTabId      = 0;
+  _dlFilePaths    = [NSMutableDictionary dictionary];
+  _dlStartTimes   = [NSMutableDictionary dictionary];
   _bookmarksBarVisible = NO;
 
   NSRect frame = NSMakeRect(100, 100, w, h);
@@ -771,8 +747,7 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
   [_window makeKeyAndOrderFront:nil];
   [self openTabWithURL:url];
 
-  [self loadBookmarks];
-  [self loadHistory];
+  [self setupPersistence];
 
   // Local monitor: intercept ⌘A when the URL field editor is active.
   // CEF's event handling can consume Command+key events before they reach
@@ -816,11 +791,12 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
         }
         NSEventModifierFlags ctrl = NSEventModifierFlagControl;
         if (e.keyCode == 48 && ws.tabs.count > 1) {  // keyCode 48 = Tab
+          NSInteger cur = [ws activeIndexInStrip];
           if (mods == ctrl) {  // ⌃Tab → next tab
-            [ws switchToIndex:(ws.activeIndex + 1) % (NSInteger)ws.tabs.count]; return nil;
+            [ws switchToIndex:(cur + 1) % (NSInteger)ws.tabs.count]; return nil;
           }
           if (mods == (ctrl | shift)) {  // ⌃⇧Tab → previous tab
-            [ws switchToIndex:((ws.activeIndex - 1) + (NSInteger)ws.tabs.count) % (NSInteger)ws.tabs.count]; return nil;
+            [ws switchToIndex:(cur - 1 + (NSInteger)ws.tabs.count) % (NSInteger)ws.tabs.count]; return nil;
           }
         }
         return e;
@@ -831,6 +807,27 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 - (void)dealloc {
   if (_cmdAMonitor) [NSEvent removeMonitor:_cmdAMonitor];
   [super dealloc];
+}
+
+// ── Tab state helpers ─────────────────────────────────────────────────────────
+
+- (NSInteger)activeIndexInStrip {
+  if (!_browserState.active_tab_id.has_value()) return -1;
+  uint64_t aid = _browserState.active_tab_id->value;
+  for (NSInteger i = 0; i < (NSInteger)_tabs.count; i++)
+    if (_tabs[i].tabId == aid) return i;
+  return -1;
+}
+
+- (DriftTabModel*)tabModelForTabId:(uint64_t)tabId {
+  for (DriftTabModel* t in _tabs) if (t.tabId == tabId) return t;
+  return nil;
+}
+
+- (const drift::browser::TabState*)tabStateForTabId:(uint64_t)tabId {
+  for (auto& ts : _browserState.tabs)
+    if (ts.id.value == tabId) return &ts;
+  return nullptr;
 }
 
 // ── Layout ────────────────────────────────────────────────────────────────────
@@ -849,8 +846,8 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
   _downloadBar.frame      = NSMakeRect(0, 0, cw, kDownloadBarH);
   NSRect bb = _contentContainer.bounds;
   for (DriftTabModel* t in _tabs) {
-    if (!t.browser) continue;
-    NSView* v = (__bridge NSView*)t.browser->GetHost()->GetWindowHandle();
+    if (!t.engine) continue;
+    NSView* v = (__bridge NSView*)t.engine->native_view_handle();
     v.frame = bb;
   }
   [self refreshBookmarksBar];
@@ -859,10 +856,16 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 // ── Tab management ────────────────────────────────────────────────────────────
 
 - (void)openTabWithURL:(NSString*)url {
+  uint64_t tid = ++_nextTabId;
   DriftTabModel* tab = [[DriftTabModel alloc] init];
-  tab.url   = url;
-  tab.title = @"New Tab";
+  tab.tabId = tid;
   [_tabs addObject:tab];
+
+  (void)drift::browser::apply_event(_browserState,
+      drift::browser::TabCreatedEvent{
+          drift::browser::TabId{tid},
+          url ? std::string(url.UTF8String) : "",
+          /*activate=*/false});  // switchToTabId: will apply TabSelectedEvent
 
   CefWindowInfo info;
   NSRect b = _contentContainer.bounds;
@@ -872,55 +875,66 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
   CefRefPtr<DriftClient> client(new DriftClient);
   CefBrowserSettings settings;
   CefBrowserHost::CreateBrowser(info, client,
-    CefString([url UTF8String]), settings, nullptr, nullptr);
+    CefString(url ? [url UTF8String] : ""), settings, nullptr, nullptr);
 
-  [self switchToIndex:(NSInteger)_tabs.count - 1];
+  [self switchToTabId:tid];
   // DriftOnAddressChange claims focus once CEF commits about:blank — after all async focus-stealing has settled
   if ([url isEqualToString:@"about:blank"]) _urlBarFocusPending = YES;
 }
 
-- (void)switchToIndex:(NSInteger)idx {
-  if (idx < 0 || idx >= (NSInteger)_tabs.count) return;
-  if ([_urlField currentEditor]) [_window makeFirstResponder:nil]; // resign edit so refreshNavBar isn't blocked
+- (void)switchToTabId:(uint64_t)tid {
+  if ([_urlField currentEditor]) [_window makeFirstResponder:nil];
   for (DriftTabModel* t in _tabs) {
-    if (t.browser) {
-      NSView* v = (__bridge NSView*)t.browser->GetHost()->GetWindowHandle();
+    if (t.engine) {
+      NSView* v = (__bridge NSView*)t.engine->native_view_handle();
       v.hidden  = YES;
     }
   }
-  _activeIndex = idx;
-  DriftTabModel* active = _tabs[idx];
-  if (active.browser) {
-    NSView* v          = (__bridge NSView*)active.browser->GetHost()->GetWindowHandle();
+  (void)drift::browser::apply_event(_browserState,
+      drift::browser::TabSelectedEvent{drift::browser::TabId{tid}});
+  DriftTabModel* active = [self tabModelForTabId:tid];
+  if (active && active.engine) {
+    NSView* v          = (__bridge NSView*)active.engine->native_view_handle();
     v.hidden           = NO;
     v.frame            = _contentContainer.bounds;
     v.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
   }
-  _window.title = active.title;
+  const drift::browser::TabState* ts = [self tabStateForTabId:tid];
+  _window.title = (ts && !ts->title.empty())
+    ? [NSString stringWithUTF8String:ts->title.c_str()] : @"New Tab";
   [self refreshStrip];
   [self refreshNavBar];
   [self refreshNavButtons];
   [self refreshStarButton];
 }
 
+- (void)switchToIndex:(NSInteger)idx {
+  if (idx < 0 || idx >= (NSInteger)_tabs.count) return;
+  [self switchToTabId:_tabs[idx].tabId];
+}
+
 - (void)refreshStrip {
+  NSInteger activeIdx = [self activeIndexInStrip];
   NSMutableArray<DriftTabInfo*>* infos = [NSMutableArray array];
   for (NSInteger i = 0; i < (NSInteger)_tabs.count; i++) {
     DriftTabModel* t = _tabs[i];
-    DriftTabInfo*  info = [[DriftTabInfo alloc] init];
+    const drift::browser::TabState* ts = [self tabStateForTabId:t.tabId];
+    DriftTabInfo* info = [[DriftTabInfo alloc] init];
     info.index        = i;
-    info.title        = t.title;
+    info.title        = (ts && !ts->title.empty())
+      ? [NSString stringWithUTF8String:ts->title.c_str()] : @"New Tab";
     info.favicon      = t.favicon;
-    info.isPinned     = t.pinned;
-    info.isActive     = (i == _activeIndex);
-    info.isLoading    = t.loading;
-    NSURL* u          = [NSURL URLWithString:t.url];
-    NSString* host    = u.host ?: t.url;
+    info.isPinned     = ts ? ts->pinned : NO;
+    info.isActive     = (i == activeIdx);
+    info.isLoading    = ts ? ts->loading : NO;
+    NSString* urlStr  = ts ? [NSString stringWithUTF8String:ts->url.c_str()] : @"";
+    NSURL* u          = [NSURL URLWithString:urlStr];
+    NSString* host    = u.host ?: urlStr;
     info.faviconLetter= host.length ? [[host substringToIndex:1] uppercaseString] : @"?";
     [infos addObject:info];
   }
   _tabStrip.tabs        = infos;
-  _tabStrip.activeIndex = _activeIndex;
+  _tabStrip.activeIndex = activeIdx;
   [_tabStrip setNeedsDisplay:YES];
 }
 
@@ -935,6 +949,20 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
   return -1;
 }
 
+- (drift::engine::IBrowserEngine*)adoptEngineForBrowser:(CefRefPtr<CefBrowser>)browser {
+  auto adapter = std::make_unique<drift::engine::CefEngineAdapter>(browser);
+  drift::engine::IBrowserEngine* ptr = adapter.get();
+  _engines.push_back(std::move(adapter));
+  return ptr;
+}
+
+- (void)releaseEngineForBrowserId:(int)bid {
+  _engines.erase(std::remove_if(_engines.begin(), _engines.end(),
+    [bid](const std::unique_ptr<drift::engine::CefEngineAdapter>& e) {
+      return e->browser_id() == bid;
+    }), _engines.end());
+}
+
 // ── DriftTabStripDelegate ─────────────────────────────────────────────────────
 
 - (void)tabStripDidRequestNewTab:(DriftTabStripView*)__unused strip {
@@ -947,26 +975,24 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 
 - (void)tabStrip:(DriftTabStripView*)__unused strip didCloseTabAtIndex:(NSInteger)i {
   if (i < 0 || i >= (NSInteger)_tabs.count) return;
-  // Chrome-style: closing the last tab quits Drift. Take the ⌘Q path (NSApp.terminate → DriftApplication.terminate → CefQuitMessageLoop)
-  // rather than relying on CloseBrowser's async callback, which doesn't reliably exit NSApp's run loop.
+  // Chrome-style: closing the last tab quits Drift.
   if (_tabs.count == 1) { [NSApp terminate:nil]; return; }
   DriftTabModel* tab = _tabs[i];
 
-  // Track for ⌘⇧T reopen
-  if (tab.url.length)
-    [_closedTabURLs addObject:tab.url];
+  // TabClosedEvent records this in closed_tabs and updates active_tab_id to the next tab
+  (void)drift::browser::apply_event(_browserState,
+      drift::browser::TabClosedEvent{drift::browser::TabId{tab.tabId}});
 
   // Move to closingTabs BEFORE calling CloseBrowser so CefRefPtr stays alive
   // until CEF calls OnBeforeClose. Only then does DriftOnBrowserClosed release it.
   [_tabs removeObjectAtIndex:i];
   [_closingTabs addObject:tab];
 
-  if (_tabs.count > 0) {
-    [self switchToIndex:MIN(i, (NSInteger)_tabs.count - 1)];
-  }
+  if (_browserState.active_tab_id.has_value())
+    [self switchToTabId:_browserState.active_tab_id->value];
 
-  if (tab.browser) {
-    tab.browser->GetHost()->CloseBrowser(false);
+  if (tab.engine) {
+    tab.engine->close();
   } else {
     [_closingTabs removeObject:tab];
     if (_tabs.count == 0) [_window close];
@@ -978,22 +1004,30 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
   if (from == to || from < 0 || to < 0 ||
       from >= (NSInteger)_tabs.count || to >= (NSInteger)_tabs.count) return;
   DriftTabModel* t = _tabs[from];
+  (void)drift::browser::apply_event(_browserState,
+      drift::browser::TabMovedEvent{
+          drift::browser::TabId{t.tabId}, (std::uint32_t)to});
   [_tabs removeObjectAtIndex:from];
   [_tabs insertObject:t atIndex:to];
-  if (_activeIndex == from) _activeIndex = to;
   [self refreshStrip];
 }
 
 - (void)tabStrip:(DriftTabStripView*)__unused strip didTogglePinAtIndex:(NSInteger)i {
-  if (i >= 0 && i < (NSInteger)_tabs.count) {
-    _tabs[i].pinned = !_tabs[i].pinned;
-    [self refreshStrip];
-  }
+  if (i < 0 || i >= (NSInteger)_tabs.count) return;
+  uint64_t tid = _tabs[i].tabId;
+  const drift::browser::TabState* ts = [self tabStateForTabId:tid];
+  (void)drift::browser::apply_event(_browserState,
+      drift::browser::TabPinnedEvent{
+          drift::browser::TabId{tid}, ts ? !ts->pinned : true});
+  [self refreshStrip];
 }
 
 - (void)tabStrip:(DriftTabStripView*)__unused strip didRequestDuplicateTabAtIndex:(NSInteger)i {
   if (i < 0 || i >= (NSInteger)_tabs.count) return;
-  [self openTabWithURL:_tabs[i].url ?: @"about:blank"];
+  const drift::browser::TabState* ts = [self tabStateForTabId:_tabs[i].tabId];
+  NSString* url = ts && !ts->url.empty()
+    ? [NSString stringWithUTF8String:ts->url.c_str()] : @"about:blank";
+  [self openTabWithURL:url];
 }
 
 - (void)tabStrip:(DriftTabStripView*)__unused strip didCloseOtherTabsExceptIndex:(NSInteger)keepIdx {
@@ -1008,16 +1042,16 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 // ── Address bar ───────────────────────────────────────────────────────────────
 
 - (void)refreshNavBar {
-  if ([_urlField currentEditor]) return; // user is typing — don't clobber the field editor
-  if (_activeIndex < 0 || _activeIndex >= (NSInteger)_tabs.count) {
+  if ([_urlField currentEditor]) return;
+  NSInteger activeIdx = [self activeIndexInStrip];
+  if (activeIdx < 0 || activeIdx >= (NSInteger)_tabs.count) {
     _urlField.stringValue = @"";
     _lockIcon.hidden = YES;
     _urlDisplayLabel.hidden = YES;
     return;
   }
-  DriftTabModel* t = _tabs[_activeIndex];
-  NSString* url = t.url ?: @"";
-  // New tab / blank: show empty field with placeholder, no display label
+  const drift::browser::TabState* ts = [self tabStateForTabId:_tabs[activeIdx].tabId];
+  NSString* url = ts ? [NSString stringWithUTF8String:ts->url.c_str()] : @"";
   if (!url.length || [url isEqualToString:@"about:blank"]) {
     _urlField.stringValue = @"";
     _lockIcon.hidden = YES;
@@ -1026,7 +1060,7 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
   }
   _lockIcon.hidden = ![url hasPrefix:@"https://"];
   _urlField.stringValue = url;
-  _urlField.textColor = [NSColor clearColor]; // display label renders on top; clear prevents double-text bleed-through
+  _urlField.textColor = [NSColor clearColor];
   _urlDisplayLabel.attributedStringValue = [self displayStringForURL:url];
   _urlDisplayLabel.hidden = NO;
 }
@@ -1067,18 +1101,17 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 }
 
 - (void)navigateActiveTabToURL:(NSString*)urlStr {
-  if (!urlStr || _activeIndex < 0 || _activeIndex >= (NSInteger)_tabs.count) return;
-  DriftTabModel* t = _tabs[_activeIndex];
-  t.url = urlStr;
-  if (t.browser) {
-    CefRefPtr<CefFrame> frame = t.browser->GetMainFrame();
-    if (frame) frame->LoadURL(CefString([urlStr UTF8String]));
-  }
+  if (!urlStr) return;
+  NSInteger activeIdx = [self activeIndexInStrip];
+  if (activeIdx < 0 || activeIdx >= (NSInteger)_tabs.count) return;
+  DriftTabModel* t = _tabs[activeIdx];
+  if (t.engine) t.engine->navigate([urlStr UTF8String]);
 }
 
 - (void)closeActiveTab {
-  if (_activeIndex >= 0 && _activeIndex < (NSInteger)_tabs.count)
-    [self tabStrip:_tabStrip didCloseTabAtIndex:_activeIndex];
+  NSInteger activeIdx = [self activeIndexInStrip];
+  if (activeIdx >= 0 && activeIdx < (NSInteger)_tabs.count)
+    [self tabStrip:_tabStrip didCloseTabAtIndex:activeIdx];
 }
 
 - (void)focusAddressBar {
@@ -1089,35 +1122,39 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 }
 
 - (void)reloadActiveTab {
-  if (_activeIndex < 0 || _activeIndex >= (NSInteger)_tabs.count) return;
-  DriftTabModel* t = _tabs[_activeIndex];
-  if (t.browser) t.browser->Reload();
+  NSInteger activeIdx = [self activeIndexInStrip];
+  if (activeIdx < 0 || activeIdx >= (NSInteger)_tabs.count) return;
+  DriftTabModel* t = _tabs[activeIdx];
+  if (t.engine) t.engine->reload();
 }
 
 - (void)reopenLastClosedTab {
-  if (!_closedTabURLs.count) return;
-  NSString* url = _closedTabURLs.lastObject;
-  [_closedTabURLs removeLastObject];
-  [self openTabWithURL:url];
+  if (_browserState.closed_tabs.empty()) return;
+  std::string url = _browserState.closed_tabs.front().url;
+  _browserState.closed_tabs.erase(_browserState.closed_tabs.begin());
+  [self openTabWithURL:[NSString stringWithUTF8String:url.c_str()]];
 }
 
 - (void)refreshNavButtons {
-  if (_activeIndex < 0 || _activeIndex >= (NSInteger)_tabs.count) {
+  NSInteger activeIdx = [self activeIndexInStrip];
+  if (activeIdx < 0 || activeIdx >= (NSInteger)_tabs.count) {
     _backButton.enabled = _forwardButton.enabled = _reloadStopButton.enabled = NO;
     _progressBar.hidden = YES;
     return;
   }
-  DriftTabModel* t       = _tabs[_activeIndex];
-  _backButton.enabled    = t.canGoBack;
-  _forwardButton.enabled = t.canGoForward;
+  const drift::browser::TabState* ts = [self tabStateForTabId:_tabs[activeIdx].tabId];
+  _backButton.enabled    = ts ? ts->can_go_back : NO;
+  _forwardButton.enabled = ts ? ts->can_go_forward : NO;
   _reloadStopButton.enabled = YES;
-  NSString* sym  = t.loading ? @"xmark"           : @"arrow.clockwise";
-  NSString* a11y = t.loading ? @"Stop"            : @"Reload";
+  bool loading = ts ? ts->loading : false;
+  NSString* sym  = loading ? @"xmark"  : @"arrow.clockwise";
+  NSString* a11y = loading ? @"Stop"   : @"Reload";
   _reloadStopButton.image = [NSImage imageWithSystemSymbolName:sym
                                        accessibilityDescription:a11y];
-  _progressBar.hidden = !t.loading || t.loadProgress <= 0;
+  double prog = ts ? ts->load_progress : 0.0;
+  _progressBar.hidden = !loading || prog <= 0;
   if (!_progressBar.hidden) {
-    CGFloat barW = _progressBar.superview.bounds.size.width * t.loadProgress;
+    CGFloat barW = _progressBar.superview.bounds.size.width * (CGFloat)prog;
     NSRect f = _progressBar.frame;
     f.size.width = MAX(barW, 4);
     _progressBar.frame = f;
@@ -1125,23 +1162,29 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 }
 
 - (IBAction)goBack:(id)__unused sender {
-  if (_activeIndex < 0 || _activeIndex >= (NSInteger)_tabs.count) return;
-  DriftTabModel* t = _tabs[_activeIndex];
-  if (t.browser && t.canGoBack) t.browser->GoBack();
+  NSInteger activeIdx = [self activeIndexInStrip];
+  if (activeIdx < 0 || activeIdx >= (NSInteger)_tabs.count) return;
+  DriftTabModel* t = _tabs[activeIdx];
+  const drift::browser::TabState* ts = [self tabStateForTabId:t.tabId];
+  if (t.engine && ts && ts->can_go_back) t.engine->go_back();
 }
 
 - (IBAction)goForward:(id)__unused sender {
-  if (_activeIndex < 0 || _activeIndex >= (NSInteger)_tabs.count) return;
-  DriftTabModel* t = _tabs[_activeIndex];
-  if (t.browser && t.canGoForward) t.browser->GoForward();
+  NSInteger activeIdx = [self activeIndexInStrip];
+  if (activeIdx < 0 || activeIdx >= (NSInteger)_tabs.count) return;
+  DriftTabModel* t = _tabs[activeIdx];
+  const drift::browser::TabState* ts = [self tabStateForTabId:t.tabId];
+  if (t.engine && ts && ts->can_go_forward) t.engine->go_forward();
 }
 
 - (IBAction)reloadOrStop:(id)__unused sender {
-  if (_activeIndex < 0 || _activeIndex >= (NSInteger)_tabs.count) return;
-  DriftTabModel* t = _tabs[_activeIndex];
-  if (!t.browser) return;
-  if (t.loading) t.browser->StopLoad();
-  else           t.browser->Reload();
+  NSInteger activeIdx = [self activeIndexInStrip];
+  if (activeIdx < 0 || activeIdx >= (NSInteger)_tabs.count) return;
+  DriftTabModel* t = _tabs[activeIdx];
+  const drift::browser::TabState* ts = [self tabStateForTabId:t.tabId];
+  if (!t.engine) return;
+  if (ts && ts->loading) t.engine->stop();
+  else                   t.engine->reload();
 }
 
 - (IBAction)urlFieldAction:(id)__unused sender {
@@ -1184,63 +1227,67 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
   return [dir stringByAppendingPathComponent:filename];
 }
 
-- (void)loadBookmarks {
+- (void)setupPersistence {
+  NSString* dbPath = [self driftDataPath:@"drift.sqlite"];
+  BOOL needsMigration = ![[NSFileManager defaultManager] fileExistsAtPath:dbPath];
+  _bookmarkRepo = std::make_unique<drift::storage::SqliteBookmarkRepo>(dbPath.UTF8String);
+  _historyRepo  = std::make_unique<drift::storage::SqliteHistoryRepo>(dbPath.UTF8String);
+  if (needsMigration) {
+    [self loadBookmarksFromJSON];
+    [self loadHistoryFromJSON];
+    _bookmarkRepo->save_all(_bookmarkState.bookmarks);
+    _historyRepo->save_all(_historyState.entries);
+  } else {
+    _bookmarkState.bookmarks = _bookmarkRepo->load_all();
+    _historyState.entries    = _historyRepo->load_all();
+  }
+}
+
+- (void)loadBookmarksFromJSON {
   NSData* data = [NSData dataWithContentsOfFile:[self driftDataPath:@"bookmarks.json"]];
   if (!data) return;
   NSArray* arr = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
   if (![arr isKindOfClass:[NSArray class]]) return;
   for (NSDictionary* d in arr) {
     if (![d isKindOfClass:[NSDictionary class]]) continue;
-    DriftBookmark* b = [DriftBookmark new];
-    b.url       = d[@"url"]       ?: @"";
-    b.title     = d[@"title"]     ?: @"";
-    b.timestamp = d[@"timestamp"] ?: @"";
-    // Strip entries saved before the positive-list guard (BUG-20 migration)
-    BOOL valid = [b.url hasPrefix:@"http://"] || [b.url hasPrefix:@"https://"] || [b.url hasPrefix:@"file://"];
-    if (valid) [_bookmarks addObject:b];
+    drift::bookmarks::Bookmark b;
+    b.url           = [d[@"url"]       UTF8String] ?: "";
+    b.title         = [d[@"title"]     UTF8String] ?: "";
+    b.timestamp_utc = [d[@"timestamp"] UTF8String] ?: "";
+    (void)drift::bookmarks::add_bookmark(_bookmarkState, std::move(b));
   }
 }
 
 - (void)saveBookmarks {
-  NSMutableArray* arr = [NSMutableArray arrayWithCapacity:_bookmarks.count];
-  for (DriftBookmark* b in _bookmarks)
-    [arr addObject:@{@"url": b.url, @"title": b.title, @"timestamp": b.timestamp ?: @""}];
-  NSData* data = [NSJSONSerialization dataWithJSONObject:arr
-                    options:NSJSONWritingPrettyPrinted error:nil];
-  [data writeToFile:[self driftDataPath:@"bookmarks.json"] atomically:YES];
+  _bookmarkRepo->save_all(_bookmarkState.bookmarks);
 }
 
 - (BOOL)isActiveTabBookmarked {
-  if (_activeIndex < 0 || _activeIndex >= (NSInteger)_tabs.count) return NO;
-  NSString* url = _tabs[_activeIndex].url;
-  for (DriftBookmark* b in _bookmarks)
-    if ([b.url isEqualToString:url]) return YES;
-  return NO;
+  NSInteger activeIdx = [self activeIndexInStrip];
+  if (activeIdx < 0 || activeIdx >= (NSInteger)_tabs.count) return NO;
+  const drift::browser::TabState* ts = [self tabStateForTabId:_tabs[activeIdx].tabId];
+  return ts ? drift::bookmarks::has_bookmark(_bookmarkState, ts->url) : NO;
 }
 
 - (IBAction)toggleBookmark:(id)__unused sender {
-  if (_activeIndex < 0 || _activeIndex >= (NSInteger)_tabs.count) return;
-  DriftTabModel* t = _tabs[_activeIndex];
-  // Only allow real navigable URLs. Guards against about:blank, chrome://, data: etc.
-  if (!([t.url hasPrefix:@"http://"] || [t.url hasPrefix:@"https://"] || [t.url hasPrefix:@"file://"])) return;
+  NSInteger activeIdx = [self activeIndexInStrip];
+  if (activeIdx < 0 || activeIdx >= (NSInteger)_tabs.count) return;
+  const drift::browser::TabState* tab = [self tabStateForTabId:_tabs[activeIdx].tabId];
+  if (!tab || !drift::bookmarks::is_bookmarkable_url(tab->url)) return;
 
-  for (NSInteger i = 0; i < (NSInteger)_bookmarks.count; i++) {
-    if ([_bookmarks[i].url isEqualToString:t.url]) {
-      [_bookmarks removeObjectAtIndex:i];
-      [self saveBookmarks];
-      [self refreshStarButton];
-      [self refreshBookmarksBar];
-      return;
-    }
+  if (drift::bookmarks::has_bookmark(_bookmarkState, tab->url)) {
+    (void)drift::bookmarks::remove_bookmark(_bookmarkState, tab->url);
+  } else {
+    drift::bookmarks::Bookmark b;
+    b.url   = tab->url;
+    b.title = tab->title.empty() ? tab->url : tab->title;
+    NSDateFormatter* fmt = [NSDateFormatter new];
+    fmt.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z'";
+    fmt.timeZone   = [NSTimeZone timeZoneWithName:@"UTC"];
+    NSString* ts = [fmt stringFromDate:[NSDate date]];
+    b.timestamp_utc = ts ? std::string(ts.UTF8String) : "";
+    (void)drift::bookmarks::add_bookmark(_bookmarkState, std::move(b));
   }
-  DriftBookmark* b = [DriftBookmark new];
-  b.url   = t.url;
-  b.title = t.title.length ? t.title : t.url;
-  NSDateFormatter* fmt = [NSDateFormatter new];
-  fmt.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z'";
-  fmt.timeZone   = [NSTimeZone timeZoneWithName:@"UTC"];
-  b.timestamp = [fmt stringFromDate:[NSDate date]];
-  [_bookmarks addObject:b];
   [self saveBookmarks];
   [self refreshStarButton];
   [self refreshBookmarksBar];
@@ -1272,20 +1319,21 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
   NSFont* font = [NSFont fontWithName:@"Inter" size:11] ?: [NSFont systemFontOfSize:11];
   NSDictionary* attrs = @{NSFontAttributeName: font};
 
-  for (NSInteger i = 0; i < (NSInteger)_bookmarks.count; i++) {
-    DriftBookmark* bk = _bookmarks[i];
-    NSString* title = bk.title.length ? bk.title : bk.url;
-    CGFloat btnW = MIN([title sizeWithAttributes:attrs].width + 16, 150);
+  auto& bks = _bookmarkState.bookmarks;
+  for (NSInteger i = 0; i < (NSInteger)bks.size(); i++) {
+    const auto& bk = bks[(size_t)i];
+    NSString* nsTitle = bk.title.empty() ? @(bk.url.c_str()) : @(bk.title.c_str());
+    CGFloat btnW = MIN([nsTitle sizeWithAttributes:attrs].width + 16, 150);
     if (x + btnW > _bookmarksBar.bounds.size.width - 8) break;
 
-    NSButton* btn = [NSButton buttonWithTitle:title
+    NSButton* btn = [NSButton buttonWithTitle:nsTitle
                                        target:self
                                        action:@selector(bookmarkButtonClicked:)];
     btn.frame   = NSMakeRect(x, 4, btnW, 18);
     btn.font    = font;
     btn.bordered = NO;
     btn.tag     = i;
-    btn.toolTip = bk.url;
+    btn.toolTip = @(bk.url.c_str());
     [_bookmarksBar addSubview:btn];
     x += btnW + 4;
   }
@@ -1293,47 +1341,44 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 
 - (void)bookmarkButtonClicked:(NSButton*)sender {
   NSInteger i = sender.tag;
-  if (i >= 0 && i < (NSInteger)_bookmarks.count)
-    [self navigateActiveTabToURL:_bookmarks[i].url];
+  auto& bks = _bookmarkState.bookmarks;
+  if (i >= 0 && i < (NSInteger)bks.size())
+    [self navigateActiveTabToURL:@(bks[(size_t)i].url.c_str())];
 }
 
 // ── History ───────────────────────────────────────────────────────────────────
 
-- (void)loadHistory {
+- (void)loadHistoryFromJSON {
   NSData* data = [NSData dataWithContentsOfFile:[self driftDataPath:@"history.json"]];
   if (!data) return;
   NSArray* arr = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
   if (![arr isKindOfClass:[NSArray class]]) return;
   for (NSDictionary* d in arr) {
     if (![d isKindOfClass:[NSDictionary class]]) continue;
-    DriftHistoryEntry* e = [DriftHistoryEntry new];
-    e.url       = d[@"url"]       ?: @"";
-    e.title     = d[@"title"]     ?: @"";
-    e.timestamp = d[@"timestamp"] ?: @"";
-    if (e.url.length) [_history addObject:e];
+    std::string url   = [d[@"url"]       ?: @"" UTF8String];
+    std::string title = [d[@"title"]     ?: @"" UTF8String];
+    std::string ts    = [d[@"timestamp"] ?: @"" UTF8String];
+    if (!url.empty() && drift::history::is_recordable_url(url))
+      _historyState.entries.push_back({url, title, ts});
   }
 }
 
 - (void)saveHistory {
-  NSMutableArray* arr = [NSMutableArray arrayWithCapacity:_history.count];
-  for (DriftHistoryEntry* e in _history)
-    [arr addObject:@{@"url": e.url, @"title": e.title, @"timestamp": e.timestamp ?: @""}];
-  NSData* data = [NSJSONSerialization dataWithJSONObject:arr
-                    options:NSJSONWritingPrettyPrinted error:nil];
-  [data writeToFile:[self driftDataPath:@"history.json"] atomically:YES];
+  _historyRepo->save_all(_historyState.entries);
 }
 
 - (void)recordHistoryEntry:(NSString*)url title:(NSString*)title {
-  if (!url.length || [url isEqualToString:@"about:blank"]) return;
-  DriftHistoryEntry* e = [DriftHistoryEntry new];
-  e.url   = url;
-  e.title = title.length ? title : url;
+  if (!url.length) return;
   NSDateFormatter* fmt = [NSDateFormatter new];
   fmt.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss'Z'";
   fmt.timeZone   = [NSTimeZone timeZoneWithName:@"UTC"];
-  e.timestamp = [fmt stringFromDate:[NSDate date]];
-  [_history insertObject:e atIndex:0];
-  if (_history.count > 5000) [_history removeLastObject];
+  drift::history::HistoryEntry e{
+    [url UTF8String],
+    [(title.length ? title : url) UTF8String],
+    [[fmt stringFromDate:[NSDate date]] UTF8String],
+  };
+  if (drift::history::add_entry(_historyState, std::move(e)))
+    return;  // non-recordable URL; do not save
   [self saveHistory];
 }
 
@@ -1389,27 +1434,31 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
 
 // NSTableViewDataSource
 - (NSInteger)numberOfRowsInTableView:(NSTableView*)__unused tv {
-  return (NSInteger)_history.count;
+  return (NSInteger)_historyState.entries.size();
 }
 
 - (id)tableView:(NSTableView*)__unused tv
   objectValueForTableColumn:(NSTableColumn*)__unused col
                         row:(NSInteger)row {
-  if (row < 0 || row >= (NSInteger)_history.count) return @"";
-  DriftHistoryEntry* e = _history[row];
-  NSString* dateStr = e.timestamp.length >= 10
-    ? [e.timestamp substringToIndex:10] : e.timestamp;
-  return [NSString stringWithFormat:@"%@   %@", dateStr, e.title.length ? e.title : e.url];
+  if (row < 0 || row >= (NSInteger)_historyState.entries.size()) return @"";
+  const auto& e = _historyState.entries[(std::size_t)row];
+  NSString* ts = [NSString stringWithUTF8String:e.timestamp_utc.c_str()];
+  NSString* dateStr = ts.length >= 10 ? [ts substringToIndex:10] : ts;
+  NSString* label = e.title.empty()
+    ? [NSString stringWithUTF8String:e.url.c_str()]
+    : [NSString stringWithUTF8String:e.title.c_str()];
+  return [NSString stringWithFormat:@"%@   %@", dateStr, label];
 }
 
 - (void)historyTableDoubleClicked:(NSTableView*)__unused sender {
   NSInteger row = _historyTableView.clickedRow;
-  if (row < 0 || row >= (NSInteger)_history.count) return;
-  [self navigateActiveTabToURL:_history[row].url];
+  if (row < 0 || row >= (NSInteger)_historyState.entries.size()) return;
+  [self navigateActiveTabToURL:
+    [NSString stringWithUTF8String:_historyState.entries[(std::size_t)row].url.c_str()]];
 }
 
 - (IBAction)clearHistory:(id)__unused sender {
-  [_history removeAllObjects];
+  drift::history::clear_all(_historyState);
   [self saveHistory];
   [_historyTableView reloadData];
 }
@@ -1420,12 +1469,12 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
   // Clear item container (border line lives in _downloadBar directly and is unaffected)
   for (NSView* v in [_downloadItemsView.subviews copy]) [v removeFromSuperview];
 
-  NSArray<DriftDownloadItem*>* visible = [_downloads filteredArrayUsingPredicate:
-    [NSPredicate predicateWithBlock:^BOOL(DriftDownloadItem* d, NSDictionary* __unused b) {
-      return !d.isCanceled;
-    }]];
+  // Count visible (non-cancelled) downloads
+  std::size_t visibleCount = 0;
+  for (const auto& d : _browserState.downloads)
+    if (d.status != drift::browser::DownloadStatus::cancelled) ++visibleCount;
 
-  if (!visible.count) { _downloadBar.hidden = YES; return; }
+  if (!visibleCount) { _downloadBar.hidden = YES; return; }
   _downloadBar.hidden = NO;
 
   NSFont* font = [NSFont fontWithName:@"Inter" size:10] ?: [NSFont systemFontOfSize:10];
@@ -1440,43 +1489,52 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
   };
 
   CGFloat x = 12;
-  for (DriftDownloadItem* item in visible) {
+  for (const auto& d : _browserState.downloads) {
+    if (d.status == drift::browser::DownloadStatus::cancelled) continue;
+
     CGFloat itemW = 230;
     CGFloat viewW = _downloadItemsView.bounds.size.width;
     if (viewW > 0 && x + itemW > viewW - 12) break;
 
     CGFloat textW = itemW - 48;  // leave 48px right margin for two icon buttons
+    NSInteger downloadId = (NSInteger)d.id.value;
+    NSString* filePath = _dlFilePaths[@(downloadId)];
+    NSDate*   startTime = _dlStartTimes[@(downloadId)];
+    BOOL isComplete = (d.status == drift::browser::DownloadStatus::complete);
+    NSString* filename = d.file_name.empty()
+      ? @"Download"
+      : [NSString stringWithUTF8String:d.file_name.c_str()];
 
     // Filename
-    NSTextField* nameLabel = [NSTextField labelWithString:item.filename ?: @"Download"];
+    NSTextField* nameLabel = [NSTextField labelWithString:filename];
     nameLabel.frame = NSMakeRect(x, 28, textW, 13);
     nameLabel.font = font;
     nameLabel.textColor = textColor;
     nameLabel.cell.lineBreakMode = NSLineBreakByTruncatingMiddle;
     [_downloadItemsView addSubview:nameLabel];
 
-    // Status label — size progress + speed (in-progress) or completion summary (done)
+    // Status label — size/progress + speed (in-progress) or completion summary (done)
     NSString* status;
-    NSTimeInterval elapsed = item.startTime ? -[item.startTime timeIntervalSinceNow] : 0;
-    if (item.isComplete) {
+    NSTimeInterval elapsed = startTime ? -[startTime timeIntervalSinceNow] : 0;
+    if (isComplete) {
       NSString* summary = elapsed > 0.5
         ? [NSString stringWithFormat:@"%.1fs · avg %@/s",
-            elapsed, fmt((int64_t)(item.receivedBytes / elapsed))]
+            elapsed, fmt((int64_t)(d.received_bytes / elapsed))]
         : @"";
       status = summary.length
-        ? [NSString stringWithFormat:@"%@ in %@", fmt(item.receivedBytes), summary]
-        : [NSString stringWithFormat:@"Complete — %@", fmt(item.receivedBytes)];
-    } else if (item.totalBytes > 0) {
-      NSString* speed = (elapsed > 0.5 && item.receivedBytes > 0)
-        ? [NSString stringWithFormat:@" · %@/s", fmt((int64_t)(item.receivedBytes / elapsed))]
+        ? [NSString stringWithFormat:@"%@ in %@", fmt((int64_t)d.received_bytes), summary]
+        : [NSString stringWithFormat:@"Complete — %@", fmt((int64_t)d.received_bytes)];
+    } else if (d.total_bytes > 0) {
+      NSString* speed = (elapsed > 0.5 && d.received_bytes > 0)
+        ? [NSString stringWithFormat:@" · %@/s", fmt((int64_t)(d.received_bytes / elapsed))]
         : @"";
       status = [NSString stringWithFormat:@"%@ / %@%@",
-                fmt(item.receivedBytes), fmt(item.totalBytes), speed];
-    } else if (item.receivedBytes > 0) {
+                fmt((int64_t)d.received_bytes), fmt((int64_t)d.total_bytes), speed];
+    } else if (d.received_bytes > 0) {
       NSString* speed = (elapsed > 0.5)
-        ? [NSString stringWithFormat:@" · %@/s", fmt((int64_t)(item.receivedBytes / elapsed))]
+        ? [NSString stringWithFormat:@" · %@/s", fmt((int64_t)(d.received_bytes / elapsed))]
         : @"";
-      status = [NSString stringWithFormat:@"%@%@", fmt(item.receivedBytes), speed];
+      status = [NSString stringWithFormat:@"%@%@", fmt((int64_t)d.received_bytes), speed];
     } else {
       status = @"Waiting…";
     }
@@ -1495,13 +1553,13 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
     [_downloadItemsView addSubview:track];
 
     // Progress fill
-    double pct = (item.totalBytes > 0)
-      ? (double)item.receivedBytes / item.totalBytes : (item.isComplete ? 1.0 : 0.0);
+    double pct = (d.total_bytes > 0)
+      ? (double)d.received_bytes / d.total_bytes : (isComplete ? 1.0 : 0.0);
     CGFloat fillW = textW * (CGFloat)pct;
     if (fillW > 0) {
       NSView* fill = [[NSView alloc] initWithFrame:NSMakeRect(x, 8, fillW, 3)];
       fill.wantsLayer = YES;
-      fill.layer.backgroundColor = item.isComplete
+      fill.layer.backgroundColor = isComplete
         ? [NSColor colorWithSRGBRed:0.176 green:0.314 blue:0.086 alpha:1].CGColor  // green
         : [NSColor colorWithSRGBRed:0.831 green:0.510 blue:0.039 alpha:1].CGColor; // amber
       fill.layer.cornerRadius = 1.5;
@@ -1509,8 +1567,8 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
     }
 
     // "Show in Finder" button — only when file exists
-    BOOL fileExists = item.filePath &&
-        [[NSFileManager defaultManager] fileExistsAtPath:item.filePath];
+    BOOL fileExists = filePath &&
+        [[NSFileManager defaultManager] fileExistsAtPath:filePath];
     if (fileExists) {
       NSButton* finderBtn = [NSButton buttonWithTitle:@""
                                               target:self
@@ -1520,7 +1578,7 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
       finderBtn.bezelStyle = NSBezelStyleInline;
       finderBtn.bordered = NO;
       finderBtn.frame = NSMakeRect(x + itemW - 42, 16, 18, 18);
-      finderBtn.tag = item.downloadId;
+      finderBtn.tag = downloadId;
       finderBtn.contentTintColor = secColor;
       [_downloadItemsView addSubview:finderBtn];
     }
@@ -1534,7 +1592,7 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
     clearBtn.bezelStyle = NSBezelStyleInline;
     clearBtn.bordered = NO;
     clearBtn.frame = NSMakeRect(x + itemW - 22, 16, 18, 18);
-    clearBtn.tag = item.downloadId;
+    clearBtn.tag = downloadId;
     clearBtn.contentTintColor = secColor;
     [_downloadItemsView addSubview:clearBtn];
 
@@ -1542,35 +1600,66 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
   }
 }
 
-- (void)scheduleDownloadBarHide {
-  __unsafe_unretained DriftBrowserWindowController* ws = self;
-  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)),
-                 dispatch_get_main_queue(), ^{
-    // Only prune finished items — don't nuke in-progress downloads (race: new download may arrive)
-    [ws.downloads filterUsingPredicate:
-      [NSPredicate predicateWithBlock:^BOOL(DriftDownloadItem* d, NSDictionary* __unused b) {
-        return !d.isComplete && !d.isCanceled;
-      }]];
-    if (!ws.downloads.count) ws.downloadBar.hidden = YES;
-    else [ws refreshDownloadBar];
-  });
-}
 
 - (void)showInFinderClicked:(NSButton*)sender {
-  for (DriftDownloadItem* d in _downloads) {
-    if (d.downloadId != sender.tag) continue;
-    if (d.filePath && [[NSFileManager defaultManager] fileExistsAtPath:d.filePath])
-      [[NSWorkspace sharedWorkspace] selectFile:d.filePath inFileViewerRootedAtPath:@""];
-    return;
-  }
+  NSString* fp = _dlFilePaths[@(sender.tag)];
+  if (fp && [[NSFileManager defaultManager] fileExistsAtPath:fp])
+    [[NSWorkspace sharedWorkspace] selectFile:fp inFileViewerRootedAtPath:@""];
 }
 
 - (void)clearDownloadClicked:(NSButton*)sender {
-  NSInteger did = sender.tag;
-  [_downloads filterUsingPredicate:
-    [NSPredicate predicateWithBlock:^BOOL(DriftDownloadItem* d, NSDictionary* __unused b) {
-      return d.downloadId != did;
-    }]];
+  drift::browser::DownloadId did{(std::uint64_t)sender.tag};
+  std::erase_if(_browserState.downloads,
+      [did](const drift::browser::DownloadState& d) { return d.id == did; });
+  [_dlFilePaths removeObjectForKey:@(sender.tag)];
+  [_dlStartTimes removeObjectForKey:@(sender.tag)];
+  [self refreshDownloadBar];
+}
+
+// ── Download bridge handlers ───────────────────────────────────────────────
+
+- (void)handleDownloadStarted:(int)downloadId
+                     filename:(const char*)filename
+                   totalBytes:(int64_t)totalBytes
+                     filePath:(const char*)filePath {
+  drift::browser::DownloadId did{(std::uint64_t)downloadId};
+  auto& downloads = _browserState.downloads;
+  auto it = std::find_if(downloads.begin(), downloads.end(),
+      [did](const drift::browser::DownloadState& d) { return d.id == did; });
+  // Preserve received_bytes if a placeholder was created by an early update event
+  std::uint64_t curReceived = (it != downloads.end()) ? it->received_bytes : 0;
+  std::string fname = filename ? filename : "download";
+  (void)drift::browser::apply_event(_browserState,
+      drift::browser::DownloadUpdatedEvent{
+          did, std::nullopt, fname, curReceived, (std::uint64_t)totalBytes,
+          drift::browser::DownloadStatus::in_progress});
+  if (filePath)
+    _dlFilePaths[@(downloadId)] = [NSString stringWithUTF8String:filePath];
+  if (!_dlStartTimes[@(downloadId)])
+    _dlStartTimes[@(downloadId)] = [NSDate date];
+  [self refreshDownloadBar];
+}
+
+- (void)handleDownloadUpdated:(int)downloadId
+                receivedBytes:(int64_t)receivedBytes
+                   isComplete:(BOOL)isComplete
+                   isCanceled:(BOOL)isCanceled {
+  drift::browser::DownloadId did{(std::uint64_t)downloadId};
+  auto& downloads = _browserState.downloads;
+  auto it = std::find_if(downloads.begin(), downloads.end(),
+      [did](const drift::browser::DownloadState& d) { return d.id == did; });
+  std::string fname = (it != downloads.end()) ? it->file_name : "";
+  std::uint64_t total = (it != downloads.end()) ? it->total_bytes : 0;
+  // Guard: received may temporarily exceed an unknown total during race
+  if (total > 0 && (std::uint64_t)receivedBytes > total) total = 0;
+  auto status = isCanceled ? drift::browser::DownloadStatus::cancelled
+              : isComplete  ? drift::browser::DownloadStatus::complete
+                            : drift::browser::DownloadStatus::in_progress;
+  (void)drift::browser::apply_event(_browserState,
+      drift::browser::DownloadUpdatedEvent{
+          did, std::nullopt, fname, (std::uint64_t)receivedBytes, total, status});
+  if (!_dlStartTimes[@(downloadId)])
+    _dlStartTimes[@(downloadId)] = [NSDate date];
   [self refreshDownloadBar];
 }
 
@@ -1590,9 +1679,88 @@ static NSMutableDictionary<NSString*, NSString*>* gPendingSavePaths = nil;
     if (!gPendingSavePaths) gPendingSavePaths = [[NSMutableDictionary alloc] init];
     gPendingSavePaths[url] = panel.URL.path;
     DriftTabModel* t = [ws tabForBrowserId:browserId];
-    if (t && t.browser)
-      t.browser->GetHost()->StartDownload(CefString([url UTF8String]));
+    if (t && t.engine) t.engine->start_download([url UTF8String]);
   }];
+}
+
+// ── CEF bridge handlers (called by C bridge functions below) ─────────────────
+
+- (void)handleAddressChange:(int)browserId url:(const char*)url {
+  DriftTabModel* t = [self tabForBrowserId:browserId];
+  if (!t) return;
+  const drift::browser::TabState* cur = [self tabStateForTabId:t.tabId];
+  (void)drift::browser::apply_event(_browserState,
+      drift::browser::NavigationStateEvent{
+          drift::browser::TabId{t.tabId},
+          url ? url : "",
+          cur ? cur->title : "",
+          cur ? cur->loading : false,
+          cur ? cur->can_go_back : false,
+          cur ? cur->can_go_forward : false});
+  if ([self activeIndexInStrip] >= 0 && _tabs[[self activeIndexInStrip]] == t) {
+    [self refreshNavBar];
+    [self refreshStarButton];
+    if (_urlBarFocusPending) {
+      const drift::browser::TabState* ts = [self tabStateForTabId:t.tabId];
+      _urlBarFocusPending = NO;
+      if (ts && ts->url == "about:blank" && ![_urlField currentEditor])
+        [self focusAddressBar];
+    }
+  }
+}
+
+- (void)handleTitleChange:(int)browserId title:(const char*)title {
+  DriftTabModel* t = [self tabForBrowserId:browserId];
+  if (!t) return;
+  NSString* titleStr = [NSString stringWithUTF8String:title ?: ""];
+  const drift::browser::TabState* cur = [self tabStateForTabId:t.tabId];
+  (void)drift::browser::apply_event(_browserState,
+      drift::browser::NavigationStateEvent{
+          drift::browser::TabId{t.tabId},
+          cur ? cur->url : "",
+          title ? title : "",
+          cur ? cur->loading : false,
+          cur ? cur->can_go_back : false,
+          cur ? cur->can_go_forward : false});
+  if ([self activeIndexInStrip] >= 0 && _tabs[[self activeIndexInStrip]] == t)
+    _window.title = titleStr;
+  [self refreshStrip];
+  [self recordHistoryEntry:
+    (cur && !cur->url.empty() ? [NSString stringWithUTF8String:cur->url.c_str()] : @"")
+    title:titleStr];
+}
+
+- (void)handleLoadingStateChange:(int)browserId
+                         loading:(bool)loading
+                      canGoBack:(bool)canGoBack
+                    canGoForward:(bool)canGoForward {
+  DriftTabModel* t = [self tabForBrowserId:browserId];
+  if (!t) return;
+  const drift::browser::TabState* cur = [self tabStateForTabId:t.tabId];
+  (void)drift::browser::apply_event(_browserState,
+      drift::browser::NavigationStateEvent{
+          drift::browser::TabId{t.tabId},
+          cur ? cur->url : "",
+          cur ? cur->title : "",
+          loading, canGoBack, canGoForward});
+  if (!loading) {
+    // Reset progress on load-complete
+    const drift::browser::TabState* ts = [self tabStateForTabId:t.tabId];
+    if (ts) const_cast<drift::browser::TabState*>(ts)->load_progress = 0.0;
+  }
+  [self refreshStrip];
+  if ([self activeIndexInStrip] >= 0 && _tabs[[self activeIndexInStrip]] == t)
+    [self refreshNavButtons];
+}
+
+- (void)handleLoadProgressChange:(int)browserId progress:(double)progress {
+  DriftTabModel* t = [self tabForBrowserId:browserId];
+  if (!t) return;
+  (void)drift::browser::apply_event(_browserState,
+      drift::browser::LoadProgressEvent{
+          drift::browser::TabId{t.tabId}, progress});
+  if ([self activeIndexInStrip] >= 0 && _tabs[[self activeIndexInStrip]] == t)
+    [self refreshNavButtons];
 }
 
 // ── NSWindowDelegate ──────────────────────────────────────────────────────────
@@ -1620,10 +1788,10 @@ void DriftOnBrowserCreated(CefRefPtr<CefBrowser> browser) {
   for (DriftTabModel* t in gWindow.tabs) {
     if (t.browserId != -1) continue;
     t.browserId = browser->GetIdentifier();
-    t.browser   = browser;
-    NSInteger idx = [gWindow indexForBrowserId:t.browserId];
-    NSView* v     = (__bridge NSView*)browser->GetHost()->GetWindowHandle();
-    if (idx == gWindow.activeIndex) {
+    t.engine    = [gWindow adoptEngineForBrowser:browser];
+    NSView* v = (__bridge NSView*)t.engine->native_view_handle();
+    NSInteger myIdx = (NSInteger)[gWindow.tabs indexOfObject:t];
+    if (myIdx == [gWindow activeIndexInStrip]) {
       v.hidden           = NO;
       v.frame            = gWindow.contentContainer.bounds;
       v.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
@@ -1638,11 +1806,17 @@ void DriftOnBrowserCreated(CefRefPtr<CefBrowser> browser) {
 void DriftOnBrowserClosed(int browser_id) {
   if (!gWindow) return;
 
-  // Remove from active tabs (tab closed while window is still open)
+  // Null engine pointer before erasing the adapter.
+  for (DriftTabModel* t in gWindow.tabs)
+    if (t.browserId == browser_id) { t.engine = nullptr; break; }
+  for (DriftTabModel* t in gWindow.closingTabs)
+    if (t.browserId == browser_id) { t.engine = nullptr; break; }
+
+  // Safety: remove from active tabs if not already removed by tabStrip:didCloseTabAtIndex:
   NSInteger idx = [gWindow indexForBrowserId:browser_id];
   if (idx >= 0) [gWindow.tabs removeObjectAtIndex:idx];
 
-  // Remove from closingTabs — this is the safe moment to release the CefRefPtr
+  // Remove from closingTabs (CEF's final callback; safe to destroy adapter now).
   NSMutableArray<DriftTabModel*>* closing = gWindow.closingTabs;
   for (NSInteger i = 0; i < (NSInteger)closing.count; i++) {
     if (closing[i].browserId == browser_id) {
@@ -1650,6 +1824,9 @@ void DriftOnBrowserClosed(int browser_id) {
       break;
     }
   }
+
+  // Destroy the CefEngineAdapter (releases CefRefPtr).
+  [gWindow releaseEngineForBrowserId:browser_id];
 
   if (gWindow.tabs.count == 0 && gWindow.closingTabs.count == 0) {
     CefQuitMessageLoop();
@@ -1660,32 +1837,12 @@ void DriftOnBrowserClosed(int browser_id) {
 
 void DriftOnAddressChange(int browser_id, const char* url) {
   if (!gWindow) return;
-  DriftTabModel* t = [gWindow tabForBrowserId:browser_id];
-  if (!t) return;
-  t.url = [NSString stringWithUTF8String:url ?: ""];
-  if ([gWindow indexForBrowserId:browser_id] == gWindow.activeIndex) {
-    [gWindow refreshNavBar];
-    [gWindow refreshStarButton];
-    // Claim URL bar focus once CEF commits about:blank — fires after all renderer focus-stealing is done
-    if (gWindow.urlBarFocusPending) {
-      gWindow.urlBarFocusPending = NO;
-      if ([t.url isEqualToString:@"about:blank"] && ![gWindow.urlField currentEditor])
-        [gWindow focusAddressBar];
-    }
-  }
+  [gWindow handleAddressChange:browser_id url:url];
 }
 
 void DriftOnTitleChange(int browser_id, const char* title) {
   if (!gWindow) return;
-  DriftTabModel* t = [gWindow tabForBrowserId:browser_id];
-  if (!t) return;
-  NSString* titleStr = [NSString stringWithUTF8String:title ?: ""];
-  t.title = titleStr;
-  if ([gWindow indexForBrowserId:browser_id] == gWindow.activeIndex)
-    gWindow.window.title = t.title;
-  [gWindow refreshStrip];
-  // Record to history on every title change (title fires when page is fully committed)
-  [gWindow recordHistoryEntry:t.url title:titleStr];
+  [gWindow handleTitleChange:browser_id title:title];
 }
 
 void DriftOnFaviconURLChange(int browser_id, const char* first_icon_url) {
@@ -1698,24 +1855,15 @@ void DriftOnFaviconURLChange(int browser_id, const char* first_icon_url) {
 void DriftOnLoadingStateChange(int browser_id, bool loading,
                                bool canGoBack, bool canGoForward) {
   if (!gWindow) return;
-  DriftTabModel* t = [gWindow tabForBrowserId:browser_id];
-  if (!t) return;
-  t.loading      = loading;
-  t.canGoBack    = canGoBack;
-  t.canGoForward = canGoForward;
-  if (!loading) t.loadProgress = 0;
-  [gWindow refreshStrip];
-  if ([gWindow indexForBrowserId:browser_id] == gWindow.activeIndex)
-    [gWindow refreshNavButtons];
+  [gWindow handleLoadingStateChange:browser_id
+                            loading:loading
+                         canGoBack:canGoBack
+                       canGoForward:canGoForward];
 }
 
 void DriftOnLoadingProgressChange(int browser_id, double progress) {
   if (!gWindow) return;
-  DriftTabModel* t = [gWindow tabForBrowserId:browser_id];
-  if (!t) return;
-  t.loadProgress = (CGFloat)progress;
-  if ([gWindow indexForBrowserId:browser_id] == gWindow.activeIndex)
-    [gWindow refreshNavButtons];
+  [gWindow handleLoadProgressChange:browser_id progress:progress];
 }
 
 void DriftOpenURLInNewTab(const char* url) {
@@ -1733,27 +1881,8 @@ void DriftCopyToClipboard(const char* text) {
 void DriftOnDownloadStarted(int download_id, const char* filename,
                             int64_t total_bytes, const char* file_path) {
   if (!gWindow) return;
-  // If OnDownloadUpdated already created a placeholder (fast/cached download race),
-  // back-fill metadata onto it instead of creating a duplicate item.
-  for (DriftDownloadItem* d in gWindow.downloads) {
-    if (d.downloadId == download_id) {
-      if (!d.filename.length) d.filename = [NSString stringWithUTF8String:filename ?: "download"];
-      if (!d.filePath && file_path) d.filePath = [NSString stringWithUTF8String:file_path];
-      if (d.totalBytes == 0) d.totalBytes = total_bytes;
-      if (!d.startTime) d.startTime = [NSDate date];
-      [gWindow refreshDownloadBar];
-      return;
-    }
-  }
-  DriftDownloadItem* item = [DriftDownloadItem new];
-  item.downloadId    = download_id;
-  item.filename      = [NSString stringWithUTF8String:filename ?: "download"];
-  item.filePath      = file_path ? [NSString stringWithUTF8String:file_path] : nil;
-  item.totalBytes    = total_bytes;
-  item.receivedBytes = 0;
-  item.startTime     = [NSDate date];
-  [gWindow.downloads addObject:item];
-  [gWindow refreshDownloadBar];
+  [gWindow handleDownloadStarted:download_id filename:filename
+                      totalBytes:total_bytes filePath:file_path];
 }
 
 void DriftSaveLinkAs(int browser_id, const char* url) {
@@ -1774,22 +1903,6 @@ std::string DriftConsumePendingSavePath(const std::string& url) {
 void DriftOnDownloadUpdated(int download_id, int64_t received_bytes,
                             bool is_complete, bool is_canceled) {
   if (!gWindow) return;
-  for (DriftDownloadItem* d in gWindow.downloads) {
-    if (d.downloadId == download_id) {
-      d.receivedBytes = received_bytes;
-      d.isComplete    = is_complete;
-      d.isCanceled    = is_canceled;
-      [gWindow refreshDownloadBar];
-      if (is_complete || is_canceled) [gWindow scheduleDownloadBarHide];
-      return;
-    }
-  }
-  // Edge case: update arrives before start event
-  DriftDownloadItem* item = [DriftDownloadItem new];
-  item.downloadId    = download_id;
-  item.receivedBytes = received_bytes;
-  item.isComplete    = is_complete;
-  item.isCanceled    = is_canceled;
-  [gWindow.downloads addObject:item];
-  [gWindow refreshDownloadBar];
+  [gWindow handleDownloadUpdated:download_id receivedBytes:received_bytes
+                      isComplete:is_complete isCanceled:is_canceled];
 }

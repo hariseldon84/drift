@@ -33,6 +33,11 @@ foreach(SUFFIX_ENTRY ${CEF_HELPER_APP_SUFFIXES})
   target_link_libraries(${HELPER_TARGET} PRIVATE
     libcef_dll_wrapper
     ${CEF_STANDARD_LIBS}
+    drift_cef_engine
+    drift_bookmarks
+    drift_history
+    drift_browser_state
+    drift_storage
   )
 endforeach()
 
@@ -47,6 +52,11 @@ target_include_directories(Drift PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 target_link_libraries(Drift PRIVATE
   libcef_dll_wrapper
   ${CEF_STANDARD_LIBS}
+  drift_cef_engine
+  drift_bookmarks
+  drift_history
+  drift_browser_state
+  drift_storage
 )
 
 # Copy CEF framework into Drift.app/Contents/Frameworks/ after build
