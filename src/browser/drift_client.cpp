@@ -12,7 +12,7 @@ static const int kCmdCopyImageURL    = MENU_ID_USER_FIRST + 3;
 static const int kCmdSaveLinkAs      = MENU_ID_USER_FIRST + 4;
 static const int kCmdSaveImageAs     = MENU_ID_USER_FIRST + 5;
 
-bool DriftClient::OnBeforePopup(CefRefPtr<CefBrowser> /*browser*/,
+bool DriftClient::OnBeforePopup(CefRefPtr<CefBrowser> browser,
                                 CefRefPtr<CefFrame> /*frame*/,
                                 int /*popup_id*/,
                                 const CefString& target_url,
@@ -25,9 +25,10 @@ bool DriftClient::OnBeforePopup(CefRefPtr<CefBrowser> /*browser*/,
                                 CefBrowserSettings& /*settings*/,
                                 CefRefPtr<CefDictionaryValue>& /*extra_info*/,
                                 bool* /*no_javascript_access*/) {
-  // Open all popups as new tabs; never create floating popup browsers.
+  // Navigate the current tab to the popup URL — same as clicking a normal link.
+  // Never create floating popup browsers.
   if (!target_url.empty())
-    DriftOpenURLInNewTab(target_url.ToString().c_str());
+    browser->GetMainFrame()->LoadURL(target_url);
   return true;  // cancel the popup window
 }
 
