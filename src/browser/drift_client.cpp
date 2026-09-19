@@ -1,5 +1,6 @@
 #include "drift_client.h"
 #include "browser_window.h"
+#include "include/cef_frame.h"
 #include "include/cef_context_menu_handler.h"
 #include "include/cef_download_handler.h"
 #include "include/wrapper/cef_helpers.h"
@@ -57,6 +58,16 @@ void DriftClient::OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
 void DriftClient::OnLoadingProgressChange(CefRefPtr<CefBrowser> browser,
                                           double progress) {
   DriftOnLoadingProgressChange(browser->GetIdentifier(), progress);
+}
+
+void DriftClient::OnLoadEnd(CefRefPtr<CefBrowser> browser,
+                            CefRefPtr<CefFrame> frame,
+                            int /*http_status_code*/) {
+  if (!frame->IsMain()) return;
+  std::string url = frame->GetURL().ToString();
+  // Only trigger on navigable http/https pages — skip blank, internal, and error pages.
+  if (url.rfind("http://", 0) != 0 && url.rfind("https://", 0) != 0) return;
+  DriftOnLoadEnd(browser->GetIdentifier(), url.c_str());
 }
 
 void DriftClient::OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,

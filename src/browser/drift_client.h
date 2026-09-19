@@ -39,6 +39,9 @@ class DriftClient : public CefClient,
   void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
                             bool isLoading, bool canGoBack,
                             bool canGoForward) override;
+  void OnLoadEnd(CefRefPtr<CefBrowser> browser,
+                 CefRefPtr<CefFrame> frame,
+                 int http_status_code) override;
 
   // CefContextMenuHandler
   void OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,

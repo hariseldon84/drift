@@ -18,4 +18,4 @@ else()
   target_compile_options(drift_cef_engine PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
-target_link_libraries(drift_cef_engine PRIVATE libcef_dll_wrapper ${CEF_STANDARD_LIBS})
+target_link_libraries(drift_cef_engine PRIVATE libcef_dll_wrapper ${CEF_STANDARD_LIBS} drift_intelligence)

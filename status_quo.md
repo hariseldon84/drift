@@ -31,13 +31,14 @@
 
 ## What is missing
 
-- The macOS behavior-parity gate (EP-00-T09) — manual run after extraction.
-- Windows, Android, and iPhone runnable proofs.
+- iPhone WKWebView proof (SP-09 T13–T15) — planned after first Mac feature sprint.
+- Windows and Android proofs — deferred; require native dev machines.
 - The page-understanding, object, Compare Mode, action, and widget product layers.
+- Mac distribution: signing, notarization, DMG, Sparkle, onboarding (EP-06).
 
 ## In flight
 
-EP-00 is the active migration epic. SP-07 complete (T07, T08). Next: EP-00-T09 (macOS parity gate).
+EP-00 foundation complete (SP-06 + SP-07 all done, T09 parity gate passed 2026-09-19). Active: Mac product sprint, starting EP-02 (DOM extraction) through EP-06 (distribution).
 
 ## Open decisions waiting on Anand
 

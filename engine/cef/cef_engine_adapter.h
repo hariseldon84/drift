@@ -15,6 +15,7 @@ public:
   void stop() override;
   void close() override;
   void start_download(const std::string& url) override;
+  void request_extraction(const std::string& request_id) override;
   void* native_view_handle() override;
 
   // CEF-specific — used only in bridge functions, not on the interface.

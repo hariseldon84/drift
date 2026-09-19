@@ -34,3 +34,7 @@ void DriftOnDownloadUpdated(int download_id, int64_t received_bytes,
 void DriftSaveLinkAs(int browser_id, const char* url);
 // Returns and clears the NSSavePanel-chosen path for a given URL.
 std::string DriftConsumePendingSavePath(const std::string& url);
+
+// Extraction — call from DriftClient::OnLoadEnd and DriftSourceVisitor::Visit.
+void DriftOnLoadEnd(int browser_id, const char* url);
+void DriftOnExtractionCompleted(int browser_id, const char* request_id, const char* result_json);

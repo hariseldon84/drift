@@ -38,6 +38,7 @@ foreach(SUFFIX_ENTRY ${CEF_HELPER_APP_SUFFIXES})
     drift_history
     drift_browser_state
     drift_storage
+    drift_intelligence
   )
 endforeach()
 
@@ -57,6 +58,7 @@ target_link_libraries(Drift PRIVATE
   drift_history
   drift_browser_state
   drift_storage
+  drift_intelligence
 )
 
 # Copy CEF framework into Drift.app/Contents/Frameworks/ after build

@@ -20,6 +20,10 @@ public:
   virtual void close() = 0;
   virtual void start_download(const std::string& url) = 0;
 
+  // Trigger async extraction of the current page. Result delivered via
+  // DriftOnExtractionCompleted bridge (browser process UI thread).
+  virtual void request_extraction(const std::string& request_id) = 0;
+
   // Platform-native view handle for embedding.
   // macOS/Windows: NSView* / HWND cast via the caller's platform bridge.
   // Returns nullptr if the engine is not yet initialised.

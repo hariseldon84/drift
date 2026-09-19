@@ -5,39 +5,8 @@
 
 ---
 
-## Active Epic — Cross-Platform Migration
+## EP-02 — Product Recognition · ACTIVE
 
-- [ ] EP-00-T00: Execute the approved four-platform migration (`_wip_cross_platform_migration.md`; PRD §21)
-
-## SP-06 — Shared State Extraction · NEXT
-
-- [x] EP-00-T04: Extract bookmarks behind a tested shared-core state model
-- [x] EP-00-T05: Extract history and download state behind shared-core models
-- [x] EP-00-T06: Extract tab, navigation, and session state behind shared-core models
-
-## SP-07 — Engine and Persistence Boundaries
-
-- [x] EP-00-T07: Introduce the platform-neutral BrowserEngine interface and macOS CEF adapter
-- [x] EP-00-T08: Preserve JSON compatibility, then add SQLite behind versioned repository interfaces
-- [ ] EP-00-T09: Pass the macOS behavior-parity and performance gate after extraction
-
-## SP-08 — Windows Proof
-
-- [ ] EP-00-T10: Build a Windows shell with one CEF tab driven by shared commands/events
-- [ ] EP-00-T11: Add pinned Windows CEF bootstrap and a Windows build/CI smoke path
-
-## SP-09 — Mobile Proofs
-
-- [ ] EP-00-T12: Build an Android engine proof and decide WebView versus GeckoView from measured capability gaps
-- [ ] EP-00-T13: Build an iPhone WKWebView proof using the same shared command/event contract
-- [ ] EP-00-T14: Produce one normalized extraction result on Android and iPhone through the shared core
-- [ ] EP-00-T15: Pass the cross-platform foundation gate before feature sprints resume
-
-## Post-Foundation Product Queue
-
-- [ ] EP-01-T12: Desktop Chrome extension compatibility — MV3 CRX load and required chrome.* API surface
-- [ ] EP-01-T13: Password manager — save/fill credentials with platform secure-storage adapters
-- [ ] EP-01-T14: Settings — shared settings model with platform-appropriate surfaces
 - [ ] EP-02-T01: DOM extraction — JSON-LD, schema.org, and OpenGraph into a normalized result
 - [ ] EP-02-T02: Heuristic rule engine — selectors for price, title, rating, and availability
 - [ ] EP-02-T03: Local ML classifier — product page versus non-product page
@@ -45,6 +14,9 @@
 - [ ] EP-02-T05: Portable local inference — Core ML/ONNX/platform adapters behind one contract
 - [ ] EP-02-T06: Performance harness — enforce platform-specific pipeline budgets
 - [ ] EP-02-T07: Graceful degradation — stay silent when confidence is below 0.5
+
+## EP-03 — Product Objects
+
 - [ ] EP-03-T01: Product schema — typed, validated, serializable shared-core model
 - [ ] EP-03-T02: Object materialization — normalized pipeline output to Product
 - [ ] EP-03-T03: Recognition indicator — amber-gold product-recognized signal
@@ -52,6 +24,9 @@
 - [ ] EP-03-T05: Object Panel — complete product fields and actions
 - [ ] EP-03-T06: Object persistence — survive refresh and same-domain navigation
 - [ ] EP-03-T07: Multi-object pages — identify the primary product in the first release
+
+## EP-04 — Compare Mode
+
 - [ ] EP-04-T01: Compare Tray — persistent cross-tab product selection
 - [ ] EP-04-T02: Cross-tab object state — preserve held products during the session
 - [ ] EP-04-T03: Compare View — two-column matched-field layout
@@ -62,6 +37,9 @@
 - [ ] EP-04-T08: Action confirmation — explicit, stoppable human gate
 - [ ] EP-04-T09: Action execution — Amazon, Best Buy, and Flipkart adapters
 - [ ] EP-04-T10: Compare limit — two products in the first release
+
+## EP-05 — Widget Surface
+
 - [ ] EP-05-T01: Widget surface container — useful empty-tab/new-tab state
 - [ ] EP-05-T02: Tasks widget — local list connected to Product objects
 - [ ] EP-05-T03: Notes widget — local rich text and comparison capture
@@ -69,6 +47,9 @@
 - [ ] EP-05-T05: Widget layout — resize, reorder, and local preference persistence
 - [ ] EP-05-T06: Object graph connection — offer Add to Tasks after a comparison
 - [ ] EP-05-T07: New-tab trigger — expose the widget surface as the new tab page
+
+## EP-06 — Mac Distribution
+
 - [ ] EP-06-T01: macOS signed and notarized app bundle
 - [ ] EP-06-T02: macOS DMG installer
 - [ ] EP-06-T03: macOS auto-update through Sparkle
@@ -81,6 +62,9 @@
 
 ## Backlog — Browser Baseline Polish
 
+- [ ] EP-01-T12: Desktop Chrome extension compatibility — MV3 CRX load and required chrome.* API surface
+- [ ] EP-01-T13: Password manager — save/fill credentials with platform secure-storage adapters
+- [ ] EP-01-T14: Settings — shared settings model with platform-appropriate surfaces
 - [ ] EP-01-T10a: Shared History internal page — grouped timeline, search, item deletion, and time-range clearing
 - [ ] EP-01-T10b: Local history categorization — on-device category model and filters
 - [ ] EP-01-T11a: Downloads — pause, resume, cancel, transfer rate, and ETA
@@ -103,8 +87,28 @@
 
 ---
 
+## Later — Platform Proofs (after Mac launch)
+
+### iPhone Proof
+
+- [ ] EP-00-T13: Build an iPhone WKWebView proof using the same shared command/event contract
+- [ ] EP-00-T14: Produce one normalized extraction result on iPhone through the shared core
+- [ ] EP-00-T15: Pass the Mac + iPhone foundation gate
+
+### Windows Proof (requires native Windows dev machine)
+
+- [ ] EP-00-T10: Build a Windows shell with one CEF tab driven by shared commands/events
+- [ ] EP-00-T11: Add pinned Windows CEF bootstrap and a Windows build/CI smoke path
+
+### Android Proof
+
+- [ ] EP-00-T12: Build an Android engine proof and decide WebView versus GeckoView from measured capability gaps
+
+---
+
 ## Done
 
+- [x] EP-00-T09: macOS behavior-parity and performance gate passed after extraction (2026-09-19)
 - [x] EP-00-T08: IBookmarkRepository + IHistoryRepository interfaces; SqliteBookmarkRepo + SqliteHistoryRepo in core/storage; JSON-to-SQLite migration on first launch; 4 CTest suites passing (2026-09-19)
 - [x] EP-00-T07: IBrowserEngine interface + CefEngineAdapter; all browser calls in shell routed through engine abstraction; build clean, 3 CTest suites passing (2026-09-18)
 - [x] EP-00-T06: Slimmed DriftTabModel to CEF-only fields; all tab/nav/session state routed through drift_browser_state; build clean, 3 CTest suites passing (2026-09-18)

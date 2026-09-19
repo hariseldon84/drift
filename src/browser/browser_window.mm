@@ -11,6 +11,7 @@
 #include "storage/sqlite_history_repo.h"
 
 #include <algorithm>
+#include <atomic>
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants
@@ -1905,4 +1906,31 @@ void DriftOnDownloadUpdated(int download_id, int64_t received_bytes,
   if (!gWindow) return;
   [gWindow handleDownloadUpdated:download_id receivedBytes:received_bytes
                       isComplete:is_complete isCanceled:is_canceled];
+}
+
+// ── Extraction bridges ────────────────────────────────────────────────────────
+
+static std::atomic<uint64_t> gNextRequestId{1};
+
+void DriftOnLoadEnd(int browser_id, const char* url) {
+  if (!gWindow || !url) return;
+  DriftTabModel* t = [gWindow tabForBrowserId:browser_id];
+  if (!t || !t.engine) return;
+  // Generate a monotonic request_id for this extraction attempt.
+  uint64_t rid = gNextRequestId.fetch_add(1, std::memory_order_relaxed);
+  t.engine->request_extraction(std::to_string(rid));
+}
+
+void DriftOnExtractionCompleted(int browser_id, const char* /*request_id*/,
+                                const char* result_json) {
+  if (!gWindow || !result_json) return;
+  // EP-03 will consume this to show the recognition indicator and object card.
+  // For EP-02 we just log it so the pipeline is end-to-end verifiable.
+  DriftTabModel* t = [gWindow tabForBrowserId:browser_id];
+  if (!t) return;
+  NSString* json = [NSString stringWithUTF8String:result_json];
+  // Only log when a product was recognized (confidence field present and > 0)
+  if ([json containsString:@"\"product\""]) {
+    NSLog(@"[Drift] Product recognized on browser %d: %@", browser_id, json);
+  }
 }
