@@ -1,5 +1,8 @@
 include("${CEF_ROOT}/cmake/cef_macros.cmake")
 
+set(DRIFT_ICON "${PROJECT_SOURCE_DIR}/assets/drift.icns")
+set_source_files_properties("${DRIFT_ICON}" PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+
 set(DRIFT_SRCS
   main.mm
   drift_app.h
@@ -8,6 +11,7 @@ set(DRIFT_SRCS
   drift_client.cpp
   browser_window.h
   browser_window.mm
+  "${DRIFT_ICON}"
 )
 
 # ── Helper apps ──────────────────────────────────────────────────────────────
